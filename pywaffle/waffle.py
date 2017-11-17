@@ -63,7 +63,7 @@ class Waffle(Figure):
             raise ValueError("Length of labels doesn't match the values.")
 
         # default legend_args
-        legend_args = dict({'loc': (0, -0.1), 'ncol': len(labels)}, **legend_args)
+        legend_args = dict({'loc': (0, -0.1), 'ncol': values_len}, **legend_args)
 
         Figure.__init__(self, *args, **kwargs)
 
@@ -131,10 +131,7 @@ class Waffle(Figure):
 
         # Add legend
         if labels is not None:
-            self.ax.legend(
-                handles=[Patch(color=colors[i], label="{0} ({1})".format(l, values[i])) for i, l in enumerate(labels)],
-                **legend_args
-            )
+            self.ax.legend(handles=[Patch(color=colors[i], label=str(l)) for i, l in enumerate(labels)], **legend_args)
 
         # Remove unnecessary lines, ticks, etc.
         self.ax.tick_params(
