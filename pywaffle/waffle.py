@@ -36,62 +36,66 @@ def unique_pairs(w, h):
 
 
 class Waffle(Figure):
-    def __init__(self, height, values, *args, **kwargs):
+    def __init__(self, rows, values, *args, **kwargs):
         """
         custom kwarg figtitle is a figure title
         """
-        width = kwargs.pop('width', None)
+        columns = kwargs.pop('columns', None)
         colors = kwargs.pop('colors', None)
         labels = kwargs.pop('labels', None)
         legend_args = kwargs.pop('legend_args', {})
         interval_ratio_x = kwargs.pop('interval_ratio_x', 0.2)
         interval_ratio_y = kwargs.pop('interval_ratio_y', 0.2)
-        width_height_ratio = kwargs.pop('width_height_ratio', 1)
+        column_row_ratio = kwargs.pop('column_row_ratio', 1)
         cmap_name = kwargs.pop('cmap_name', 'Set2')
         title_args = kwargs.pop('title_args', None)
 
         values_len = len(values)
 
-        default_legend_args = {
-            'loc': 'lower left',
-            'ncol': len(labels),
-            'bbox_to_anchor': (0, -0.1)
-        }
-        legend_args = dict(default_legend_args, **legend_args)
+        if colors and len(colors) != values_len:
+            raise ValueError("Length of colors doesn't match the values.")
+
+        # if values is a dict, ignore argument labels
+        if isinstance(values, dict):
+            labels = values.keys()
+            values = list(values.values())
+        elif labels and len(labels) != values_len:
+            raise ValueError("Length of labels doesn't match the values.")
+
+        # default legend_args
+        legend_args = dict({'loc': (0, -0.1), 'ncol': len(labels)}, **legend_args)
 
         Figure.__init__(self, *args, **kwargs)
 
         value_sum = float(sum(values))
 
-        # if width is not given, use the values as number of blocks
+        # if column number is not given, use the values as number of blocks
         value_as_block_number = False
-        if width is None:
-            width = ceil(value_sum, height)
+        if columns is None:
+            columns = ceil(value_sum, rows)
             value_as_block_number = True
 
         self.ax = self.gca(aspect='equal')
 
-        block_unit_value = width * height / value_sum
+        block_unit_value = columns * rows / value_sum
         block_numbers = values if value_as_block_number else [round(v * block_unit_value) for v in values]
 
         # Absolute height of the plot
         figure_height = 1
 
-        block_height_length = figure_height / (height + height * interval_ratio_y - interval_ratio_y)
-        block_width_length = width_height_ratio * block_height_length
+        block_y_length = figure_height / (rows + rows * interval_ratio_y - interval_ratio_y)
+        block_x_length = column_row_ratio * block_y_length
 
         # Define the limit of X, Y axis
         self.ax.axis(
             [
-                0, (width + width * interval_ratio_x - interval_ratio_x) * block_width_length,
+                0, (columns + columns * interval_ratio_x - interval_ratio_x) * block_x_length,
                 0, figure_height
             ]
         )
 
-        # Build a color sequence with same length as values
-        if colors:
-            colors = array_resize(array=colors, length=values_len)
-        else:
+        # Build a color sequence if colors is empty
+        if not colors:
             default_colors = cm.get_cmap(cmap_name).colors
             default_color_num = cm.get_cmap(cmap_name).N
             colors = array_resize(array=default_colors, length=values_len, array_len=default_color_num)
@@ -99,15 +103,15 @@ class Waffle(Figure):
         # Plot blocks
         class_index = 0
         block_index = 0
-        for col, row in unique_pairs(width, height):
+        for col, row in unique_pairs(columns, rows):
             self.ax.add_artist(
                 Rectangle(
                     xy=(
-                        (1 + interval_ratio_x) * block_width_length * col,
-                        (1 + interval_ratio_y) * block_height_length * row
+                        (1 + interval_ratio_x) * block_x_length * col,
+                        (1 + interval_ratio_y) * block_y_length * row
                     ),
-                    width=block_width_length,
-                    height=block_height_length,
+                    width=block_x_length,
+                    height=block_y_length,
                     color=colors[class_index],
                 )
             )
@@ -148,5 +152,3 @@ class Waffle(Figure):
 
     def remove(self):
         pass
-
-
