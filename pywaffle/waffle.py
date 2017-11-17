@@ -43,12 +43,12 @@ class Waffle(Figure):
         columns = kwargs.pop('columns', None)
         colors = kwargs.pop('colors', None)
         labels = kwargs.pop('labels', None)
-        legend_args = kwargs.pop('legend_args', {})
+        legend_conf = kwargs.pop('legend_conf', {})
         interval_ratio_x = kwargs.pop('interval_ratio_x', 0.2)
         interval_ratio_y = kwargs.pop('interval_ratio_y', 0.2)
         column_row_ratio = kwargs.pop('column_row_ratio', 1)
         cmap_name = kwargs.pop('cmap_name', 'Set2')
-        title_args = kwargs.pop('title_args', None)
+        title_conf = kwargs.pop('title_conf', None)
 
         values_len = len(values)
 
@@ -63,8 +63,8 @@ class Waffle(Figure):
         if labels and len(labels) != values_len:
             raise ValueError("Length of labels doesn't match the values.")
 
-        # default legend_args
-        legend_args = dict({'loc': (0, -0.1), 'ncol': values_len}, **legend_args)
+        # default legend_conf
+        legend_conf = dict({'loc': (0, -0.1), 'ncol': values_len}, **legend_conf)
 
         Figure.__init__(self, *args, **kwargs)
 
@@ -127,12 +127,12 @@ class Waffle(Figure):
                     break
 
         # Add title
-        if title_args is not None:
-            self.ax.set_title(**title_args)
+        if title_conf is not None:
+            self.ax.set_title(**title_conf)
 
         # Add legend
         if labels is not None:
-            self.ax.legend(handles=[Patch(color=colors[i], label=str(l)) for i, l in enumerate(labels)], **legend_args)
+            self.ax.legend(handles=[Patch(color=colors[i], label=str(l)) for i, l in enumerate(labels)], **legend_conf)
 
         # Remove unnecessary lines, ticks, etc.
         self.ax.tick_params(

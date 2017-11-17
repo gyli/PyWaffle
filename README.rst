@@ -29,8 +29,8 @@ Examples
     import matplotlib.pyplot as plt
     from pywaffle import Waffle
 
-    # Define a 10 * 3 block matrix, 1 block = 2 unit of values
-    fig = plt.figure(FigureClass=Waffle, rows=3, columns=10, values=[30, 20, 10])
+    # The percentage is rounded to 10 * 5 blocks
+    fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3])
     plt.show()
 
 .. raw:: html
@@ -41,22 +41,27 @@ Examples
 
 .. code:: python
 
-    fig = plt.figure(FigureClass=Waffle, rows=6, values={'Cat1': 35, 'Cat2': 24, 'Cat3': 9})
+    data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
+    fig = plt.figure(FigureClass=Waffle, rows=5, values=data, legend_conf={'loc': (0, -0.3)})
     plt.show()
 
 .. raw:: html
 
     <img src="README_images/absolute_block_numbers.png", width="400px">
 
-3. Add title, legend and background color; customized block color:
+3. Add title, legend and background color; customize the block color:
 
 .. code:: python
 
-    fig = plt.figure(FigureClass=Waffle, rows=6, values={'Cat1': 35, 'Cat2': 24, 'Cat3': 9},
-                     title_args={'label': 'Here is the title', 'loc': 'left'},
-                     legend_args={'loc': (0, -0.15), 'facecolor': '#EAEAEA'})
-    fig.gca().set_facecolor('#EAEAEA')
-    fig.set_facecolor('#EAEAEA')
+    # Data source https://en.wikipedia.org/wiki/United_States_presidential_election,_2016
+    data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
+    fig = plt.figure(FigureClass=Waffle, rows=5, values=data,
+                     title_conf={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
+                     colors=("#983D3D", "#232066", "#DCB732"),
+                     labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
+                     legend_conf={'loc': (0, -0.2), 'facecolor': '#EEEEEE', 'fontsize': 8})
+    fig.gca().set_facecolor('#EEEEEE')
+    fig.set_facecolor('#EEEEEE')
     plt.show()
 
 .. raw:: html

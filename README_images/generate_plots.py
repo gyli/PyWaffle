@@ -10,21 +10,23 @@ from pywaffle.waffle import Waffle
 image_folder = 'README_images/'
 
 # Basic
-fig = plt.figure(FigureClass=Waffle, rows=3, columns=10, values=[30, 20, 10])
+fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3])
 fig.savefig(image_folder + 'basic.png', bbox_inches='tight', dpi=200)
 
 
 # Use values in dictionary; use absolute value as block number, without defining columns
-fig = plt.figure(FigureClass=Waffle, rows=6, values={'Cat1': 35, 'Cat2': 24, 'Cat3': 9},
-                 legend_args={'loc': (0, -0.15)})
+data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
+fig = plt.figure(FigureClass=Waffle, rows=5, values=data, legend_conf={'loc': (0, -0.3)})
 fig.savefig(image_folder + 'absolute_block_numbers.png', bbox_inches='tight', dpi=200)
 
 
 # Add title, legend and background color; and change block color
-fig = plt.figure(FigureClass=Waffle, rows=6, values={'Cat1': 35, 'Cat2': 24, 'Cat3': 9},
-                 colors=("#FCF8C1", "#CEEEF9", "#E9DBF9"),
-                 title_args={'label': 'Here is the title', 'loc': 'left'},
-                 legend_args={'loc': (0, -0.15), 'facecolor': '#EEEEEE'})
+data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
+fig = plt.figure(FigureClass=Waffle, rows=5, values=data,
+                 title_conf={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
+                 colors=("#983D3D", "#232066", "#DCB732"),
+                 labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
+                 legend_conf={'loc': (0, -0.2), 'facecolor': '#EEEEEE', 'fontsize': 8})
 fig.gca().set_facecolor('#EEEEEE')
 fig.set_facecolor('#EEEEEE')
 fig.savefig(image_folder + 'title_and_legend.png', bbox_inches='tight', dpi=200, facecolor='#EEEEEE')
