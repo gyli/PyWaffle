@@ -3,10 +3,14 @@
 
 import matplotlib.pyplot as plt
 from pywaffle.waffle import Waffle
+import unittest
 
 
-fig = plt.figure(FigureClass=Waffle, height=10, values=[10, 20, 30], interval_ratio_x=0.2, interval_ratio_y=0.2,
-                 colors=("#969696", "#1879bf", "#009bda"),
-                 labels=("cat1", "cat2", "cat3"),
-                 title_args={'label': 'Test Figure', 'loc': 'left', 'fontdict': {'fontsize': 10}})
-plt.show()
+class TestWaffle(unittest.TestCase):
+    def test_legend(self):
+        fig = plt.figure(FigureClass=Waffle, rows=10, values=[10], labels=["cat1"])
+        self.assertEqual(fig.gca().get_legend().texts[0]._text, 'cat1')
+
+
+if __name__ == '__main__':
+    unittest.main()

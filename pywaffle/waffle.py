@@ -6,7 +6,7 @@ from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle, Patch
 import matplotlib.font_manager as fm
 
-prop = fm.FontProperties(fname='font/FontAwesome.otf')
+# prop = fm.FontProperties(fname='font/FontAwesome.otf')
 
 
 def ceil(a, b):

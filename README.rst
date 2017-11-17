@@ -22,21 +22,22 @@ Installation
 Examples
 --------
 
-Basic example:
+1. Basic example:
 
 .. code:: python
 
     import matplotlib.pyplot as plt
     from pywaffle import Waffle
 
-    fig = plt.figure(FigureClass=Waffle, rows=6, columns=10, values=[30, 20, 10])
+    # Define a 10 * 3 block matrix, 1 block = 2 unit of values
+    fig = plt.figure(FigureClass=Waffle, rows=3, columns=10, values=[30, 20, 10])
     plt.show()
 
 .. raw:: html
 
     <img src="README_images/basic.png", width="400px">
 
-Use dictionary; Use absolute value as block number, without defining columns:
+2. Use values in dictionary; use absolute value as block number, without defining columns:
 
 .. code:: python
 
@@ -47,7 +48,7 @@ Use dictionary; Use absolute value as block number, without defining columns:
 
     <img src="README_images/absolute_block_numbers.png", width="400px">
 
-Add title, legend and background color:
+3. Add title, legend and background color; customized block color:
 
 .. code:: python
 
