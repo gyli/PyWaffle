@@ -38,8 +38,8 @@ Examples
 
     <img src="README_images/basic.svg", alt="">
 
-2. Values in dict & Absolute Value as Block Number
-""""""""""""""""""""""""""""""""""""""""""""""""""
+2. Values in dict & Auto-columns
+""""""""""""""""""""""""""""""""
 
 .. code:: python
 
@@ -51,9 +51,10 @@ Examples
 
     <img src="README_images/absolute_block_numbers.svg", alt="Use values in dictionary; use absolute value as block number, without defining columns">
 
-Since it uses percentage as block number, it is now clear to see that there are 3% votes for other parties/candidates.
+If columns is empty, it uses absolute number in values as block number. It is now clear to see that there are 3% votes to other parties/candidates.
 
-3. Title, Legend, Block Color and Background Color
+3. Title, Legend, Colors and Background Color
+"""""""""""""""""""""""""""""""""""""""""""""
 
 .. code:: python
 
