@@ -21,6 +21,7 @@ fig.savefig(image_folder + 'absolute_block_numbers.png', bbox_inches='tight', dp
 
 
 # Add title, legend and background color; and change block color
+# Data source https://en.wikipedia.org/wiki/United_States_presidential_election,_2016
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
 fig = plt.figure(FigureClass=Waffle, rows=5, values=data,
                  title_conf={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},

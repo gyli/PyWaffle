@@ -10,6 +10,8 @@ Introduction
 
 PyWaffle is a Python package to make waffle chart, bases on `Matplotlib <https://matplotlib.org/>`__.
 
+It provides a `Figure class <https://matplotlib.org/devdocs/gallery/subplots_axes_and_figures/custom_figure_class.html>`__ ``Waffle``, which could be called by `matplotlib.pyplot.figure <https://matplotlib.org/devdocs/api/_as_gen/matplotlib.pyplot.figure.html>`__ and generates a matplotlib Figure object.
+
 Please note that this package is under heavy development currently. Do NOT use it until it reaches the first stable version.
 
 Installation
@@ -29,7 +31,7 @@ Examples
     import matplotlib.pyplot as plt
     from pywaffle import Waffle
 
-    # The percentage is rounded to 10 * 5 blocks
+    # The values are rounded to 10 * 5 blocks
     fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3])
     plt.show()
 
