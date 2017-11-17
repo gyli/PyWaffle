@@ -33,9 +33,34 @@ Basic example:
     plt.show()
 
 .. image:: README_images/basic.png
-    :width: 640
+    :width: 400
     :alt: Pywaffle basic example
 
+Use dictionary; Use absolute value as block number, without defining columns:
+
+.. code:: python
+
+    fig = plt.figure(FigureClass=Waffle, rows=6, values={'Cat1': 35, 'Cat2': 24, 'Cat3': 9})
+    plt.show()
+
+.. image:: README_images/absolute_block_numbers.png
+    :width: 400
+    :alt: Absolute block number and value in dict
+
+Add title, legend and background color:
+
+.. code:: python
+
+    fig = plt.figure(FigureClass=Waffle, rows=6, values={'Cat1': 35, 'Cat2': 24, 'Cat3': 9},
+                     title_args={'label': 'Here is the title', 'loc': 'left'},
+                     legend_args={'loc': (0, -0.15), 'facecolor': '#EAEAEA'})
+    fig.gca().set_facecolor('#EAEAEA')
+    fig.set_facecolor('#EAEAEA')
+    plt.show()
+
+.. image:: README_images/absolute_block_numbers.png
+    :width: 400
+    :alt: Add title, legend and background color
 
 License
 -------

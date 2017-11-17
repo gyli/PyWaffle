@@ -55,11 +55,12 @@ class Waffle(Figure):
         if colors and len(colors) != values_len:
             raise ValueError("Length of colors doesn't match the values.")
 
-        # if values is a dict, ignore argument labels
         if isinstance(values, dict):
-            labels = values.keys()
+            if not labels:
+                labels = values.keys()
             values = list(values.values())
-        elif labels and len(labels) != values_len:
+
+        if labels and len(labels) != values_len:
             raise ValueError("Length of labels doesn't match the values.")
 
         # default legend_args
