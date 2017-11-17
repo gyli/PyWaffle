@@ -8,9 +8,19 @@ Documentation: Working on it
 Introduction
 ------------
 
-PyWaffle is a Python package to make waffle chart, bases on `Matplotlib <https://matplotlib.org/>`__.
+PyWaffle is a Python package to make waffle chart, bases on `Matplotlib <https://matplotlib.org/>`_.
 
-It provides a `Figure class <https://matplotlib.org/devdocs/gallery/subplots_axes_and_figures/custom_figure_class.html>`__ ``Waffle``, which could be called by `matplotlib.pyplot.figure <https://matplotlib.org/devdocs/api/_as_gen/matplotlib.pyplot.figure.html>`__ and generates a matplotlib Figure object.
+It provides a |figure_constructor_link| ``Waffle``, which could be passed to |matplotlib_pyplot_figure_link| and generates a matplotlib Figure object.
+
+.. |figure_constructor_link| raw:: html
+
+   <a href="https://matplotlib.org/devdocs/gallery/subplots_axes_and_figures/custom_figure_class.html" target="_blank">Figure constructor</a>
+
+
+.. |matplotlib_pyplot_figure_link| raw:: html
+
+   <a href="https://matplotlib.org/devdocs/api/_as_gen/matplotlib.pyplot.figure.html" target="_blank">Figure constructor</a>
+
 
 Please note that this package is under heavy development currently. Do NOT use it until it reaches the first stable version.
 
