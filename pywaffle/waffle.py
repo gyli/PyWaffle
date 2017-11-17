@@ -3,7 +3,7 @@
 
 from matplotlib.pyplot import cm
 from matplotlib.figure import Figure
-from matplotlib.patches import Rectangle
+from matplotlib.patches import Rectangle, Patch
 import matplotlib.font_manager as fm
 
 prop = fm.FontProperties(fname='font/FontAwesome.otf')
@@ -42,6 +42,8 @@ class Waffle(Figure):
         """
         width = kwargs.pop('width', None)
         colors = kwargs.pop('colors', None)
+        labels = kwargs.pop('labels', None)
+        legend_args = kwargs.pop('legend_args', {})
         interval_ratio_x = kwargs.pop('interval_ratio_x', 0.2)
         interval_ratio_y = kwargs.pop('interval_ratio_y', 0.2)
         width_height_ratio = kwargs.pop('width_height_ratio', 1)
@@ -49,6 +51,13 @@ class Waffle(Figure):
         title_args = kwargs.pop('title_args', None)
 
         values_len = len(values)
+
+        default_legend_args = {
+            'loc': 'lower left',
+            'ncol': len(labels),
+            'bbox_to_anchor': (0, -0.1)
+        }
+        legend_args = dict(default_legend_args, **legend_args)
 
         Figure.__init__(self, *args, **kwargs)
 
@@ -99,7 +108,7 @@ class Waffle(Figure):
                     ),
                     width=block_width_length,
                     height=block_height_length,
-                    color=colors[class_index]
+                    color=colors[class_index],
                 )
             )
 
@@ -112,8 +121,16 @@ class Waffle(Figure):
                 if class_index > values_len - 1:
                     break
 
+        # Add title
         if title_args is not None:
             self.ax.set_title(**title_args)
+
+        # Add legend
+        if labels is not None:
+            self.ax.legend(
+                handles=[Patch(color=colors[i], label="{0} ({1})".format(l, values[i])) for i, l in enumerate(labels)],
+                **legend_args
+            )
 
         # Remove unnecessary lines, ticks, etc.
         self.ax.tick_params(
