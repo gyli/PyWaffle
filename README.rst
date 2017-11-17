@@ -8,11 +8,9 @@ Documentation: Working on it
 Introduction
 ------------
 
-PyWaffle is a Python package to make waffle chart, bases on `Matplotlib <https://matplotlib.org/>`__.
+PyWaffle is a Python package to make waffle chart, bases on `Matplotlib <https://matplotlib.org/>`_.
 
-It provides a `Figure class <https://matplotlib.org/devdocs/gallery/subplots_axes_and_figures/custom_figure_class.html>`__ ``Waffle``, which could be called by `matplotlib.pyplot.figure <https://matplotlib.org/devdocs/api/_as_gen/matplotlib.pyplot.figure.html>`__ and generates a matplotlib Figure object.
-
-Please note that this package is under heavy development currently. Do NOT use it until it reaches the first stable version.
+It provides a `Figure constructor class <https://matplotlib.org/devdocs/gallery/subplots_axes_and_figures/custom_figure_class.html>`_ ``Waffle``, which could be passed to `matplotlib.pyplot.figure <https://matplotlib.org/devdocs/api/_as_gen/matplotlib.pyplot.figure.html>`_ and generates a matplotlib Figure object.
 
 Installation
 ------------
@@ -24,7 +22,8 @@ Installation
 Examples
 --------
 
-1. Basic example:
+1. Basic Example
+""""""""""""""""
 
 .. code:: python
 
@@ -39,7 +38,8 @@ Examples
 
     <img src="README_images/basic.svg", alt="">
 
-2. Use values in dictionary; use absolute value as block number, without defining columns:
+2. Values in dict & Absolute Value as Block Number
+""""""""""""""""""""""""""""""""""""""""""""""""""
 
 .. code:: python
 
@@ -51,7 +51,9 @@ Examples
 
     <img src="README_images/absolute_block_numbers.svg", alt="Use values in dictionary; use absolute value as block number, without defining columns">
 
-3. Add title, legend and background color; customize the block color:
+Since it uses percentage as block number, it is now clear to see that there are 3% votes for other parties/candidates.
+
+3. Title, Legend, Block Color and Background Color
 
 .. code:: python
 
