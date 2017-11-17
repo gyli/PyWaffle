@@ -34,6 +34,7 @@ Basic example:
 
 .. image:: README_images/basic.png
     :scale: 50
+    :width: 400
     :alt: Pywaffle basic example
 
 Use dictionary; Use absolute value as block number, without defining columns:
@@ -45,6 +46,7 @@ Use dictionary; Use absolute value as block number, without defining columns:
 
 .. image:: README_images/absolute_block_numbers.png
     :scale: 50
+    :width: 400
     :alt: Absolute block number and value in dict
 
 Add title, legend and background color:
@@ -60,6 +62,7 @@ Add title, legend and background color:
 
 .. image:: README_images/title_and_legend.png
     :scale: 50
+    :width: 400
     :alt: Add title, legend and background color
 
 License
