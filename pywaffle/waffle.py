@@ -1,13 +1,12 @@
 #!/usr/bin/python
 # -*-coding: utf-8 -*-
 
-import matplotlib as mpl
-import matplotlib.pyplot as plt
+from matplotlib.pyplot import cm
 from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
 import matplotlib.font_manager as fm
 
-prop = mpl.font_manager.FontProperties(fname='font/FontAwesome.otf')
+prop = fm.FontProperties(fname='font/FontAwesome.otf')
 
 
 def ceil(a, b):
@@ -47,6 +46,7 @@ class Waffle(Figure):
         interval_ratio_y = kwargs.pop('interval_ratio_y', 0.2)
         width_height_ratio = kwargs.pop('width_height_ratio', 1)
         cmap_name = kwargs.pop('cmap_name', 'Set2')
+        title_args = kwargs.pop('title_args', None)
 
         values_len = len(values)
 
@@ -83,8 +83,8 @@ class Waffle(Figure):
         if colors:
             colors = array_resize(array=colors, length=values_len)
         else:
-            default_colors = plt.cm.get_cmap(cmap_name).colors
-            default_color_num = plt.cm.get_cmap(cmap_name).N
+            default_colors = cm.get_cmap(cmap_name).colors
+            default_color_num = cm.get_cmap(cmap_name).N
             colors = array_resize(array=default_colors, length=values_len, array_len=default_color_num)
 
         # Plot blocks
@@ -112,6 +112,9 @@ class Waffle(Figure):
                 if class_index > values_len - 1:
                     break
 
+        if title_args is not None:
+            self.ax.set_title(**title_args)
+
         # Remove unnecessary lines, ticks, etc.
         self.ax.tick_params(
             axis='both',
@@ -130,6 +133,3 @@ class Waffle(Figure):
         pass
 
 
-fig = plt.figure(FigureClass=Waffle, height=4, values=[10, 20, 70], interval_ratio_x=0.2, colors=("#969696", "#1879bf", "#009bda"),
-                 interval_ratio_y=0.2)
-plt.show()
