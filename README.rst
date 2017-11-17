@@ -16,17 +16,25 @@ Installation
 ------------
 
 .. code:: bash
+
     pip install pywaffle
 
 Examples
 --------
 
+Basic example:
+
 .. code:: python
+
     import matplotlib.pyplot as plt
     from pywaffle import Waffle
 
-    fig = plt.figure(FigureClass=Waffle, rows=6, columns=10, values=[10, 20, 30])
+    fig = plt.figure(FigureClass=Waffle, rows=6, columns=10, values=[30, 20, 10])
     plt.show()
+
+.. image:: README_images/basic.png
+    :width: 640
+    :alt: Pywaffle basic example
 
 
 License
