@@ -37,7 +37,7 @@ Examples
 
 .. raw:: html
 
-    <img src="README_images/basic.png", width="50%" height="50%">
+    <img src="README_images/basic.svg", alt="">
 
 2. Use values in dictionary; use absolute value as block number, without defining columns:
 
@@ -49,7 +49,7 @@ Examples
 
 .. raw:: html
 
-    <img src="README_images/absolute_block_numbers.png", width="50%" height="50%">
+    <img src="README_images/absolute_block_numbers.svg", alt="Use values in dictionary; use absolute value as block number, without defining columns">
 
 3. Add title, legend and background color; customize the block color:
 
@@ -67,7 +67,7 @@ Examples
 
 .. raw:: html
 
-    <img src="README_images/title_and_legend.png", width="50%" height="50%">
+    <img src="README_images/title_and_legend.svg", alt="Add title, legend and background color; customize the block color">
 
 Data source `https://en.wikipedia.org/wiki/United_States_presidential_election,_2016 <https://en.wikipedia.org/wiki/United_States_presidential_election,_2016>`__.
 
