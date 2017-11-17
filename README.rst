@@ -33,6 +33,7 @@ Basic example:
     plt.show()
 
 .. raw:: html
+
     <img src="README_images/basic.png", width="400px">
 
 Use dictionary; Use absolute value as block number, without defining columns:
@@ -42,10 +43,9 @@ Use dictionary; Use absolute value as block number, without defining columns:
     fig = plt.figure(FigureClass=Waffle, rows=6, values={'Cat1': 35, 'Cat2': 24, 'Cat3': 9})
     plt.show()
 
-.. image:: README_images/absolute_block_numbers.png
-    :scale: 100
-    :width: 400
-    :alt: Absolute block number and value in dict
+.. raw:: html
+
+    <img src="README_images/absolute_block_numbers.png", width="400px">
 
 Add title, legend and background color:
 
@@ -58,10 +58,9 @@ Add title, legend and background color:
     fig.set_facecolor('#EAEAEA')
     plt.show()
 
-.. image:: README_images/title_and_legend.png
-    :scale: 50
-    :width: 400
-    :alt: Add title, legend and background color
+.. raw:: html
+
+    <img src="README_images/title_and_legend.png", width="400px">
 
 License
 -------
