@@ -32,10 +32,8 @@ Basic example:
     fig = plt.figure(FigureClass=Waffle, rows=6, columns=10, values=[30, 20, 10])
     plt.show()
 
-.. image:: README_images/basic.png
-    :scale: 50
-    :width: 400
-    :alt: Pywaffle basic example
+.. raw:: html
+    <img src="README_images/basic.png", width="400px">
 
 Use dictionary; Use absolute value as block number, without defining columns:
 
@@ -45,7 +43,7 @@ Use dictionary; Use absolute value as block number, without defining columns:
     plt.show()
 
 .. image:: README_images/absolute_block_numbers.png
-    :scale: 50
+    :scale: 100
     :width: 400
     :alt: Absolute block number and value in dict
 
