@@ -6,12 +6,12 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
-with open('README.rst') as f:
+with open('README_pypi.rst') as f:
     long_description = f.read()
 
 setup(
     name="pywaffle",
-    version="0.0.1",
+    version="0.0.2",
     description="A FigureClass of Matplotlib to make waffle chart.",
     keywords="matplotlib waffle chart pie plot",
     long_description=long_description,

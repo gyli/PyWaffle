@@ -6,8 +6,6 @@ from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle, Patch
 import matplotlib.font_manager as fm
 
-# prop = fm.FontProperties(fname='font/FontAwesome.otf')
-
 
 def ceil(a, b):
     """
@@ -49,6 +47,8 @@ class Waffle(Figure):
         column_row_ratio = kwargs.pop('column_row_ratio', 1)
         cmap_name = kwargs.pop('cmap_name', 'Set2')
         title_conf = kwargs.pop('title_conf', None)
+        icons = kwargs.pop('icons', None)
+        icon_size = kwargs.pop('icon_size', None)
 
         values_len = len(values)
 
@@ -62,6 +62,14 @@ class Waffle(Figure):
 
         if labels and len(labels) != values_len:
             raise ValueError("Length of labels doesn't match the values.")
+
+        if icons:
+            from pywaffle.awesomefont_mapping import af_mapping
+            if isinstance(icons, str):
+                icons = [icons] * values_len
+            if len(icons) != values_len:
+                raise ValueError("Length of icons doesn't match the values.")
+            icons = [af_mapping[i] for i in icons]
 
         # default legend_conf
         legend_conf = dict({'loc': (0, -0.1), 'ncol': values_len}, **legend_conf)
@@ -95,6 +103,11 @@ class Waffle(Figure):
             ]
         )
 
+        # Default font size
+        if icons:
+            x, y = self.ax.transData.transform([(0, 0), (0, block_x_length)])
+            prop = fm.FontProperties(fname='font/FontAwesome.otf', size=icon_size or int((y[1] - x[1]) / 16 * 12))
+
         # Build a color sequence if colors is empty
         if not colors:
             default_colors = cm.get_cmap(cmap_name).colors
@@ -105,19 +118,26 @@ class Waffle(Figure):
         class_index = 0
         block_index = 0
         for col, row in unique_pairs(columns, rows):
-            self.ax.add_artist(
-                Rectangle(
-                    xy=(
-                        (1 + interval_ratio_x) * block_x_length * col,
-                        (1 + interval_ratio_y) * block_y_length * row
-                    ),
-                    width=block_x_length,
-                    height=block_y_length,
+            if icons:
+                self.ax.text(
+                    x=(1 + interval_ratio_x) * block_x_length * col,
+                    y=(1 + interval_ratio_y) * block_y_length * row,
+                    s=icons[class_index],
                     color=colors[class_index],
+                    fontproperties=prop
                 )
-            )
-
-            # ax.annotate('\uf2c6', (x, y), color='w', fontsize=32, fontproperties=prop)
+            else:
+                self.ax.add_artist(
+                    Rectangle(
+                        xy=(
+                            (1 + interval_ratio_x) * block_x_length * col,
+                            (1 + interval_ratio_y) * block_y_length * row
+                        ),
+                        width=block_x_length,
+                        height=block_y_length,
+                        color=colors[class_index],
+                    )
+                )
 
             block_index += 1
             if block_index >= sum(block_numbers[:class_index + 1]):
@@ -134,19 +154,8 @@ class Waffle(Figure):
         if labels is not None:
             self.ax.legend(handles=[Patch(color=colors[i], label=str(l)) for i, l in enumerate(labels)], **legend_conf)
 
-        # Remove unnecessary lines, ticks, etc.
-        self.ax.tick_params(
-            axis='both',
-            which='both',
-            bottom=False,
-            left=False,
-            top=False,
-            labelbottom=False,
-            labelleft=False
-        )
-
-        for spine in self.ax.spines.values():
-            spine.set_visible(False)
+        # Remove borders, ticks, etc.
+        self.ax.axis('off')
 
     def remove(self):
         pass
