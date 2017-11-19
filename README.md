@@ -12,26 +12,32 @@ It provides a [Figure constructor class](https://matplotlib.org/devdocs/gallery/
 
 ## Installation
 
-    pip install pywaffle
+```python
+pip install pywaffle
+```
 
 ## Examples
 
 #### 1. Basic Example
 
-    import matplotlib.pyplot as plt
-    from pywaffle import Waffle
+```python
+import matplotlib.pyplot as plt
+from pywaffle import Waffle
 
-    # The values are rounded to 10 * 5 blocks
-    fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3])
-    plt.show()
+# The values are rounded to 10 * 5 blocks
+fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3])
+plt.show()
+```
 
 ![basic](README_images/basic.svg)
 
 #### 2. Values in dict & Auto-columns
 
-    data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
-    fig = plt.figure(FigureClass=Waffle, rows=5, values=data, legend_conf={'loc': (0, -0.3)})
-    plt.show()
+```python
+data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
+fig = plt.figure(FigureClass=Waffle, rows=5, values=data, legend_conf={'loc': (0, -0.3)})
+plt.show()
+```
 
 ![Use values in dictionary; use absolute value as block number, without defining columns](README_images/absolute_block_numbers.svg)
 
@@ -39,29 +45,32 @@ If columns is empty, it uses absolute number in values as block number. It is no
 
 #### 3. Title, Legend, Colors and Background Color
 
-    data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
-    fig = plt.figure(
-        FigureClass=Waffle, rows=5, values=data,
-        title_conf={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
-        colors=("#983D3D", "#232066", "#DCB732"),
-        labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
-        legend_conf={'loc': (0, -0.3), 'fontsize': 10, 'framealpha': 0}
-    )
-    fig.gca().set_facecolor('#EEEEEE')
-    fig.set_facecolor('#EEEEEE')
-    plt.show()
+```python
+data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
+fig = plt.figure(
+    FigureClass=Waffle, rows=5, values=data,
+    title_conf={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
+    colors=("#983D3D", "#232066", "#DCB732"),
+    labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
+    legend_conf={'loc': (0, -0.3), 'fontsize': 10, 'framealpha': 0}
+)
+fig.gca().set_facecolor('#EEEEEE')
+fig.set_facecolor('#EEEEEE')
+plt.show()
+```
 
 ![Add title, legend and background color; customize the block color](README_images/title_and_legend.svg)
 
 #### 4. Use Font Awesome icons
 
-    data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
-    fig = plt.figure(
-        FigureClass=Waffle, rows=5, values=data, legend_conf={'loc': (0, -0.3)},
-        colors=("#232066", "#983D3D", "#DCB732"),
-        icons='child', icon_size=18, interval_ratio_y=0.3,
-    
-    )
+```python
+data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
+fig = plt.figure(
+    FigureClass=Waffle, rows=5, values=data, legend_conf={'loc': (0, -0.3)},
+    colors=("#232066", "#983D3D", "#DCB732"),
+    icons='child', icon_size=18, interval_ratio_y=0.3,
+)
+```
     
 ![Use Font Awesome icons](README_images/fontawesome.svg)
 
