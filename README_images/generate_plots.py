@@ -40,7 +40,6 @@ data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
 fig = plt.figure(
     FigureClass=Waffle, rows=5, values=data, legend_conf={'loc': (0, -0.3)},
     colors=("#232066", "#983D3D", "#DCB732"),
-    icons='child', icon_size=18, interval_ratio_y=0.3,
-
+    icons='child', icon_size=18
 )
 fig.savefig(image_folder + 'fontawesome.svg', bbox_inches='tight')

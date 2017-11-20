@@ -7,7 +7,6 @@ from matplotlib.patches import Rectangle, Patch
 import matplotlib.font_manager as fm
 from matplotlib.text import Text
 from matplotlib.legend_handler import HandlerBase
-import copy
 
 
 def ceil(a, b):
@@ -36,20 +35,27 @@ def unique_pairs(w, h):
             yield i, j
 
 
-class TextHandler(HandlerBase):
-    def create_artists(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize, trans):
-        h = copy.copy(orig_handle)
-        h.set_position((width/2., height/2.))
-        h.set_transform(trans)
-        h.set_ha("center")
-        h.set_va("center")
-        # TODO: simplify this
-        fp = orig_handle.get_font_properties().copy()
-        fp.set_size(fontsize)
-        # uncomment the following line,
-        # if legend symbol should have the same size as in the plot
-        h.set_font_properties(fp)
-        return [h]
+class TextLegend(object):
+    def __init__(self, text, color, **kwargs):
+        self.text = text
+        self.color = color
+        self.kwargs = kwargs
+
+
+class TextLegendHandler(HandlerBase):
+    def create_artists(self, legend, orig_handle, xdescent, ydescent,
+                       width, height, fontsize, trans):
+        x = xdescent + width / 2.0
+        y = ydescent + height / 2.0
+        kwargs = {
+            'horizontalalignment': 'center',
+            'verticalalignment': 'center',
+            'color': orig_handle.color,
+            'fontproperties': fm.FontProperties(fname='font/FontAwesome.otf', size=fontsize)
+        }
+        kwargs.update(orig_handle.kwargs)
+        annotation = Text(x, y, orig_handle.text, **kwargs)
+        return [annotation]
 
 
 class Waffle(Figure):
@@ -198,21 +204,19 @@ class Waffle(Figure):
             self.ax.set_title(**self.title_conf)
 
         # Add legend
-        if self.labels is not None:
-            # TODO: simplify this
-            if self.icons and self.icon_legend:
-                self.ax.legend(
-                    handles=unique_class_items,
-                    labels=self.labels,
-                    handler_map={Text: TextHandler()},
-                    **self.legend_conf
-                )
-            else:
-                self.ax.legend(
-                    handles=[Patch(color=self.colors[i], label=str(l)) for i, l in enumerate(self.labels)],
-                    labels=self.labels,
-                    **self.legend_conf
-                )
+        if self.icons and self.icon_legend:
+            # self.legend_conf['handles'] = unique_class_items
+            self.legend_conf['handles'] = [TextLegend(color=self.colors[i], text=l) for i, l in enumerate(self.icons)]
+            self.legend_conf['handler_map'] = {TextLegend: TextLegendHandler()}
+        elif not self.legend_conf.get('handles'):
+            self.legend_conf['handles'] = [Patch(color=self.colors[i], label=str(l)) for i, l in enumerate(self.labels)]
+
+        # labels is an alias of legend_conf['labels']
+        if 'labels' not in self.legend_conf and self.labels:
+            self.legend_conf['labels'] = self.labels
+
+        if self.legend_conf['labels'] or self.legend_conf['handles']:
+            self.ax.legend(**self.legend_conf)
 
         # Remove borders, ticks, etc.
         self.ax.axis('off')

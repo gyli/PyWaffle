@@ -18,7 +18,7 @@ pip install pywaffle
 
 ## Examples
 
-#### 1. Basic Example
+### 1. Basic Example
 
 ```python
 import matplotlib.pyplot as plt
@@ -31,7 +31,7 @@ plt.show()
 
 ![basic](README_images/basic.svg)
 
-#### 2. Values in dict & Auto-columns
+### 2. Values in dict & Auto-columns
 
 ```python
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
@@ -41,9 +41,9 @@ plt.show()
 
 ![Use values in dictionary; use absolute value as block number, without defining columns](README_images/absolute_block_numbers.svg)
 
-If columns is empty, it uses absolute number in values as block number. It is now clear to see that there are 3% votes to other parties/candidates.
+If columns is empty, PyWaffle uses absolute number in values as block number. It is now clear to see that there are 3% votes to other parties/candidates.
 
-#### 3. Title, Legend, Colors and Background Color
+### 3. Title, Legend, Colors and Background Color
 
 ```python
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
@@ -63,19 +63,20 @@ plt.show()
 
 Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).
 
-#### 4. Use Font Awesome icons
+### 4. Icons
 
 ```python
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
 fig = plt.figure(
     FigureClass=Waffle, rows=5, values=data, legend_conf={'loc': (0, -0.3)},
     colors=("#232066", "#983D3D", "#DCB732"),
-    icons='child', icon_size=18, interval_ratio_y=0.3,
+    icons='child', icon_size=18,
 )
 ```
     
 ![Use Font Awesome icons](README_images/fontawesome.svg)
 
+PyWaffle supports [Font Awesome](http://fontawesome.io/) icons in the chart.
 
 ## License
 
