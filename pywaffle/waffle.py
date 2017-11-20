@@ -43,8 +43,7 @@ class TextLegend(object):
 
 
 class TextLegendHandler(HandlerBase):
-    def create_artists(self, legend, orig_handle, xdescent, ydescent,
-                       width, height, fontsize, trans):
+    def create_artists(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize, trans):
         x = xdescent + width / 2.0
         y = ydescent + height / 2.0
         kwargs = {
@@ -69,7 +68,7 @@ class Waffle(Figure):
             'columns': kwargs.pop('columns', None),
             'colors': kwargs.pop('colors', None),
             'labels': kwargs.pop('labels', None),
-            'legend_conf': kwargs.pop('legend_conf', {}),
+            'legend': kwargs.pop('legend', {}),
             'icon_legend': kwargs.pop('icon_legend', False),
             'interval_ratio_x': kwargs.pop('interval_ratio_x', 0.2),
             'interval_ratio_y': kwargs.pop('interval_ratio_y', 0.2),
@@ -121,9 +120,6 @@ class Waffle(Figure):
             if len(self.icons) != self.values_len:
                 raise ValueError("Length of icons doesn't match the values.")
             self.icons = [af_mapping[i] for i in self.icons]
-
-        # default legend_conf
-        self.legend_conf = dict({'loc': (0, -0.1), 'ncol': self.values_len}, **self.legend_conf)
 
         self.ax = self.add_subplot(loc, aspect='equal')
 
@@ -205,18 +201,18 @@ class Waffle(Figure):
 
         # Add legend
         if self.icons and self.icon_legend:
-            # self.legend_conf['handles'] = unique_class_items
-            self.legend_conf['handles'] = [TextLegend(color=self.colors[i], text=l) for i, l in enumerate(self.icons)]
-            self.legend_conf['handler_map'] = {TextLegend: TextLegendHandler()}
-        elif not self.legend_conf.get('handles'):
-            self.legend_conf['handles'] = [Patch(color=self.colors[i], label=str(l)) for i, l in enumerate(self.labels)]
+            # self.legend['handles'] = unique_class_items
+            self.legend['handles'] = [TextLegend(color=self.colors[i], text=l) for i, l in enumerate(self.icons)]
+            self.legend['handler_map'] = {TextLegend: TextLegendHandler()}
+        elif not self.legend.get('handles'):
+            self.legend['handles'] = [Patch(color=self.colors[i], label=str(l)) for i, l in enumerate(self.labels)]
 
-        # labels is an alias of legend_conf['labels']
-        if 'labels' not in self.legend_conf and self.labels:
-            self.legend_conf['labels'] = self.labels
+        # labels is an alias of legend['labels']
+        if 'labels' not in self.legend and self.labels:
+            self.legend['labels'] = self.labels
 
-        if self.legend_conf['labels'] or self.legend_conf['handles']:
-            self.ax.legend(**self.legend_conf)
+        if self.legend.get('handles'):
+            self.ax.legend(**self.legend)
 
         # Remove borders, ticks, etc.
         self.ax.axis('off')
