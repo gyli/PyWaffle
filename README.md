@@ -61,6 +61,8 @@ plt.show()
 
 ![Add title, legend and background color; customize the block color](README_images/title_and_legend.svg)
 
+Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).
+
 #### 4. Use Font Awesome icons
 
 ```python
@@ -74,7 +76,6 @@ fig = plt.figure(
     
 ![Use Font Awesome icons](README_images/fontawesome.svg)
 
-Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).
 
 ## License
 
