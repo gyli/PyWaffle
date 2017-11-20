@@ -11,7 +11,7 @@ with open('README_pypi.rst') as f:
 
 setup(
     name="pywaffle",
-    version="0.0.2",
+    version="0.0.3",
     description="A FigureClass of Matplotlib to make waffle chart.",
     keywords="matplotlib waffle chart pie plot",
     long_description=long_description,

@@ -23,7 +23,9 @@ pip install pywaffle
 ```python
 import matplotlib.pyplot as plt
 from pywaffle import Waffle
+```
 
+```python
 # The values are rounded to 10 * 5 blocks
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3])
 plt.show()
@@ -41,7 +43,7 @@ plt.show()
 
 ![Use values in dictionary; use absolute value as block number, without defining columns](README_images/absolute_block_numbers.svg)
 
-If columns is empty, PyWaffle uses absolute number in values as block number. It is now clear to see that there are 3% votes to other parties/candidates.
+If parameter `columns` is empty, PyWaffle uses absolute number in `values` as block number. It is now clear to see that there are 3% votes to other parties/candidates.
 
 ### 3. Title, Legend, Colors and Background Color
 

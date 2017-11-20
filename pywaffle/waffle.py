@@ -35,6 +35,9 @@ def unique_pairs(w, h):
             yield i, j
 
 
+FONTAWESOME_FILE = 'font/FontAwesome.otf'
+
+
 class TextLegend(object):
     def __init__(self, text, color, **kwargs):
         self.text = text
@@ -50,7 +53,7 @@ class TextLegendHandler(HandlerBase):
             'horizontalalignment': 'center',
             'verticalalignment': 'center',
             'color': orig_handle.color,
-            'fontproperties': fm.FontProperties(fname='font/FontAwesome.otf', size=fontsize)
+            'fontproperties': fm.FontProperties(fname=FONTAWESOME_FILE, size=fontsize)
         }
         kwargs.update(orig_handle.kwargs)
         annotation = Text(x, y, orig_handle.text, **kwargs)
@@ -62,13 +65,14 @@ class Waffle(Figure):
         """
         custom kwarg figtitle is a figure title
         """
+        # TODO: avoid overwriting figure's attributes, use a variable to wrap these arguments up
         self.fig_args = {
             'values': kwargs.pop('values', None),
             'rows': kwargs.pop('rows', None),
             'columns': kwargs.pop('columns', None),
             'colors': kwargs.pop('colors', None),
             'labels': kwargs.pop('labels', None),
-            'legend': kwargs.pop('legend', {}),
+            'legend_args': kwargs.pop('legend', {}),
             'icon_legend': kwargs.pop('icon_legend', False),
             'interval_ratio_x': kwargs.pop('interval_ratio_x', 0.2),
             'interval_ratio_y': kwargs.pop('interval_ratio_y', 0.2),
@@ -115,6 +119,8 @@ class Waffle(Figure):
 
         if self.icons:
             from pywaffle.awesomefont_mapping import af_mapping
+            # If icons is a string, convert it into a list of same icon. It's length is the label's length
+            # '\uf26e' -> ['\uf26e', '\uf26e', '\uf26e', ]
             if isinstance(self.icons, str):
                 self.icons = [self.icons] * self.values_len
             if len(self.icons) != self.values_len:
@@ -149,7 +155,7 @@ class Waffle(Figure):
         # Default font size
         if self.icons:
             x, y = self.ax.transData.transform([(0, 0), (0, block_x_length)])
-            prop = fm.FontProperties(fname='font/FontAwesome.otf', size=self.icon_size or int((y[1] - x[1]) / 16 * 12))
+            prop = fm.FontProperties(fname=FONTAWESOME_FILE, size=self.icon_size or int((y[1] - x[1]) / 16 * 12))
 
         # Build a color sequence if colors is empty
         if not self.colors:
@@ -163,24 +169,13 @@ class Waffle(Figure):
         unique_class_index = []
         unique_class_items = []
         for col, row in unique_pairs(self.columns, self.rows):
+            x = (1 + self.interval_ratio_x) * block_x_length * col
+            y = (1 + self.interval_ratio_y) * block_y_length * row
             if self.icons:
-                item = self.ax.text(
-                    x=(1 + self.interval_ratio_x) * block_x_length * col,
-                    y=(1 + self.interval_ratio_y) * block_y_length * row,
-                    s=self.icons[class_index],
-                    color=self.colors[class_index],
-                    fontproperties=prop
-                )
+                item = self.ax.text(x=x, y=y, s=self.icons[class_index], color=self.colors[class_index],
+                                    fontproperties=prop)
             else:
-                item = Rectangle(
-                    xy=(
-                        (1 + self.interval_ratio_x) * block_x_length * col,
-                        (1 + self.interval_ratio_y) * block_y_length * row
-                    ),
-                    width=block_x_length,
-                    height=block_y_length,
-                    color=self.colors[class_index],
-                )
+                item = Rectangle(xy=(x, y), width=block_x_length, height=block_y_length, color=self.colors[class_index])
                 self.ax.add_artist(item)
 
             # Build a list of unique_class_items for legend
@@ -201,18 +196,18 @@ class Waffle(Figure):
 
         # Add legend
         if self.icons and self.icon_legend:
-            # self.legend['handles'] = unique_class_items
-            self.legend['handles'] = [TextLegend(color=self.colors[i], text=l) for i, l in enumerate(self.icons)]
-            self.legend['handler_map'] = {TextLegend: TextLegendHandler()}
-        elif not self.legend.get('handles'):
-            self.legend['handles'] = [Patch(color=self.colors[i], label=str(l)) for i, l in enumerate(self.labels)]
+            # self.legend_args['handles'] = unique_class_items
+            self.legend_args['handles'] = [TextLegend(color=self.colors[i], text=l) for i, l in enumerate(self.icons)]
+            self.legend_args['handler_map'] = {TextLegend: TextLegendHandler()}
+        elif not self.legend_args.get('handles'):
+            self.legend_args['handles'] = [Patch(color=self.colors[i], label=str(l)) for i, l in enumerate(self.labels)]
 
         # labels is an alias of legend['labels']
-        if 'labels' not in self.legend and self.labels:
-            self.legend['labels'] = self.labels
+        if 'labels' not in self.legend_args and self.labels:
+            self.legend_args['labels'] = self.labels
 
-        if self.legend.get('handles'):
-            self.ax.legend(**self.legend)
+        if 'handles' in self.legend_args:
+            self.ax.legend(**self.legend_args)
 
         # Remove borders, ticks, etc.
         self.ax.axis('off')
