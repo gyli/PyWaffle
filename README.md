@@ -46,7 +46,7 @@ plt.show()
 
 ![Use values in dictionary; use absolute value as block number, without defining columns](examples/absolute_block_numbers.svg)
 
-If parameter `columns` is empty, PyWaffle uses absolute number in `values` as block number. It is now clear to see that there are 3% votes to other parties/candidates.
+If parameter `columns` is empty, PyWaffle uses absolute number in `values` as block number.
 
 If `values` is a dict, its keys are used as labels.
 
@@ -66,6 +66,8 @@ plt.show()
 ```
 
 ![Add title, legend and background color; customize the block color](examples/title_and_legend.svg)
+
+It is now clear to see that there are 3% votes to other parties/candidates.
 
 Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).
 

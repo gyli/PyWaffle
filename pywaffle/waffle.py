@@ -64,7 +64,52 @@ class TextLegendHandler(HandlerBase):
 class Waffle(Figure):
     def __init__(self, *args, **kwargs):
         """
-        custom kwarg figtitle is a figure title
+        A custom Figure class to make waffle charts.
+
+        :param value:
+        :type value: list|dict
+
+        :param rows:
+        :type rows: int
+
+        :param columns:
+        :type columns: int
+
+        :param colors:
+        :type colors: list[str]|tuple[str]
+
+        :param labels:
+        :type labels: list[str]|tuple[str]
+
+        :param legend_args:
+        :type legend_args: dict
+
+        :param icon_legend:
+        :type icon_legend:
+
+        :param interval_ratio_x:
+        :type interval_ratio_x: float
+
+        :param interval_ratio_y:
+        :type interval_ratio_y: float
+
+        :param column_row_ratio:
+        :type column_row_ratio: float
+
+        :param cmap_name:
+        :type cmap_name:
+
+        :param title_conf:
+        :type title_conf:
+
+        :param icons:
+        :type icons: str|list[str]|tuple[str]
+
+        :param icon_size:
+        :type icon_size: int
+
+        :param plot_anchor:
+        :type plot_anchor: str
         """
         self.fig_args = {
             'values': kwargs.pop('values', None),
@@ -76,7 +121,7 @@ class Waffle(Figure):
             'icon_legend': kwargs.pop('icon_legend', False),
             'interval_ratio_x': kwargs.pop('interval_ratio_x', 0.2),
             'interval_ratio_y': kwargs.pop('interval_ratio_y', 0.2),
-            'column_row_ratio': kwargs.pop('column_row_ratio', 1),
+            'column_row_ratio': kwargs.pop('column_row_ratio', 1),  # TODO: rename width height ratio?
             'cmap_name': kwargs.pop('cmap_name', 'Set2'),
             'title_conf': kwargs.pop('title_conf', None),
             'icons': kwargs.pop('icons', None),
@@ -177,22 +222,22 @@ class Waffle(Figure):
         # Plot blocks
         class_index = 0
         block_index = 0
-        unique_class_index = []
-        unique_class_items = []
         for col, row in unique_pairs(self.pargs['columns'], self.pargs['rows']):
             x = (1 + self.pargs['interval_ratio_x']) * block_x_length * col
             y = (1 + self.pargs['interval_ratio_y']) * block_y_length * row
             if self.pargs['icons']:
-                item = self.ax.text(x=x, y=y, s=self.pargs['icons'][class_index], color=self.pargs['colors'][class_index],
-                                    fontproperties=prop)
+                self.ax.text(
+                    x=x,
+                    y=y,
+                    s=self.pargs['icons'][class_index],
+                    color=self.pargs['colors'][class_index],
+                    fontproperties=prop
+                )
             else:
-                item = Rectangle(xy=(x, y), width=block_x_length, height=block_y_length, color=self.pargs['colors'][class_index])
-                self.ax.add_artist(item)
-
-            # Build a list of unique_class_items for legend
-            if class_index not in unique_class_index:
-                unique_class_items.append(item)
-                unique_class_index.append(class_index)
+                self.ax.add_artist(
+                    Rectangle(xy=(x, y), width=block_x_length, height=block_y_length,
+                              color=self.pargs['colors'][class_index])
+                )
 
             block_index += 1
             if block_index >= sum(block_numbers[:class_index + 1]):
