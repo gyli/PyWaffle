@@ -31,21 +31,24 @@ fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3])
 plt.show()
 ```
 
-![basic](README_images/basic.svg)
+![basic](examples/basic.svg)
 
 ### 2. Values in dict & Auto-columns
 
 ```python
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
-fig = plt.figure(FigureClass=Waffle, rows=5, values=data, legend={'loc': 'upper left', 'bbox_to_anchor': (1.1, 1)})
+fig = plt.figure(
+    FigureClass=Waffle, rows=5, values=data, 
+    legend={'loc': 'upper left', 'bbox_to_anchor': (1.1, 1)}
+)
 plt.show()
 ```
 
-![Use values in dictionary; use absolute value as block number, without defining columns](README_images/absolute_block_numbers.svg)
+![Use values in dictionary; use absolute value as block number, without defining columns](examples/absolute_block_numbers.svg)
 
 If parameter `columns` is empty, PyWaffle uses absolute number in `values` as block number. It is now clear to see that there are 3% votes to other parties/candidates.
 
-Keys in `values` are used as labels.
+If `values` is a dict, its keys are used as labels.
 
 ### 3. Title, Legend, Colors and Background Color
 
@@ -55,14 +58,14 @@ fig = plt.figure(
     FigureClass=Waffle, rows=5, values=data, colors=("#983D3D", "#232066", "#DCB732"),
     title_conf={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
     labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
-    legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'fontsize': 10, 'framealpha': 0}
+    legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0}
 )
 fig.gca().set_facecolor('#EEEEEE')
 fig.set_facecolor('#EEEEEE')
 plt.show()
 ```
 
-![Add title, legend and background color; customize the block color](README_images/title_and_legend.svg)
+![Add title, legend and background color; customize the block color](examples/title_and_legend.svg)
 
 Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).
 
@@ -77,11 +80,16 @@ fig = plt.figure(
 )
 ```
     
-![Use Font Awesome icons](README_images/fontawesome.svg)
+![Use Font Awesome icons](examples/fontawesome.svg)
 
 PyWaffle supports [Font Awesome](http://fontawesome.io/) icons in the chart.
 
 ### 5. Multiple Plots
+
+## Future works
+
+1. Finish documents
+2. Add Python 2.x supports
 
 ## License
 

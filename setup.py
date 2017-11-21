@@ -13,7 +13,7 @@ setup(
     name="pywaffle",
     version="0.0.3",
     description="A FigureClass of Matplotlib to make waffle chart.",
-    keywords="matplotlib waffle chart pie plot",
+    keywords="matplotlib waffle chart pie plot data visualization",
     long_description=long_description,
     license='MIT',
     author="Guangyang Li",

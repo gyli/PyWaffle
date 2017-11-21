@@ -27,7 +27,7 @@ fig = plt.figure(
     title_conf={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
     colors=("#232066", "#983D3D", "#DCB732"),
     labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
-    legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'fontsize': 10, 'framealpha': 0}
+    legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0}
 )
 fig.gca().set_facecolor('#EEEEEE')
 fig.set_facecolor('#EEEEEE')
