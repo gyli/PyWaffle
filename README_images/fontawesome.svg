@@ -2,7 +2,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Created with matplotlib (http://matplotlib.org/) -->
-<svg height="131pt" version="1.1" viewBox="0 0 404 131" width="404pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg height="121pt" version="1.1" viewBox="0 0 517 121" width="517pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
  <defs>
   <style type="text/css">
 *{stroke-linecap:butt;stroke-linejoin:round;}
@@ -10,9 +10,9 @@
  </defs>
  <g id="figure_1">
   <g id="patch_1">
-   <path d="M 0 131.337236 
-L 404.285625 131.337236 
-L 404.285625 0 
+   <path d="M 0 121.906587 
+L 517.2885 121.906587 
+L 517.2885 0 
 L 0 0 
 z
 " style="fill:#ffffff;"/>
@@ -630,27 +630,25 @@ z
    </g>
    <g id="legend_1">
     <g id="patch_2">
-     <path d="M 38.465625 124.137236 
-L 334.128125 124.137236 
-Q 336.128125 124.137236 336.128125 122.137236 
-L 336.128125 108.459111 
-Q 336.128125 106.459111 334.128125 106.459111 
-L 38.465625 106.459111 
-Q 36.465625 106.459111 36.465625 108.459111 
-L 36.465625 122.137236 
-Q 36.465625 124.137236 38.465625 124.137236 
+     <path d="M 418.441625 63.033594 
+L 508.0885 63.033594 
+Q 510.0885 63.033594 510.0885 61.033594 
+L 510.0885 17.999219 
+Q 510.0885 15.999219 508.0885 15.999219 
+L 418.441625 15.999219 
+Q 416.441625 15.999219 416.441625 17.999219 
+L 416.441625 61.033594 
+Q 416.441625 63.033594 418.441625 63.033594 
 z
 " style="fill:#ffffff;opacity:0.8;stroke:#cccccc;stroke-linejoin:miter;"/>
     </g>
-    <g id="patch_3">
-     <path d="M 40.465625 118.057548 
-L 60.465625 118.057548 
-L 60.465625 111.057548 
-L 40.465625 111.057548 
-z
-" style="fill:#232066;stroke:#232066;stroke-linejoin:miter;"/>
-    </g>
     <g id="text_98">
+     <!--  -->
+     <g style="fill:#232066;" transform="translate(426.870531 27.267187)scale(0.1 -0.1)">
+      <use xlink:href="#FontAwesome-f1ae"/>
+     </g>
+    </g>
+    <g id="text_99">
      <!-- Democratic -->
      <defs>
       <path d="M 19.671875 64.796875 
@@ -846,7 +844,7 @@ L 9.421875 64.59375
 z
 " id="DejaVuSans-69"/>
      </defs>
-     <g transform="translate(68.465625 118.057548)scale(0.1 -0.1)">
+     <g transform="translate(448.441625 27.597656)scale(0.1 -0.1)">
       <use xlink:href="#DejaVuSans-44"/>
       <use x="77.001953" xlink:href="#DejaVuSans-65"/>
       <use x="138.525391" xlink:href="#DejaVuSans-6d"/>
@@ -859,15 +857,13 @@ z
       <use x="521.484375" xlink:href="#DejaVuSans-63"/>
      </g>
     </g>
-    <g id="patch_4">
-     <path d="M 146.1125 118.057548 
-L 166.1125 118.057548 
-L 166.1125 111.057548 
-L 146.1125 111.057548 
-z
-" style="fill:#983d3d;stroke:#983d3d;stroke-linejoin:miter;"/>
+    <g id="text_100">
+     <!--  -->
+     <g style="fill:#983d3d;" transform="translate(426.870531 41.945312)scale(0.1 -0.1)">
+      <use xlink:href="#FontAwesome-f1ae"/>
+     </g>
     </g>
-    <g id="text_99">
+    <g id="text_101">
      <!-- Republican -->
      <defs>
       <path d="M 44.390625 34.1875 
@@ -995,7 +991,7 @@ Q 54.890625 44.34375 54.890625 33.015625
 z
 " id="DejaVuSans-6e"/>
      </defs>
-     <g transform="translate(174.1125 118.057548)scale(0.1 -0.1)">
+     <g transform="translate(448.441625 42.275781)scale(0.1 -0.1)">
       <use xlink:href="#DejaVuSans-52"/>
       <use x="69.419922" xlink:href="#DejaVuSans-65"/>
       <use x="130.943359" xlink:href="#DejaVuSans-70"/>
@@ -1008,15 +1004,13 @@ z
       <use x="493.101562" xlink:href="#DejaVuSans-6e"/>
      </g>
     </g>
-    <g id="patch_5">
-     <path d="M 249.7625 118.057548 
-L 269.7625 118.057548 
-L 269.7625 111.057548 
-L 249.7625 111.057548 
-z
-" style="fill:#dcb732;stroke:#dcb732;stroke-linejoin:miter;"/>
+    <g id="text_102">
+     <!--  -->
+     <g style="fill:#dcb732;" transform="translate(426.870531 56.623437)scale(0.1 -0.1)">
+      <use xlink:href="#FontAwesome-f1ae"/>
+     </g>
     </g>
-    <g id="text_100">
+    <g id="text_103">
      <!-- Libertarian -->
      <defs>
       <path d="M 9.8125 72.90625 
@@ -1028,7 +1022,7 @@ L 9.8125 0
 z
 " id="DejaVuSans-4c"/>
      </defs>
-     <g transform="translate(277.7625 118.057548)scale(0.1 -0.1)">
+     <g transform="translate(448.441625 56.953906)scale(0.1 -0.1)">
       <use xlink:href="#DejaVuSans-4c"/>
       <use x="55.712891" xlink:href="#DejaVuSans-69"/>
       <use x="83.496094" xlink:href="#DejaVuSans-62"/>

@@ -98,11 +98,17 @@ class Waffle(Figure):
             self._waffle(loc, **setting)
 
     def _waffle(self, loc, **kwargs):
-        for k, v in self.fig_args.items():
-            # Find args from plots first, if not found, use arguments of plt.figure
-            value = kwargs[k] if k in kwargs.keys() else v
-            # Update the attributes
-            self.__setattr__(k, value)
+        # for k, v in self.fig_args.items():
+        #     # Find args from plots first, if not found, use arguments of plt.figure
+        #     value = kwargs[k] if k in kwargs.keys() else v
+        #     # Update the attributes
+        #     self.__setattr__(k, value)
+        self.plot_args = kwargs
+
+        # Append figure args to plot args
+        for arg, v in self.fig_args.items():
+            if arg not in self.plot_args:
+                self.plot_args[arg] = v
 
         self.values_len = len(self.values)
 
@@ -195,19 +201,20 @@ class Waffle(Figure):
             self.ax.set_title(**self.title_conf)
 
         # Add legend
-        if self.icons and self.icon_legend:
-            # self.legend_args['handles'] = unique_class_items
-            self.legend_args['handles'] = [TextLegend(color=self.colors[i], text=l) for i, l in enumerate(self.icons)]
-            self.legend_args['handler_map'] = {TextLegend: TextLegendHandler()}
-        elif not self.legend_args.get('handles'):
-            self.legend_args['handles'] = [Patch(color=self.colors[i], label=str(l)) for i, l in enumerate(self.labels)]
+        if self.labels or 'labels' in self.legend_args:
+            if self.icons and self.icon_legend:
+                # self.legend_args['handles'] = unique_class_items
+                self.legend_args['handles'] = [TextLegend(color=self.colors[i], text=l) for i, l in enumerate(self.icons)]
+                self.legend_args['handler_map'] = {TextLegend: TextLegendHandler()}
+            elif not self.legend_args.get('handles'):
+                self.legend_args['handles'] = [Patch(color=self.colors[i], label=str(l)) for i, l in enumerate(self.labels)]
 
-        # labels is an alias of legend['labels']
-        if 'labels' not in self.legend_args and self.labels:
-            self.legend_args['labels'] = self.labels
+            # labels is an alias of legend['labels']
+            if 'labels' not in self.legend_args and self.labels:
+                self.legend_args['labels'] = self.labels
 
-        if 'handles' in self.legend_args:
-            self.ax.legend(**self.legend_args)
+            if 'handles' in self.legend_args and 'labels' in self.legend_args:
+                self.ax.legend(**self.legend_args)
 
         # Remove borders, ticks, etc.
         self.ax.axis('off')
