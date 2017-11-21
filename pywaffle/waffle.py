@@ -122,18 +122,22 @@ class Waffle(Figure):
             raise ValueError("Length of labels doesn't match the values.")
 
         if self.pargs['icons']:
-            from pywaffle.awesomefont_mapping import af_mapping
+            from pywaffle.fontawesome_mapping import icons
+
             # If icons is a string, convert it into a list of same icon. It's length is the label's length
             # '\uf26e' -> ['\uf26e', '\uf26e', '\uf26e', ]
             if isinstance(self.pargs['icons'], str):
                 self.pargs['icons'] = [self.pargs['icons']] * self.values_len
+
             if len(self.pargs['icons']) != self.values_len:
                 raise ValueError("Length of icons doesn't match the values.")
-            self.pargs['icons'] = [af_mapping[i] for i in self.pargs['icons']]
+
+            self.pargs['icons'] = [icons[i] for i in self.pargs['icons']]
 
         self.ax = self.add_subplot(loc, aspect='equal')
 
         # Alignment of subplots
+        # https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
         self.ax.set_anchor(self.pargs['plot_anchor'])
 
         self.value_sum = float(sum(self.pargs['values']))
