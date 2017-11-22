@@ -95,7 +95,7 @@ fig = plt.figure(
         },
     },
     rows=5,
-    colors=("#232066", "#983D3D", "#999999"),  # Default argument values for subplots
+    colors=("#007dd6", "#b81800", "#e7a520"),  # Default argument values for subplots
     figsize=(9, 5)  # figsize is a parameter of plt.figure
 )
 # https://www.politico.com/2016-election/results/map/president/

@@ -2,7 +2,7 @@
 
 PyPI page: [https://pypi.python.org/pypi/pywaffle](https://pypi.python.org/pypi/pywaffle)
 
-Documentation: [http://pywaffle.readthedocs.io/](http://pywaffle.readthedocs.io/)
+Documentation: [http://pywaffle.readthedocs.io](http://pywaffle.readthedocs.io)
 
 ## Introduction
 
@@ -149,7 +149,7 @@ fig = plt.figure(
         },
     },
     rows=5,
-    colors=("#232066", "#983D3D", "#999999"),  # Default argument values for subplots
+    colors=("#007dd6", "#b81800", "#e7a520"),  # Default argument values for subplots
     figsize=(9, 5)  # figsize is a parameter of plt.figure
 )
 ```
