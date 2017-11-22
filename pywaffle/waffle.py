@@ -62,77 +62,78 @@ class TextLegendHandler(HandlerBase):
 
 
 class Waffle(Figure):
+    """
+
+    A custom Figure class to make waffle charts.
+
+    :param values: Numerical value of each category. If it is a dict, the keys would be used as labels.
+    :type values: list|dict
+
+    :param rows: The number of lines of the waffle chart. This is required if plots is not assigned.
+    :type rows: int
+
+    :param columns: The number of columns of the waffle chart.
+        If it is not None, the total number of blocks would be decided through rows and columns. [Default None]
+    :type columns: int
+
+    :param colors: A list of colors for each category. Its length should be the same as values.
+        Default values are from Set2 colormaps.
+    :type colors: list[str]|tuple[str]
+
+    :param labels: The name of each category.
+        If the values is a dict, this parameter would be replaced by the keys of values.
+    :type labels: list[str]|tuple[str]
+
+    :param legend: Parameters of matplotlib.pyplot.legend in a dict.
+        E.g. {'loc': '', 'bbox_to_anchor': (,), ...}
+        See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
+    :type legend: dict
+
+    :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
+    :type icon_legend: bool
+
+    :param interval_ratio_x: Ratio of distance between blocks on X to block's width. [Default 0.2]
+    :type interval_ratio_x: float
+
+    :param interval_ratio_y: Ratio of distance between blocks on Y to block's height. [Default 0.2]
+    :type interval_ratio_y: float
+
+    :param block_aspect: The ratio of block's width to height. [Default 1]
+    :type block_aspect: float
+
+    :param cmap_name: Name of colormaps for default color, if colors is not assigned.
+        See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
+    :type cmap_name: str
+
+    :param title: Parameters of matplotlib.axes.Axes.set_title in a dict.
+        E.g. {'label': '', 'fontdict': {}, 'loc': ''}
+        See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
+    :type title: dict
+
+    :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
+        If it's a list or tuple of icons, the length should be the same as values.
+        See the full list of Font Awesome on http://fontawesome.io/icons/ [Default None]
+    :type icons: str|list[str]|tuple[str]
+
+    :param icon_size: Fint size of the icons. The default size is not fixed and depends on the block size.
+    :type icon_size: int
+
+    :param plot_anchor: {'C', 'SW', 'S', 'SE', 'E', 'NE', 'N', 'NW', 'W'}
+        The alignment method of subplots.
+        See details in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
+        [Default 'W']
+    :type plot_anchor: str
+
+    :param plots: Location and parameters of Waffle class for subplots in a dict,
+        with format like {loc: {subplot_args: values, }, }.
+        loc is a 3-digit integer. If the three integers are I, J, and K,
+        the subplot is the Ith plot on a grid with J rows and K columns.
+        The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
+        Nested subplots is not supported.
+        If a parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
+    :type plots: dict
+    """
     def __init__(self, *args, **kwargs):
-        """
-        A custom Figure class to make waffle charts.
-
-        :param values: Numerical value of each category. If it is a dict, the keys would be used as labels.
-        :type values: list|dict
-
-        :param rows: The number of lines of the waffle chart. This is required if plots is not assigned.
-        :type rows: int
-
-        :param columns: The number of columns of the waffle chart.
-            If it is not None, the total number of blocks would be decided through rows and columns. [Default None]
-        :type columns: int
-
-        :param colors: A list of colors for each category. Its length should be the same as values.
-            Default values are from Set2 colormaps.
-        :type colors: list[str]|tuple[str]
-
-        :param labels: The name of each category.
-            If the values is a dict, this parameter would be replaced by the keys of values.
-        :type labels: list[str]|tuple[str]
-
-        :param legend: Parameters of matplotlib.pyplot.legend in a dict.
-            E.g. {'loc': '', 'bbox_to_anchor': (,), ...}
-            See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
-        :type legend: dict
-
-        :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
-        :type icon_legend: bool
-
-        :param interval_ratio_x: Ratio of distance between blocks on X to block's width. [Default 0.2]
-        :type interval_ratio_x: float
-
-        :param interval_ratio_y: Ratio of distance between blocks on Y to block's height. [Default 0.2]
-        :type interval_ratio_y: float
-
-        :param block_aspect: The ratio of block's width to height. [Default 1]
-        :type block_aspect: float
-
-        :param cmap_name: Name of colormaps for default color, if colors is not assigned.
-            See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
-        :type cmap_name: str
-
-        :param title: Parameters of matplotlib.axes.Axes.set_title in a dict.
-            E.g. {'label': '', 'fontdict': {}, 'loc': ''}
-            See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
-        :type title: dict
-
-        :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
-            If it's a list or tuple of icons, the length should be the same as values.
-            See the full list of Font Awesome on http://fontawesome.io/icons/ [Default None]
-        :type icons: str|list[str]|tuple[str]
-
-        :param icon_size: Fint size of the icons. The default size is not fixed and depends on the block size.
-        :type icon_size: int
-
-        :param plot_anchor: {'C', 'SW', 'S', 'SE', 'E', 'NE', 'N', 'NW', 'W'}
-            The alignment method of subplots.
-            See details in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
-            [Default 'W']
-        :type plot_anchor: str
-
-        :param plots: Location and parameters of Waffle class for subplots in a dict,
-            with format like {loc: {subplot_args: values, }, }.
-            loc is a 3-digit integer. If the three integers are I, J, and K,
-            the subplot is the Ith plot on a grid with J rows and K columns.
-            The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
-            Nested subplots is not supported.
-            If a parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
-        :type plots: dict
-        """
         self.fig_args = {
             'values': kwargs.pop('values', []),
             'rows': kwargs.pop('rows', None),
