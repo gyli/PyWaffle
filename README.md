@@ -1,8 +1,8 @@
 # PyWaffle
 
-PyPI page: https://pypi.python.org/pypi/pywaffle
+PyPI page: [https://pypi.python.org/pypi/pywaffle](https://pypi.python.org/pypi/pywaffle)
 
-Documentation: Working on it
+Documentation: [http://pywaffle.readthedocs.io/](http://pywaffle.readthedocs.io/)
 
 ## Introduction
 
@@ -15,6 +15,11 @@ It provides a [Figure constructor class](https://matplotlib.org/gallery/subplots
 ```python
 pip install pywaffle
 ```
+
+## Requirements:
+
+* Python 3
+* Matplotlib
 
 ## Examples
 
@@ -112,6 +117,14 @@ data = pd.DataFrame(
         'West Virginia': [187457, 486198, 27371],
     },
 ).set_index('labels')
+
+# Take a look of the date:
+#                  Maryland  Virginia  West Virginia
+# labels                                            
+# Hillary Clinton   1497951   1916845         187457
+# Donald Trump       873646   1731156         486198
+# Others             102946    196786          27371
+
 
 fig = plt.figure(
     FigureClass=Waffle,

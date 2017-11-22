@@ -1,9 +1,9 @@
 PyWaffle
 ========
 
-PyPI page: https://pypi.python.org/pypi/pywaffle
+PyPI page: `https://pypi.python.org/pypi/pywaffle <https://pypi.python.org/pypi/pywaffle>`_
 
-Documentation: Working on it
+Documentation: `http://pywaffle.readthedocs.io/ <http://pywaffle.readthedocs.io/>`_
 
 Introduction
 ------------
