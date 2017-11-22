@@ -85,6 +85,7 @@ class Waffle(Figure):
         :type labels: list[str]|tuple[str]
 
         :param legend_args: Parameters of matplotlib.pyplot.legend in a dict.
+            E.g. {'loc': '', 'bbox_to_anchor': (,), ...}
             See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
         :type legend_args: dict
 
@@ -105,28 +106,41 @@ class Waffle(Figure):
         :type cmap_name: str
 
         :param title_conf: Parameters of matplotlib.axes.Axes.set_title in a dict.
+            E.g. {'label': '', 'fontdict': {}, 'loc': ''}
             See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
         :type title_conf: dict
 
         :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
-            If it's a list or tuple of icons, the length should be the same as values. [Default None]
+            If it's a list or tuple of icons, the length should be the same as values.
+            See the full list of Font Awesome on http://fontawesome.io/icons/ [Default None]
         :type icons: str|list[str]|tuple[str]
 
         :param icon_size: Fint size of the icons. The default size is not fixed and depends on the block size.
         :type icon_size: int
 
-        :param plot_anchor: The alignment method of subplots.
-            See all allowed options in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
+        :param plot_anchor: {'C', 'SW', 'S', 'SE', 'E', 'NE', 'N', 'NW', 'W'}
+            The alignment method of subplots.
+            See details in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
             [Default 'W']
         :type plot_anchor: str
 
-        :param plots: All parameters of Waffle class for sub plots in a dict, excluding plots itself.
-            Nested sub plots is not supported.
+        :param plots: Location and parameters of Waffle class for subplots in a dict,
+            with format like {loc: {subplot_args: values, }, }.
+            loc is a 3-digit integer. If the three integers are I, J, and K,
+            the subplot is the Ith plot on a grid with J rows and K columns.
+            The parameters of subplots are the same as Waffle class parameters, excluding plots and tight_layout.
+            Nested subplots is not supported.
+            If a parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
         :type plots: dict
+
+        :param tight_layout: Parameters of matplotlib.pyplot.tight_layout in a dict.
+            E.g. {'pad': None, 'h_pad': None, 'w_pad': None, ...}
+            See full parameter list in https://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.tight_layout
+        :type tight_layout: dict
         """
         self.fig_args = {
-            'values': kwargs.pop('values', None),
-            'rows': kwargs.pop('rows', None),  # TODO: default 0 or None?
+            'values': kwargs.pop('values', []),
+            'rows': kwargs.pop('rows', None),
             'columns': kwargs.pop('columns', None),
             'colors': kwargs.pop('colors', None),
             'labels': kwargs.pop('labels', None),
@@ -139,11 +153,12 @@ class Waffle(Figure):
             'title_conf': kwargs.pop('title_conf', None),
             'icons': kwargs.pop('icons', None),
             'icon_size': kwargs.pop('icon_size', None),
-            'plot_anchor': kwargs.pop('plot_anchor', 'W')
+            'plot_anchor': kwargs.pop('plot_anchor', 'W'),
+            'tight_layout': kwargs.pop('tight_layout', {}),
         }
         self.plots = kwargs.pop('plots', None)
 
-        if (self.fig_args['values'] is None or self.fig_args['rows'] is None) and self.plots is None:
+        if (not self.fig_args['values'] or not self.fig_args['rows']) and not self.plots:
             raise ValueError("Assign argument values and rows to build a single waffle chart or assign plots to build "
                              "multiple charts.")
 
@@ -154,129 +169,143 @@ class Waffle(Figure):
         Figure.__init__(self, *args, **kwargs)
 
         for loc, setting in self.plots.items():
-            self._waffle(loc, **setting)
+            self._waffle(loc, **copy.deepcopy(setting))
+
+        # Adjust the layout
+        self.tight_layout(**self.fig_args['tight_layout'])
 
     def _waffle(self, loc, **kwargs):
-        # pargs is the arguments for this single plot
-        self.pargs = kwargs
-
+        # _pa is the arguments for this single plot
+        self._pa = kwargs
+        print(self._pa)
         # Append figure args to plot args
         plot_fig_args = copy.deepcopy(self.fig_args)
         for arg, v in plot_fig_args.items():
-            if arg not in self.pargs:
-                self.pargs[arg] = v
+            if arg not in self._pa:
+                self._pa[arg] = v
+        print(self._pa)
+        print('\n')
+        self.values_len = len(self._pa['values'])
 
-        self.values_len = len(self.pargs['values'])
-
-        if self.pargs['colors'] and len(self.pargs['colors']) != self.values_len:
+        if self._pa['colors'] and len(self._pa['colors']) != self.values_len:
             raise ValueError("Length of colors doesn't match the values.")
 
-        if isinstance(self.pargs['values'], dict):
-            if not self.pargs['labels']:
-                self.pargs['labels'] = self.pargs['values'].keys()
-            self.pargs['values'] = list(self.pargs['values'].values())
+        if isinstance(self._pa['values'], dict):
+            if not self._pa['labels']:
+                self._pa['labels'] = self._pa['values'].keys()
+            self._pa['values'] = list(self._pa['values'].values())
 
-        if self.pargs['labels'] and len(self.pargs['labels']) != self.values_len:
+        if self._pa['labels'] and len(self._pa['labels']) != self.values_len:
             raise ValueError("Length of labels doesn't match the values.")
 
-        if self.pargs['icons']:
+        if self._pa['icons']:
             from pywaffle.fontawesome_mapping import icons
 
             # If icons is a string, convert it into a list of same icon. It's length is the label's length
             # '\uf26e' -> ['\uf26e', '\uf26e', '\uf26e', ]
-            if isinstance(self.pargs['icons'], str):
-                self.pargs['icons'] = [self.pargs['icons']] * self.values_len
+            if isinstance(self._pa['icons'], str):
+                self._pa['icons'] = [self._pa['icons']] * self.values_len
 
-            if len(self.pargs['icons']) != self.values_len:
+            if len(self._pa['icons']) != self.values_len:
                 raise ValueError("Length of icons doesn't match the values.")
 
-            self.pargs['icons'] = [icons[i] for i in self.pargs['icons']]
+            self._pa['icons'] = [icons[i] for i in self._pa['icons']]
 
         self.ax = self.add_subplot(loc, aspect='equal')
 
         # Alignment of subplots
-        self.ax.set_anchor(self.pargs['plot_anchor'])
+        self.ax.set_anchor(self._pa['plot_anchor'])
 
-        self.value_sum = float(sum(self.pargs['values']))
+        self.value_sum = float(sum(self._pa['values']))
 
         # if column number is not given, use the values as number of blocks
-        self.value_as_block_number = False
-        if self.pargs['columns'] is None:
-            self.pargs['columns'] = ceil(self.value_sum, self.pargs['rows'])
-            self.value_as_block_number = True
-
-        block_unit_value = self.pargs['columns'] * self.pargs['rows'] / self.value_sum
-        block_numbers = self.pargs['values'] if self.value_as_block_number else [round(v * block_unit_value) for v in self.pargs['values']]
+        if self._pa['columns'] is None:
+            self._pa['columns'] = ceil(self.value_sum, self._pa['rows'])
+            block_number_per_cat = self._pa['values']
+        else:
+            block_number_per_cat = [round(v * self._pa['columns'] * self._pa['rows'] / self.value_sum) for v in self._pa['values']]
 
         # Absolute height of the plot
         figure_height = 1
-
-        block_y_length = figure_height / (self.pargs['rows'] + self.pargs['rows'] * self.pargs['interval_ratio_y'] - self.pargs['interval_ratio_y'])
-        block_x_length = self.pargs['column_row_ratio'] * block_y_length
+        block_y_length = figure_height / (self._pa['rows'] + self._pa['rows'] * self._pa['interval_ratio_y'] - self._pa['interval_ratio_y'])
+        block_x_length = self._pa['column_row_ratio'] * block_y_length
 
         # Define the limit of X, Y axis
         self.ax.axis(
-            xmin=0, xmax=(self.pargs['columns'] + self.pargs['columns'] * self.pargs['interval_ratio_x'] - self.pargs['interval_ratio_x']) * block_x_length,
-            ymin=0, ymax=figure_height
+            xmin=0,
+            xmax=(self._pa['columns'] + self._pa['columns'] * self._pa['interval_ratio_x'] - self._pa['interval_ratio_x']) * block_x_length,
+            ymin=0,
+            ymax=figure_height
         )
 
         # Default font size
-        if self.pargs['icons']:
+        if self._pa['icons']:
             x, y = self.ax.transData.transform([(0, 0), (0, block_x_length)])
-            prop = fm.FontProperties(fname=FONTAWESOME_FILE, size=self.pargs['icon_size'] or int((y[1] - x[1]) / 16 * 12))
+            prop = fm.FontProperties(
+                fname=FONTAWESOME_FILE,
+                size=self._pa['icon_size'] or int((y[1] - x[1]) / 16 * 12)
+            )
 
         # Build a color sequence if colors is empty
-        if not self.pargs['colors']:
-            default_colors = cm.get_cmap(self.pargs['cmap_name']).colors
-            default_color_num = cm.get_cmap(self.pargs['cmap_name']).N
-            self.pargs['colors'] = array_resize(array=default_colors, length=self.values_len, array_len=default_color_num)
+        if not self._pa['colors']:
+            default_colors = cm.get_cmap(self._pa['cmap_name']).colors
+            default_color_num = cm.get_cmap(self._pa['cmap_name']).N
+            self._pa['colors'] = array_resize(
+                array=default_colors,
+                length=self.values_len,
+                array_len=default_color_num
+            )
 
         # Plot blocks
         class_index = 0
         block_index = 0
-        for col, row in unique_pairs(self.pargs['columns'], self.pargs['rows']):
-            x = (1 + self.pargs['interval_ratio_x']) * block_x_length * col
-            y = (1 + self.pargs['interval_ratio_y']) * block_y_length * row
-            if self.pargs['icons']:
+        for col, row in unique_pairs(self._pa['columns'], self._pa['rows']):
+            x = (1 + self._pa['interval_ratio_x']) * block_x_length * col
+            y = (1 + self._pa['interval_ratio_y']) * block_y_length * row
+            if self._pa['icons']:
                 self.ax.text(
                     x=x,
                     y=y,
-                    s=self.pargs['icons'][class_index],
-                    color=self.pargs['colors'][class_index],
+                    s=self._pa['icons'][class_index],
+                    color=self._pa['colors'][class_index],
                     fontproperties=prop
                 )
             else:
                 self.ax.add_artist(
                     Rectangle(xy=(x, y), width=block_x_length, height=block_y_length,
-                              color=self.pargs['colors'][class_index])
+                              color=self._pa['colors'][class_index])
                 )
 
             block_index += 1
-            if block_index >= sum(block_numbers[:class_index + 1]):
+            if block_index >= sum(block_number_per_cat[:class_index + 1]):
                 class_index += 1
 
                 if class_index > self.values_len - 1:
                     break
 
         # Add title
-        if self.pargs['title_conf'] is not None:
-            self.ax.set_title(**self.pargs['title_conf'])
+        if self._pa['title_conf'] is not None:
+            self.ax.set_title(**self._pa['title_conf'])
 
         # Add legend
-        if self.pargs['labels'] or 'labels' in self.pargs['legend_args']:
-            if self.pargs['icons'] and self.pargs['icon_legend']:
-                # self.plot_args['legend_args']['handles'] = unique_class_items
-                self.pargs['legend_args']['handles'] = [TextLegend(color=self.pargs['colors'][i], text=l) for i, l in enumerate(self.pargs['icons'])]
-                self.pargs['legend_args']['handler_map'] = {TextLegend: TextLegendHandler()}
-            elif not self.pargs['legend_args'].get('handles'):
-                self.pargs['legend_args']['handles'] = [Patch(color=self.pargs['colors'][i], label=str(l)) for i, l in enumerate(self.pargs['labels'])]
+        if self._pa['labels'] or 'labels' in self._pa['legend_args']:
+            if self._pa['icons'] and self._pa['icon_legend']:
+                self._pa['legend_args']['handles'] = [
+                    TextLegend(color=c, text=i) for c, i in zip(self._pa['colors'], self._pa['icons'])
+                ]
+                self._pa['legend_args']['handler_map'] = {TextLegend: TextLegendHandler()}
+            # elif not self._pa['legend_args'].get('handles'):
+            elif 'handles' not in self._pa['legend_args']:
+                self._pa['legend_args']['handles'] = [
+                    Patch(color=c, label=str(l)) for c, l in zip(self._pa['colors'], self._pa['labels'])
+                ]
 
             # labels is an alias of legend['labels']
-            if 'labels' not in self.pargs['legend_args'] and self.pargs['labels']:
-                self.pargs['legend_args']['labels'] = self.pargs['labels']
+            if 'labels' not in self._pa['legend_args'] and self._pa['labels']:
+                self._pa['legend_args']['labels'] = self._pa['labels']
 
-            if 'handles' in self.pargs['legend_args'] and 'labels' in self.pargs['legend_args']:
-                self.ax.legend(**self.pargs['legend_args'])
+            if 'handles' in self._pa['legend_args'] and 'labels' in self._pa['legend_args']:
+                self.ax.legend(**self._pa['legend_args'])
 
         # Remove borders, ticks, etc.
         self.ax.axis('off')
