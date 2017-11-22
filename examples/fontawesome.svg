@@ -2,7 +2,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Created with matplotlib (http://matplotlib.org/) -->
-<svg height="133pt" version="1.1" viewBox="0 0 569 133" width="569pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg height="133pt" version="1.1" viewBox="0 0 548 133" width="548pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
  <defs>
   <style type="text/css">
 *{stroke-linecap:butt;stroke-linejoin:round;}
@@ -11,8 +11,8 @@
  <g id="figure_1">
   <g id="patch_1">
    <path d="M 0 133.924376 
-L 569.068594 133.924376 
-L 569.068594 0 
+L 548.746875 133.924376 
+L 548.746875 0 
 L 0 0 
 z
 " style="fill:#ffffff;"/>
@@ -630,21 +630,21 @@ z
    </g>
    <g id="legend_1">
     <g id="patch_2">
-     <path d="M 470.221719 63.033594 
-L 559.868594 63.033594 
-Q 561.868594 63.033594 561.868594 61.033594 
-L 561.868594 17.999219 
-Q 561.868594 15.999219 559.868594 15.999219 
-L 470.221719 15.999219 
-Q 468.221719 15.999219 468.221719 17.999219 
-L 468.221719 61.033594 
-Q 468.221719 63.033594 470.221719 63.033594 
+     <path d="M 449.9 63.033594 
+L 539.546875 63.033594 
+Q 541.546875 63.033594 541.546875 61.033594 
+L 541.546875 17.999219 
+Q 541.546875 15.999219 539.546875 15.999219 
+L 449.9 15.999219 
+Q 447.9 15.999219 447.9 17.999219 
+L 447.9 61.033594 
+Q 447.9 63.033594 449.9 63.033594 
 z
 " style="fill:#ffffff;opacity:0.8;stroke:#cccccc;stroke-linejoin:miter;"/>
     </g>
     <g id="text_98">
      <!--  -->
-     <g style="fill:#232066;" transform="translate(478.650625 27.267188)scale(0.1 -0.1)">
+     <g style="fill:#232066;" transform="translate(458.328906 27.267188)scale(0.1 -0.1)">
       <use xlink:href="#FontAwesome-f1ae"/>
      </g>
     </g>
@@ -844,7 +844,7 @@ L 9.421875 64.59375
 z
 " id="DejaVuSans-69"/>
      </defs>
-     <g transform="translate(500.221719 27.597656)scale(0.1 -0.1)">
+     <g transform="translate(479.9 27.597656)scale(0.1 -0.1)">
       <use xlink:href="#DejaVuSans-44"/>
       <use x="77.001953" xlink:href="#DejaVuSans-65"/>
       <use x="138.525391" xlink:href="#DejaVuSans-6d"/>
@@ -859,7 +859,7 @@ z
     </g>
     <g id="text_100">
      <!--  -->
-     <g style="fill:#983d3d;" transform="translate(478.650625 41.945313)scale(0.1 -0.1)">
+     <g style="fill:#983d3d;" transform="translate(458.328906 41.945313)scale(0.1 -0.1)">
       <use xlink:href="#FontAwesome-f1ae"/>
      </g>
     </g>
@@ -991,7 +991,7 @@ Q 54.890625 44.34375 54.890625 33.015625
 z
 " id="DejaVuSans-6e"/>
      </defs>
-     <g transform="translate(500.221719 42.275781)scale(0.1 -0.1)">
+     <g transform="translate(479.9 42.275781)scale(0.1 -0.1)">
       <use xlink:href="#DejaVuSans-52"/>
       <use x="69.419922" xlink:href="#DejaVuSans-65"/>
       <use x="130.943359" xlink:href="#DejaVuSans-70"/>
@@ -1006,7 +1006,7 @@ z
     </g>
     <g id="text_102">
      <!--  -->
-     <g style="fill:#dcb732;" transform="translate(478.650625 56.623438)scale(0.1 -0.1)">
+     <g style="fill:#dcb732;" transform="translate(458.328906 56.623438)scale(0.1 -0.1)">
       <use xlink:href="#FontAwesome-f1ae"/>
      </g>
     </g>
@@ -1022,7 +1022,7 @@ L 9.8125 0
 z
 " id="DejaVuSans-4c"/>
      </defs>
-     <g transform="translate(500.221719 56.953906)scale(0.1 -0.1)">
+     <g transform="translate(479.9 56.953906)scale(0.1 -0.1)">
       <use xlink:href="#DejaVuSans-4c"/>
       <use x="55.712891" xlink:href="#DejaVuSans-69"/>
       <use x="83.496094" xlink:href="#DejaVuSans-62"/>
