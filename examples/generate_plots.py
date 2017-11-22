@@ -6,7 +6,7 @@
 import matplotlib.pyplot as plt
 from pywaffle.waffle import Waffle
 
-image_folder = 'README_images/'
+image_folder = 'examples/'
 
 # Basic
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3])
@@ -24,7 +24,7 @@ fig.savefig(image_folder + 'absolute_block_numbers.svg', bbox_inches='tight')
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
 fig = plt.figure(
     FigureClass=Waffle, rows=5, values=data,
-    title_conf={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
+    title_args={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
     colors=("#232066", "#983D3D", "#DCB732"),
     labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0}
