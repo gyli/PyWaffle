@@ -105,10 +105,10 @@ class Waffle(Figure):
             See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
         :type cmap_name: str
 
-        :param title_args: Parameters of matplotlib.axes.Axes.set_title in a dict.
+        :param title: Parameters of matplotlib.axes.Axes.set_title in a dict.
             E.g. {'label': '', 'fontdict': {}, 'loc': ''}
             See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
-        :type title_args: dict
+        :type title: dict
 
         :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
             If it's a list or tuple of icons, the length should be the same as values.
@@ -145,7 +145,7 @@ class Waffle(Figure):
             'interval_ratio_y': kwargs.pop('interval_ratio_y', 0.2),
             'block_aspect': kwargs.pop('block_aspect', 1),
             'cmap_name': kwargs.pop('cmap_name', 'Set2'),
-            'title_args': kwargs.pop('title_args', None),
+            'title': kwargs.pop('title', None),
             'icons': kwargs.pop('icons', None),
             'icon_size': kwargs.pop('icon_size', None),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
@@ -277,8 +277,8 @@ class Waffle(Figure):
                     break
 
         # Add title
-        if self._pa['title_args'] is not None:
-            self.ax.set_title(**self._pa['title_args'])
+        if self._pa['title'] is not None:
+            self.ax.set_title(**self._pa['title'])
 
         # Add legend
         if self._pa['labels'] or 'labels' in self._pa['legend']:

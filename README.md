@@ -56,7 +56,7 @@ If `values` is a dict, its keys are used as labels.
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
 fig = plt.figure(
     FigureClass=Waffle, rows=5, values=data, colors=("#983D3D", "#232066", "#DCB732"),
-    title_args={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
+    title={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
     labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0}
 )
@@ -69,7 +69,7 @@ plt.show()
 
 It is now clear to see that there are 3% votes to other parties/candidates.
 
-Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).
+<sub>Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).</sub>
 
 ### 4. Icons
 
@@ -103,33 +103,35 @@ fig = plt.figure(
     FigureClass=Waffle,
     plots={
         '311': {
-            'values': data['Virginia']/30000,
+            'values': data['Virginia'] / 30000,
             'labels': ["{0} ({1})".format(n, v) for n, v in data['Virginia'].items()],
             'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.05, 1), 'fontsize': 8},
-            'title_args': {'label': 'Virginia', 'loc': 'left'}
+            'title': {'label': '2016 Virginia Presidential Election Results', 'loc': 'left'}
         },
         '312': {
-            'values': data['Maryland']/30000,
+            'values': data['Maryland'] / 30000,
             'labels': ["{0} ({1})".format(n, v) for n, v in data['Maryland'].items()],
             'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.2, 1), 'fontsize': 8},
-            'title_args': {'label': 'Maryland', 'loc': 'left'}
+            'title': {'label': '2016 Maryland Presidential Election Results', 'loc': 'left'}
         },
         '313': {
-            'values': data['West Virginia']/30000,
+            'values': data['West Virginia'] / 30000,
             'labels': ["{0} ({1})".format(n, v) for n, v in data['West Virginia'].items()],
             'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.3, 1), 'fontsize': 8},
-            'title_args': {'label': 'West Virginia', 'loc': 'left'}
+            'title': {'label': '2016 West Virginia Presidential Election Results', 'loc': 'left'}
         },
     },
     rows=5,
-    colors=("#232066", "#983D3D", "#999999"),  # Default values for subplots
+    colors=("#232066", "#983D3D", "#999999"),  # Default argument values for subplots
     figsize=(9, 5)  # figsize is a parameter of plt.figure
 )
 ```
     
 ![Multiple plots](examples/multiple_plots.svg)
 
-Data source [https://www.politico.com/2016-election/results/map/president/](https://www.politico.com/2016-election/results/map/president/).
+In this chart, 1 block = 30000 votes.
+
+<sub>Data source [https://www.politico.com/2016-election/results/map/president/](https://www.politico.com/2016-election/results/map/president/).</sub>
 
 
 ## Future works
