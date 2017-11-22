@@ -156,7 +156,7 @@ fig = plt.figure(
 
 In this chart, 1 block = 30000 votes.
 
-<sub>Data source [https://www.politico.com/2016-election/results/map/president/](https://www.politico.com/2016-election/results/map/president/).</sub>
+<sub>Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).</sub>
 
 ## Future works
 

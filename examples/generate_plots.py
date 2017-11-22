@@ -98,5 +98,4 @@ fig = plt.figure(
     colors=("#2196f3", "#ff5252", "#999999"),  # Default argument values for subplots
     figsize=(9, 5)  # figsize is a parameter of plt.figure
 )
-# https://www.politico.com/2016-election/results/map/president/
 fig.savefig(image_folder + 'multiple_plots.svg', bbox_inches='tight')
