@@ -48,17 +48,41 @@ fig.savefig(image_folder + 'fontawesome.svg', bbox_inches='tight')
 
 
 # Multiple Plots
-# https://www.census.gov/library/publications/2016/demo/p20-578.html
-fig = plt.figure(
-    FigureClass=Waffle, plots={
-        '411': {'rows': 5, 'values': {"High school graduate or more": 43*0.9, "Below high school": 43*0.1}, 'legend': {'loc': 'upper left', 'bbox_to_anchor': (2, 1)}}
+import pandas as pd
+data = pd.DataFrame(
+    {
+        'labels': ['Hillary Clinton', 'Donald Trump', 'Others'],
+        'Virginia': [1916845, 1731156, 196786],
+        'Maryland': [1497951, 873646, 102946],
+        'West Virginia': [187457, 486198, 27371],
+    },
+).set_index('labels')
 
-        ,'412': {'rows': 5, 'values': {"High school graduate or more": 40*0.88, "Below high school": 40*0.12}, 'legend': {'loc': 'upper left', 'bbox_to_anchor': (2, 1)}}
-        # , 'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.05, 1)}
-        ,'413': {'rows': 5, 'values': {"High school graduate or more": 83*0.89, "Below high school": 83*0.11}, 'legend': {'loc': 'upper left', 'bbox_to_anchor': (2, 1)}}
-        # , 'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.05, 1)}
-        ,'414': {'rows': 5, 'values': {"High school graduate or more": 46*0.89, "Below high school": 46*0.11}, 'legend': {'loc': 'upper left', 'bbox_to_anchor': (2, 1)}}
-        # , 'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.05, 1)}
-    }
+fig = plt.figure(
+    FigureClass=Waffle,
+    plots={
+        '311': {
+            'values': data['Virginia']/30000,
+            'labels': ["{0} ({1})".format(n, v) for n, v in data['Virginia'].items()],
+            'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.05, 1), 'fontsize': 8},
+            'title_args': {'label': 'Virginia', 'loc': 'left'}
+        },
+        '312': {
+            'values': data['Maryland']/30000,
+            'labels': ["{0} ({1})".format(n, v) for n, v in data['Maryland'].items()],
+            'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.2, 1), 'fontsize': 8},
+            'title_args': {'label': 'Maryland', 'loc': 'left'}
+        },
+        '313': {
+            'values': data['West Virginia']/30000,
+            'labels': ["{0} ({1})".format(n, v) for n, v in data['West Virginia'].items()],
+            'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.3, 1), 'fontsize': 8},
+            'title_args': {'label': 'West Virginia', 'loc': 'left'}
+        },
+    },
+    rows=5,
+    colors=("#232066", "#983D3D", "#999999"),  # Default values for subplots
+    figsize=(9, 5)  # figsize is a parameter of plt.figure
 )
+# https://www.politico.com/2016-election/results/map/president/
 fig.savefig(image_folder + 'multiple_plots.svg', bbox_inches='tight')

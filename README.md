@@ -88,6 +88,50 @@ PyWaffle supports [Font Awesome](http://fontawesome.io/) icons in the chart.
 
 ### 5. Multiple Plots
 
+```python
+import pandas as pd
+data = pd.DataFrame(
+    {
+        'labels': ['Hillary Clinton', 'Donald Trump', 'Others'],
+        'Virginia': [1916845, 1731156, 196786],
+        'Maryland': [1497951, 873646, 102946],
+        'West Virginia': [187457, 486198, 27371],
+    },
+).set_index('labels')
+
+fig = plt.figure(
+    FigureClass=Waffle,
+    plots={
+        '311': {
+            'values': data['Virginia']/30000,
+            'labels': ["{0} ({1})".format(n, v) for n, v in data['Virginia'].items()],
+            'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.05, 1), 'fontsize': 8},
+            'title_args': {'label': 'Virginia', 'loc': 'left'}
+        },
+        '312': {
+            'values': data['Maryland']/30000,
+            'labels': ["{0} ({1})".format(n, v) for n, v in data['Maryland'].items()],
+            'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.2, 1), 'fontsize': 8},
+            'title_args': {'label': 'Maryland', 'loc': 'left'}
+        },
+        '313': {
+            'values': data['West Virginia']/30000,
+            'labels': ["{0} ({1})".format(n, v) for n, v in data['West Virginia'].items()],
+            'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.3, 1), 'fontsize': 8},
+            'title_args': {'label': 'West Virginia', 'loc': 'left'}
+        },
+    },
+    rows=5,
+    colors=("#232066", "#983D3D", "#999999"),  # Default values for subplots
+    figsize=(9, 5)  # figsize is a parameter of plt.figure
+)
+```
+    
+![Multiple plots](examples/multiple_plots.svg)
+
+Data source [https://www.politico.com/2016-election/results/map/president/](https://www.politico.com/2016-election/results/map/president/).
+
+
 ## Future works
 
 1. Finish documents
