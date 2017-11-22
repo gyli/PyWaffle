@@ -21,8 +21,8 @@ def main(uri, config_uri):
     version = yaml.load(requests.get(config_uri).text)['fontawesome']['version']
 
     out = sys.stdout
-    out.write("# The content is licensed under the SIL OFL 1.1: http://scripts.sil.org/OFL\n")
-    out.write('# Fontawesome version {0}\n'.format(version))
+    out.write("# This file belongs to Font Awesome, see license http://fontawesome.io/license/\n")
+    out.write('# Font Awesome version {0}\n'.format(version))
     out.write('\n')
     out.write('icons = {\n')
     list(map(lambda x: out.write("{0}'{1}': '\\u{2}',\n".format(INDENT, x['id'], x['unicode'])), icons_list))
