@@ -22,4 +22,5 @@ Installation
 License
 -------
 
-PyWaffle uses the MIT license, see ``LICENSE`` file for the details.
+* PyWaffle is under MIT license, see `LICENSE` file for the details.
+* The Font Awesome font is licensed under the SIL OFL 1.1: `http://scripts.sil.org/OFL <http://scripts.sil.org/OFL>`_
