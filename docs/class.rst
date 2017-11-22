@@ -5,4 +5,3 @@ Constructor Class
 
 .. autoclass:: Waffle
    :members:
-   :exclude-members:

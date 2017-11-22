@@ -10,6 +10,8 @@ Welcome to PyWaffle's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   class
+
 
 
 Indices and tables
