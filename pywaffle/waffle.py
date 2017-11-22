@@ -77,7 +77,7 @@ class Waffle(Figure):
     :type columns: int
 
     :param colors: A list of colors for each category. Its length should be the same as values.
-        Default values are from Set2 colormaps.
+        Default values are from Set2 colormap.
     :type colors: list[str]|tuple[str]
 
     :param labels: The name of each category.
