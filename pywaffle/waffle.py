@@ -66,54 +66,67 @@ class Waffle(Figure):
         """
         A custom Figure class to make waffle charts.
 
-        :param value:
-        :type value: list|dict
+        :param values: Numerical value of each category. If it is a dict, the keys would be used as labels.
+        :type values: list|dict
 
-        :param rows:
+        :param rows: The number of lines of the waffle chart. This is required if plots is not assigned.
         :type rows: int
 
-        :param columns:
+        :param columns: The number of columns of the waffle chart.
+            If it is not None, the total number of blocks would be decided through rows and columns. [Default None]
         :type columns: int
 
-        :param colors:
+        :param colors: A list of colors for each category. Its length should be the same as values.
+            Default values are from Set2 colormaps.
         :type colors: list[str]|tuple[str]
 
-        :param labels:
+        :param labels: The name of each category.
+            If the values is a dict, this parameter would be replaced by the keys of values.
         :type labels: list[str]|tuple[str]
 
-        :param legend_args:
+        :param legend_args: Parameters of matplotlib.pyplot.legend in a dict.
+            See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
         :type legend_args: dict
 
-        :param icon_legend:
-        :type icon_legend:
+        :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
+        :type icon_legend: bool
 
-        :param interval_ratio_x:
+        :param interval_ratio_x: Ratio of distance between two blocks on X and block's width. [Default 0.2]
         :type interval_ratio_x: float
 
-        :param interval_ratio_y:
+        :param interval_ratio_y: Ratio of distance between two blocks on Y and block's height. [Default 0.2]
         :type interval_ratio_y: float
 
-        :param column_row_ratio:
+        :param column_row_ratio: The ratio of block's width and height. [Default 1]
         :type column_row_ratio: float
 
-        :param cmap_name:
-        :type cmap_name:
+        :param cmap_name: Name of colormaps for default color, if colors is not assigned.
+            See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
+        :type cmap_name: str
 
-        :param title_conf:
-        :type title_conf:
+        :param title_conf: Parameters of matplotlib.axes.Axes.set_title in a dict.
+            See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
+        :type title_conf: dict
 
-        :param icons:
+        :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
+            If it's a list or tuple of icons, the length should be the same as values. [Default None]
         :type icons: str|list[str]|tuple[str]
 
-        :param icon_size:
+        :param icon_size: Fint size of the icons. The default size is not fixed and depends on the block size.
         :type icon_size: int
 
-        :param plot_anchor:
+        :param plot_anchor: The alignment method of subplots.
+            See all allowed options in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
+            [Default 'W']
         :type plot_anchor: str
+
+        :param plots: All parameters of Waffle class for sub plots in a dict, excluding plots itself.
+            Nested sub plots is not supported.
+        :type plots: dict
         """
         self.fig_args = {
             'values': kwargs.pop('values', None),
-            'rows': kwargs.pop('rows', None),
+            'rows': kwargs.pop('rows', None),  # TODO: default 0 or None?
             'columns': kwargs.pop('columns', None),
             'colors': kwargs.pop('colors', None),
             'labels': kwargs.pop('labels', None),
@@ -182,7 +195,6 @@ class Waffle(Figure):
         self.ax = self.add_subplot(loc, aspect='equal')
 
         # Alignment of subplots
-        # https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
         self.ax.set_anchor(self.pargs['plot_anchor'])
 
         self.value_sum = float(sum(self.pargs['values']))
