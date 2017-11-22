@@ -92,14 +92,14 @@ class Waffle(Figure):
         :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
         :type icon_legend: bool
 
-        :param interval_ratio_x: Ratio of distance between two blocks on X and block's width. [Default 0.2]
+        :param interval_ratio_x: Ratio of distance between blocks on X to block's width. [Default 0.2]
         :type interval_ratio_x: float
 
-        :param interval_ratio_y: Ratio of distance between two blocks on Y and block's height. [Default 0.2]
+        :param interval_ratio_y: Ratio of distance between blocks on Y to block's height. [Default 0.2]
         :type interval_ratio_y: float
 
-        :param column_row_ratio: The ratio of block's width and height. [Default 1]
-        :type column_row_ratio: float
+        :param block_aspect: The ratio of block's width to height. [Default 1]
+        :type block_aspect: float
 
         :param cmap_name: Name of colormaps for default color, if colors is not assigned.
             See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
@@ -128,15 +128,10 @@ class Waffle(Figure):
             with format like {loc: {subplot_args: values, }, }.
             loc is a 3-digit integer. If the three integers are I, J, and K,
             the subplot is the Ith plot on a grid with J rows and K columns.
-            The parameters of subplots are the same as Waffle class parameters, excluding plots and tight_layout.
+            The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
             Nested subplots is not supported.
             If a parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
         :type plots: dict
-
-        :param tight_layout: Parameters of matplotlib.pyplot.tight_layout in a dict.
-            E.g. {'pad': None, 'h_pad': None, 'w_pad': None, ...}
-            See full parameter list in https://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.tight_layout
-        :type tight_layout: dict
         """
         self.fig_args = {
             'values': kwargs.pop('values', []),
@@ -148,13 +143,12 @@ class Waffle(Figure):
             'icon_legend': kwargs.pop('icon_legend', False),
             'interval_ratio_x': kwargs.pop('interval_ratio_x', 0.2),
             'interval_ratio_y': kwargs.pop('interval_ratio_y', 0.2),
-            'column_row_ratio': kwargs.pop('column_row_ratio', 1),  # TODO: rename width height ratio?
+            'block_aspect': kwargs.pop('block_aspect', 1),
             'cmap_name': kwargs.pop('cmap_name', 'Set2'),
             'title_conf': kwargs.pop('title_conf', None),
             'icons': kwargs.pop('icons', None),
             'icon_size': kwargs.pop('icon_size', None),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
-            'tight_layout': kwargs.pop('tight_layout', {}),
         }
         self.plots = kwargs.pop('plots', None)
 
@@ -172,19 +166,18 @@ class Waffle(Figure):
             self._waffle(loc, **copy.deepcopy(setting))
 
         # Adjust the layout
-        self.tight_layout(**self.fig_args['tight_layout'])
+        self.set_tight_layout(True)
 
     def _waffle(self, loc, **kwargs):
         # _pa is the arguments for this single plot
         self._pa = kwargs
-        print(self._pa)
+
         # Append figure args to plot args
         plot_fig_args = copy.deepcopy(self.fig_args)
         for arg, v in plot_fig_args.items():
             if arg not in self._pa:
                 self._pa[arg] = v
-        print(self._pa)
-        print('\n')
+
         self.values_len = len(self._pa['values'])
 
         if self._pa['colors'] and len(self._pa['colors']) != self.values_len:
@@ -228,7 +221,7 @@ class Waffle(Figure):
         # Absolute height of the plot
         figure_height = 1
         block_y_length = figure_height / (self._pa['rows'] + self._pa['rows'] * self._pa['interval_ratio_y'] - self._pa['interval_ratio_y'])
-        block_x_length = self._pa['column_row_ratio'] * block_y_length
+        block_x_length = self._pa['block_aspect'] * block_y_length
 
         # Define the limit of X, Y axis
         self.ax.axis(
