@@ -84,10 +84,10 @@ class Waffle(Figure):
             If the values is a dict, this parameter would be replaced by the keys of values.
         :type labels: list[str]|tuple[str]
 
-        :param legend_args: Parameters of matplotlib.pyplot.legend in a dict.
+        :param legend: Parameters of matplotlib.pyplot.legend in a dict.
             E.g. {'loc': '', 'bbox_to_anchor': (,), ...}
             See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
-        :type legend_args: dict
+        :type legend: dict
 
         :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
         :type icon_legend: bool
@@ -105,10 +105,10 @@ class Waffle(Figure):
             See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
         :type cmap_name: str
 
-        :param title_conf: Parameters of matplotlib.axes.Axes.set_title in a dict.
+        :param title_args: Parameters of matplotlib.axes.Axes.set_title in a dict.
             E.g. {'label': '', 'fontdict': {}, 'loc': ''}
             See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
-        :type title_conf: dict
+        :type title_args: dict
 
         :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
             If it's a list or tuple of icons, the length should be the same as values.
@@ -139,13 +139,13 @@ class Waffle(Figure):
             'columns': kwargs.pop('columns', None),
             'colors': kwargs.pop('colors', None),
             'labels': kwargs.pop('labels', None),
-            'legend_args': kwargs.pop('legend_args', {}),
+            'legend': kwargs.pop('legend', {}),
             'icon_legend': kwargs.pop('icon_legend', False),
             'interval_ratio_x': kwargs.pop('interval_ratio_x', 0.2),
             'interval_ratio_y': kwargs.pop('interval_ratio_y', 0.2),
             'block_aspect': kwargs.pop('block_aspect', 1),
             'cmap_name': kwargs.pop('cmap_name', 'Set2'),
-            'title_conf': kwargs.pop('title_conf', None),
+            'title_args': kwargs.pop('title_args', None),
             'icons': kwargs.pop('icons', None),
             'icon_size': kwargs.pop('icon_size', None),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
@@ -277,28 +277,28 @@ class Waffle(Figure):
                     break
 
         # Add title
-        if self._pa['title_conf'] is not None:
-            self.ax.set_title(**self._pa['title_conf'])
+        if self._pa['title_args'] is not None:
+            self.ax.set_title(**self._pa['title_args'])
 
         # Add legend
-        if self._pa['labels'] or 'labels' in self._pa['legend_args']:
+        if self._pa['labels'] or 'labels' in self._pa['legend']:
             if self._pa['icons'] and self._pa['icon_legend']:
-                self._pa['legend_args']['handles'] = [
+                self._pa['legend']['handles'] = [
                     TextLegend(color=c, text=i) for c, i in zip(self._pa['colors'], self._pa['icons'])
                 ]
-                self._pa['legend_args']['handler_map'] = {TextLegend: TextLegendHandler()}
-            # elif not self._pa['legend_args'].get('handles'):
-            elif 'handles' not in self._pa['legend_args']:
-                self._pa['legend_args']['handles'] = [
+                self._pa['legend']['handler_map'] = {TextLegend: TextLegendHandler()}
+            # elif not self._pa['legend'].get('handles'):
+            elif 'handles' not in self._pa['legend']:
+                self._pa['legend']['handles'] = [
                     Patch(color=c, label=str(l)) for c, l in zip(self._pa['colors'], self._pa['labels'])
                 ]
 
             # labels is an alias of legend['labels']
-            if 'labels' not in self._pa['legend_args'] and self._pa['labels']:
-                self._pa['legend_args']['labels'] = self._pa['labels']
+            if 'labels' not in self._pa['legend'] and self._pa['labels']:
+                self._pa['legend']['labels'] = self._pa['labels']
 
-            if 'handles' in self._pa['legend_args'] and 'labels' in self._pa['legend_args']:
-                self.ax.legend(**self._pa['legend_args'])
+            if 'handles' in self._pa['legend'] and 'labels' in self._pa['legend']:
+                self.ax.legend(**self._pa['legend'])
 
         # Remove borders, ticks, etc.
         self.ax.axis('off')
