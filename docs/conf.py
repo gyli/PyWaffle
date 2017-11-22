@@ -166,6 +166,3 @@ texinfo_documents = [
      author, 'PyWaffle', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
