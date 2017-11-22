@@ -66,9 +66,9 @@ import pandas as pd
 data = pd.DataFrame(
     {
         'labels': ['Hillary Clinton', 'Donald Trump', 'Others'],
-        'Virginia': [1916845, 1731156, 196786],
-        'Maryland': [1497951, 873646, 102946],
-        'West Virginia': [187457, 486198, 27371],
+        'Virginia': [1981473, 1769443, 233715],
+        'Maryland': [1677928, 943169, 160349],
+        'West Virginia': [188794, 489371, 36258],
     },
 ).set_index('labels')
 
@@ -95,7 +95,7 @@ fig = plt.figure(
         },
     },
     rows=5,
-    colors=("#007dd6", "#b81800", "#e7a520"),  # Default argument values for subplots
+    colors=("#2196f3", "#ff5252", "#999999"),  # Default argument values for subplots
     figsize=(9, 5)  # figsize is a parameter of plt.figure
 )
 # https://www.politico.com/2016-election/results/map/president/
