@@ -16,7 +16,7 @@ It provides a [Figure constructor class](https://matplotlib.org/gallery/subplots
 pip install pywaffle
 ```
 
-## Requirements:
+## Requirements
 
 * Python 3
 * Matplotlib
@@ -116,7 +116,7 @@ data = pd.DataFrame(
     },
 ).set_index('labels')
 
-# Take a look of the date:
+# A glance of the data:
 #                  Maryland  Virginia  West Virginia
 # labels                                            
 # Hillary Clinton   1677928   1981473         188794
