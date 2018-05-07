@@ -161,7 +161,8 @@ In this chart, 1 block = 30000 votes.
 ## Future works
 
 1. Finish documents
-2. Add Python 2.x supports
+2. Add support for rotation
+3. Add type hint
 
 ## License
 
