@@ -253,9 +253,12 @@ class Waffle(Figure):
         # Plot blocks
         class_index = 0
         block_index = 0
+        x_full = (1 + self._pa['interval_ratio_x']) * block_x_length
+        y_full = (1 + self._pa['interval_ratio_y']) * block_y_length
         for col, row in unique_pairs(self._pa['columns'], self._pa['rows']):
-            x = (1 + self._pa['interval_ratio_x']) * block_x_length * col
-            y = (1 + self._pa['interval_ratio_y']) * block_y_length * row
+            x = x_full * col
+            y = y_full * row
+
             if self._pa['icons']:
                 self.ax.text(
                     x=x,
