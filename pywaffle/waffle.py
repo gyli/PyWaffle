@@ -8,6 +8,8 @@ import matplotlib.font_manager as fm
 from matplotlib.text import Text
 from matplotlib.legend_handler import HandlerBase
 import copy
+import os
+import font
 
 
 def ceil(a, b):
@@ -36,7 +38,7 @@ def unique_pairs(w, h):
             yield i, j
 
 
-FONTAWESOME_FILE = 'font/FontAwesome.otf'
+FONTAWESOME_FILE = os.path.join(font.__path__[0], 'FontAwesome.otf')
 
 
 class TextLegend(object):

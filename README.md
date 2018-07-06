@@ -163,6 +163,7 @@ In this chart, 1 block = 30000 votes.
 1. Finish documents
 2. Add support for rotation
 3. Add type hint
+4. Alignment of multi plots
 
 ## License
 
