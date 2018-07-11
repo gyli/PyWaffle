@@ -155,10 +155,6 @@ class Waffle(Figure):
         }
         self.plots = kwargs.pop('plots', None)
 
-        if (not self.fig_args['values'] or not self.fig_args['rows']) and not self.plots:
-            raise ValueError("Assign argument values and rows to build a single waffle chart or assign plots to build "
-                             "multiple charts.")
-
         # If plots is empty, make a single waffle chart
         if self.plots is None:
             self.plots = {111: self.fig_args}
@@ -174,6 +170,9 @@ class Waffle(Figure):
     def _waffle(self, loc, **kwargs):
         # _pa is the arguments for this single plot
         self._pa = kwargs
+
+        if len(self._pa['values']) == 0 or not self._pa['rows']:
+            raise ValueError("Argument values or rows is required.")
 
         # Append figure args to plot args
         plot_fig_args = copy.deepcopy(self.fig_args)
