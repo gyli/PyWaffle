@@ -1,6 +1,3 @@
-#!/usr/bin/python
-# -*-coding: utf-8 -*-
-
 from matplotlib.pyplot import cm
 from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle, Patch
@@ -8,6 +5,7 @@ import matplotlib.font_manager as fm
 from matplotlib.text import Text
 from matplotlib.legend_handler import HandlerBase
 import copy
+from itertools import product
 
 
 def ceil(a, b):
@@ -76,67 +74,50 @@ class TextLegendHandler(HandlerBase):
 
 class Waffle(Figure):
     """
-
     A custom Figure class to make waffle charts.
-
     :param values: Numerical value of each category. If it is a dict, the keys would be used as labels.
     :type values: list|dict
-
     :param rows: The number of lines of the waffle chart. This is required if plots is not assigned.
     :type rows: int
-
     :param columns: The number of columns of the waffle chart.
         If it is not None, the total number of blocks would be decided through rows and columns. [Default None]
     :type columns: int
-
     :param colors: A list of colors for each category. Its length should be the same as values.
         Default values are from Set2 colormap.
     :type colors: list[str]|tuple[str]
-
     :param labels: The name of each category.
         If the values is a dict, this parameter would be replaced by the keys of values.
     :type labels: list[str]|tuple[str]
-
     :param legend: Parameters of matplotlib.pyplot.legend in a dict.
         E.g. {'loc': '', 'bbox_to_anchor': (,), ...}
         See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
     :type legend: dict
-
     :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
     :type icon_legend: bool
-
     :param interval_ratio_x: Ratio of distance between blocks on X to block's width. [Default 0.2]
     :type interval_ratio_x: float
-
     :param interval_ratio_y: Ratio of distance between blocks on Y to block's height. [Default 0.2]
     :type interval_ratio_y: float
-
     :param block_aspect: The ratio of block's width to height. [Default 1]
     :type block_aspect: float
-
     :param cmap_name: Name of colormaps for default color, if colors is not assigned.
         See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
     :type cmap_name: str
-
     :param title: Parameters of matplotlib.axes.Axes.set_title in a dict.
         E.g. {'label': '', 'fontdict': {}, 'loc': ''}
         See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
     :type title: dict
-
     :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
         If it's a list or tuple of icons, the length should be the same as values.
         See the full list of Font Awesome on http://fontawesome.io/icons/ [Default None]
     :type icons: str|list[str]|tuple[str]
-
     :param icon_size: Fint size of the icons. The default size is not fixed and depends on the block size.
     :type icon_size: int
-
     :param plot_anchor: {'C', 'SW', 'S', 'SE', 'E', 'NE', 'N', 'NW', 'W'}
         The alignment method of subplots.
         See details in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
         [Default 'W']
     :type plot_anchor: str
-
     :param plots: Location and parameters of Waffle class for subplots in a dict,
         with format like {loc: {subplot_args: values, }, }.
         loc is a 3-digit integer. If the three integers are I, J, and K,
@@ -145,11 +126,12 @@ class Waffle(Figure):
         Nested subplots is not supported.
         If a parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
-
-    :param 'plot_direction': {1, 2, ,3 ,4}
-        Where plot starts.
-    :type 'plot_direction': int
-
+    :param plot_direction: {'NW', 'SW', 'NE', 'SE'}
+    'NW' means plots start at upper left and end at lower right.
+    For 'SW', plots start at lower left and end at upper right.
+    For 'NE', plots start at upper right and end at lower left.
+    For 'SW', plots start at lower right and end at upper left.
+    :type plot_direction: str
     """
     def __init__(self, *args, **kwargs):
         self.fig_args = {
@@ -168,13 +150,17 @@ class Waffle(Figure):
             'icons': kwargs.pop('icons', None),
             'icon_size': kwargs.pop('icon_size', None),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
-            'plot_direction': kwargs.pop('plot_direction', 1)  # add
+            'plot_direction': kwargs.pop('plot_direction', 'NW')#add
         }
         self.plots = kwargs.pop('plots', None)
+
 
         if (not self.fig_args['values'] or not self.fig_args['rows']) and not self.plots:
             raise ValueError("Assign argument values and rows to build a single waffle chart or assign plots to build "
                              "multiple charts.")
+
+        if (not self.fig_args['plot_direction'] in ['NW', 'SW', 'NE', 'SE']):
+            raise ValueError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
 
         # If plots is empty, make a single waffle chart
         if self.plots is None:
@@ -199,6 +185,8 @@ class Waffle(Figure):
                 self._pa[arg] = v
 
         self.values_len = len(self._pa['values'])
+
+
 
         if self._pa['colors'] and len(self._pa['colors']) != self.values_len:
             raise ValueError("Length of colors doesn't match the values.")
@@ -274,7 +262,22 @@ class Waffle(Figure):
         block_index = 0
         x_full = (1 + self._pa['interval_ratio_x']) * block_x_length
         y_full = (1 + self._pa['interval_ratio_y']) * block_y_length
-        for col, row in unique_pairs(self._pa['columns'], self._pa['rows'], self._pa['plot_direction']):
+        if self._pa['plot_direction'] == 'NW':
+            column_order = 1
+            row_order = 1
+        elif self._pa['plot_direction'] == 'SW':
+            column_order = 1
+            row_order = -1
+        elif self._pa['plot_direction'] == 'NE':
+            column_order = -1
+            row_order = 1
+        elif self._pa['plot_direction'] == 'SE':
+            column_order = -1
+            row_order = -1
+
+
+
+        for col, row in product(range(self._pa['columns'])[::column_order], range(self._pa['rows'])[::row_order]):
             x = x_full * col
             y = y_full * row
 
@@ -328,3 +331,4 @@ class Waffle(Figure):
 
     def remove(self):
         pass
+
