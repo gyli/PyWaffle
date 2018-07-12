@@ -32,10 +32,23 @@ def array_resize(array, length, array_len=None):
     return array * (length // array_len) + array[:length % array_len]
 
 
-def unique_pairs(w, h):
-    for i in range(w):
-        for j in range(h):
-            yield i, j
+def unique_pairs(w, h, d):
+    if d == 1:
+        for i in range(w):
+            for j in range(h):
+                yield i, j
+    elif d == 2:
+        for i in range(w)[::-1]:
+            for j in range(h):
+                yield i, j
+    elif d == 3:
+        for i in range(w):
+            for j in range(h)[::-1]:
+                yield i, j
+    elif d == 4:
+        for i in range(w)[::-1]:
+            for j in range(h)[::-1]:
+                yield i, j
 
 
 FONTAWESOME_FILE = os.path.join(font.__path__[0], 'FontAwesome.otf')
@@ -134,6 +147,11 @@ class Waffle(Figure):
         Nested subplots is not supported.
         If a parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
+
+    :param 'plot_direction': {1, 2, ,3 ,4}
+        Where plot starts.
+    :type 'plot_direction': int
+
     """
     def __init__(self, *args, **kwargs):
         self.fig_args = {
@@ -152,6 +170,7 @@ class Waffle(Figure):
             'icons': kwargs.pop('icons', None),
             'icon_size': kwargs.pop('icon_size', None),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
+            'plot_direction': kwargs.pop('plot_direction', 1)  # add
         }
         self.plots = kwargs.pop('plots', None)
 
@@ -256,7 +275,7 @@ class Waffle(Figure):
         block_index = 0
         x_full = (1 + self._pa['interval_ratio_x']) * block_x_length
         y_full = (1 + self._pa['interval_ratio_y']) * block_y_length
-        for col, row in unique_pairs(self._pa['columns'], self._pa['rows']):
+        for col, row in unique_pairs(self._pa['columns'], self._pa['rows'], self._pa['plot_direction']):
             x = x_full * col
             y = y_full * row
 
