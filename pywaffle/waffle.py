@@ -21,7 +21,8 @@ def ceil(a, b):
 
 def array_resize(array, length, array_len=None):
     """
-    Resize array to given length
+    Resize array to given length. If the array is shorter than given length, repeat the array; If the array is longer
+    than the length, trim the array.
     :param array: array
     :param length: target length
     :param array_len: if length of original array is known, pass it in here
