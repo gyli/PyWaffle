@@ -133,7 +133,7 @@ class Waffle(Figure):
         the subplot is the Ith plot on a grid with J rows and K columns.
         The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
         Nested subplots is not supported.
-        If a parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
+        If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
     """
     def __init__(self, *args, **kwargs):
