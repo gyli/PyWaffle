@@ -158,10 +158,6 @@ In this chart, 1 block = 30000 votes.
 
 <sub>Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).</sub>
 
-## Future works
-
-1. Finish documents
-2. Alignment of multi plots
 
 ## License
 
