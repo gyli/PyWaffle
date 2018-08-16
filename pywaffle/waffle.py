@@ -135,6 +135,12 @@ class Waffle(Figure):
         Nested subplots is not supported.
         If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
+    :param plot_direction: {'NW', 'SW', 'NE', 'SE'}
+    'NW' means plots start at upper left and end at lower right.
+    For 'SW', plots start at lower left and end at upper right.
+    For 'NE', plots start at upper right and end at lower left.
+    For 'SW', plots start at lower right and end at upper left.
+    :type plot_direction: str
     """
     def __init__(self, *args, **kwargs):
         self.fig_args = {
@@ -257,6 +263,20 @@ class Waffle(Figure):
         block_index = 0
         x_full = (1 + self._pa['interval_ratio_x']) * block_x_length
         y_full = (1 + self._pa['interval_ratio_y']) * block_y_length
+        
+        if self._pa['plot_direction'] == 'NW':
+            column_order = 1
+            row_order = 1
+        elif self._pa['plot_direction'] == 'SW':
+            column_order = 1
+            row_order = -1
+        elif self._pa['plot_direction'] == 'NE':
+            column_order = -1
+            row_order = 1
+        elif self._pa['plot_direction'] == 'SE':
+            column_order = -1
+            row_order = -1
+            
         for col, row in unique_pairs(self._pa['columns'], self._pa['rows']):
             x = x_full * col
             y = y_full * row
