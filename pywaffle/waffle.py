@@ -10,7 +10,7 @@ from matplotlib.legend_handler import HandlerBase
 import copy
 import os
 import font
-
+from itertools import product
 
 def ceil(a, b):
     """
@@ -32,11 +32,6 @@ def array_resize(array, length, array_len=None):
         array_len = len(array)
     return array * (length // array_len) + array[:length % array_len]
 
-
-def unique_pairs(w, h):
-    for i in range(w):
-        for j in range(h):
-            yield i, j
 
 
 FONTAWESOME_FILE = os.path.join(font.__path__[0], 'FontAwesome.otf')
@@ -159,6 +154,7 @@ class Waffle(Figure):
             'icons': kwargs.pop('icons', None),
             'icon_size': kwargs.pop('icon_size', None),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
+            'plot_direction': kwargs.pop('plot_direction', 'NW')
         }
         self.plots = kwargs.pop('plots', None)
 
@@ -188,6 +184,9 @@ class Waffle(Figure):
                 self._pa[arg] = v
 
         self.values_len = len(self._pa['values'])
+
+        if not self.fig_args['plot_direction'] in ['NW', 'SW', 'NE', 'SE']:
+            raise ValueError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
 
         if self._pa['colors'] and len(self._pa['colors']) != self.values_len:
             raise ValueError("Length of colors doesn't match the values.")
@@ -263,7 +262,7 @@ class Waffle(Figure):
         block_index = 0
         x_full = (1 + self._pa['interval_ratio_x']) * block_x_length
         y_full = (1 + self._pa['interval_ratio_y']) * block_y_length
-        
+
         if self._pa['plot_direction'] == 'NW':
             column_order = 1
             row_order = 1
@@ -276,8 +275,7 @@ class Waffle(Figure):
         elif self._pa['plot_direction'] == 'SE':
             column_order = -1
             row_order = -1
-            
-        for col, row in unique_pairs(self._pa['columns'], self._pa['rows']):
+        for col, row in product(range(self._pa['columns'])[::column_order], range(self._pa['rows'])[::row_order]):
             x = x_full * col
             y = y_full * row
 
@@ -331,3 +329,4 @@ class Waffle(Figure):
 
     def remove(self):
         pass
+
