@@ -10,7 +10,7 @@ from matplotlib.legend_handler import HandlerBase
 import copy
 import os
 import font
-
+from itertools import product
 
 def ceil(a, b):
     """
@@ -32,11 +32,6 @@ def array_resize(array, length, array_len=None):
         array_len = len(array)
     return array * (length // array_len) + array[:length % array_len]
 
-
-def unique_pairs(w, h):
-    for i in range(w):
-        for j in range(h):
-            yield i, j
 
 
 FONTAWESOME_FILE = os.path.join(font.__path__[0], 'FontAwesome.otf')
@@ -135,6 +130,12 @@ class Waffle(Figure):
         Nested subplots is not supported.
         If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
+    :param plot_direction: {'NW', 'SW', 'NE', 'SE'}
+    'NW' means plots start at upper left and end at lower right.
+    For 'SW', plots start at lower left and end at upper right.
+    For 'NE', plots start at upper right and end at lower left.
+    For 'SW', plots start at lower right and end at upper left.
+    :type plot_direction: str
     """
     def __init__(self, *args, **kwargs):
         self.fig_args = {
@@ -153,6 +154,7 @@ class Waffle(Figure):
             'icons': kwargs.pop('icons', None),
             'icon_size': kwargs.pop('icon_size', None),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
+            'plot_direction': kwargs.pop('plot_direction', 'NW')
         }
         self.plots = kwargs.pop('plots', None)
 
@@ -182,6 +184,9 @@ class Waffle(Figure):
                 self._pa[arg] = v
 
         self.values_len = len(self._pa['values'])
+
+        if not self.fig_args['plot_direction'] in ['NW', 'SW', 'NE', 'SE']:
+            raise ValueError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
 
         if self._pa['colors'] and len(self._pa['colors']) != self.values_len:
             raise ValueError("Length of colors doesn't match the values.")
@@ -257,7 +262,20 @@ class Waffle(Figure):
         block_index = 0
         x_full = (1 + self._pa['interval_ratio_x']) * block_x_length
         y_full = (1 + self._pa['interval_ratio_y']) * block_y_length
-        for col, row in unique_pairs(self._pa['columns'], self._pa['rows']):
+
+        if self._pa['plot_direction'] == 'NW':
+            column_order = 1
+            row_order = 1
+        elif self._pa['plot_direction'] == 'SW':
+            column_order = 1
+            row_order = -1
+        elif self._pa['plot_direction'] == 'NE':
+            column_order = -1
+            row_order = 1
+        elif self._pa['plot_direction'] == 'SE':
+            column_order = -1
+            row_order = -1
+        for col, row in product(range(self._pa['columns'])[::column_order], range(self._pa['rows'])[::row_order]):
             x = x_full * col
             y = y_full * row
 
@@ -311,3 +329,4 @@ class Waffle(Figure):
 
     def remove(self):
         pass
+
