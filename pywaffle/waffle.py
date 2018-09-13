@@ -12,6 +12,7 @@ import os
 import font
 from itertools import product
 
+
 def ceil(a, b):
     """
     Just like math.ceil
@@ -33,7 +34,6 @@ def array_resize(array, length, array_len=None):
     return array * (length // array_len) + array[:length % array_len]
 
 
-
 FONTAWESOME_FILE = os.path.join(font.__path__[0], 'FontAwesome.otf')
 
 
@@ -45,14 +45,19 @@ class TextLegend(object):
 
 
 class TextLegendHandler(HandlerBase):
-    def create_artists(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize, trans):
+    def create_artists(self, legend, orig_handle, xdescent, ydescent, width,
+                       height, fontsize, trans):
         x = xdescent + width / 2.0
         y = ydescent + height / 2.0
         kwargs = {
-            'horizontalalignment': 'center',
-            'verticalalignment': 'center',
-            'color': orig_handle.color,
-            'fontproperties': fm.FontProperties(fname=FONTAWESOME_FILE, size=fontsize)
+            'horizontalalignment':
+            'center',
+            'verticalalignment':
+            'center',
+            'color':
+            orig_handle.color,
+            'fontproperties':
+            fm.FontProperties(fname=FONTAWESOME_FILE, size=fontsize)
         }
         kwargs.update(orig_handle.kwargs)
         annotation = Text(x, y, orig_handle.text, **kwargs)
@@ -137,6 +142,7 @@ class Waffle(Figure):
     For 'SW', plots start at lower right and end at upper left.
     :type plot_direction: str
     """
+
     def __init__(self, *args, **kwargs):
         self.fig_args = {
             'values': kwargs.pop('values', []),
@@ -185,9 +191,6 @@ class Waffle(Figure):
 
         self.values_len = len(self._pa['values'])
 
-        if not self.fig_args['plot_direction'] in ['NW', 'SW', 'NE', 'SE']:
-            raise ValueError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
-
         if self._pa['colors'] and len(self._pa['colors']) != self.values_len:
             raise ValueError("Length of colors doesn't match the values.")
 
@@ -224,28 +227,33 @@ class Waffle(Figure):
             self._pa['columns'] = ceil(self.value_sum, self._pa['rows'])
             block_number_per_cat = self._pa['values']
         else:
-            block_number_per_cat = [round(v * self._pa['columns'] * self._pa['rows'] / self.value_sum) for v in self._pa['values']]
+            block_number_per_cat = [
+                round(v * self._pa['columns'] * self._pa['rows'] /
+                      self.value_sum) for v in self._pa['values']
+            ]
 
         # Absolute height of the plot
         figure_height = 1
-        block_y_length = figure_height / (self._pa['rows'] + self._pa['rows'] * self._pa['interval_ratio_y'] - self._pa['interval_ratio_y'])
+        block_y_length = figure_height / (
+            self._pa['rows'] + self._pa['rows'] * self._pa['interval_ratio_y']
+            - self._pa['interval_ratio_y'])
         block_x_length = self._pa['block_aspect'] * block_y_length
 
         # Define the limit of X, Y axis
         self.ax.axis(
             xmin=0,
-            xmax=(self._pa['columns'] + self._pa['columns'] * self._pa['interval_ratio_x'] - self._pa['interval_ratio_x']) * block_x_length,
+            xmax=(self._pa['columns'] +
+                  self._pa['columns'] * self._pa['interval_ratio_x'] -
+                  self._pa['interval_ratio_x']) * block_x_length,
             ymin=0,
-            ymax=figure_height
-        )
+            ymax=figure_height)
 
         # Default font size
         if self._pa['icons']:
             x, y = self.ax.transData.transform([(0, 0), (0, block_x_length)])
             prop = fm.FontProperties(
                 fname=FONTAWESOME_FILE,
-                size=self._pa['icon_size'] or int((y[1] - x[1]) / 16 * 12)
-            )
+                size=self._pa['icon_size'] or int((y[1] - x[1]) / 16 * 12))
 
         # Build a color sequence if colors is empty
         if not self._pa['colors']:
@@ -254,8 +262,7 @@ class Waffle(Figure):
             self._pa['colors'] = array_resize(
                 array=default_colors,
                 length=self.values_len,
-                array_len=default_color_num
-            )
+                array_len=default_color_num)
 
         # Plot blocks
         class_index = 0
@@ -263,19 +270,26 @@ class Waffle(Figure):
         x_full = (1 + self._pa['interval_ratio_x']) * block_x_length
         y_full = (1 + self._pa['interval_ratio_y']) * block_y_length
 
-        if self._pa['plot_direction'] == 'NW':
+        plot_direction = self._pa['plot_direction'].upper()
+
+        if plot_direction == 'NW':
             column_order = 1
             row_order = 1
-        elif self._pa['plot_direction'] == 'SW':
+        elif plot_direction == 'SW':
             column_order = 1
             row_order = -1
-        elif self._pa['plot_direction'] == 'NE':
+        elif plot_direction == 'NE':
             column_order = -1
             row_order = 1
-        elif self._pa['plot_direction'] == 'SE':
+        elif plot_direction == 'SE':
             column_order = -1
             row_order = -1
-        for col, row in product(range(self._pa['columns'])[::column_order], range(self._pa['rows'])[::row_order]):
+        else:
+            raise ValueError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
+        
+        for col, row in product(
+                range(self._pa['columns'])[::column_order],
+                range(self._pa['rows'])[::row_order]):
             x = x_full * col
             y = y_full * row
 
@@ -285,13 +299,14 @@ class Waffle(Figure):
                     y=y,
                     s=self._pa['icons'][class_index],
                     color=self._pa['colors'][class_index],
-                    fontproperties=prop
-                )
+                    fontproperties=prop)
             else:
                 self.ax.add_artist(
-                    Rectangle(xy=(x, y), width=block_x_length, height=block_y_length,
-                              color=self._pa['colors'][class_index])
-                )
+                    Rectangle(
+                        xy=(x, y),
+                        width=block_x_length,
+                        height=block_y_length,
+                        color=self._pa['colors'][class_index]))
 
             block_index += 1
             if block_index >= sum(block_number_per_cat[:class_index + 1]):
@@ -308,13 +323,17 @@ class Waffle(Figure):
         if self._pa['labels'] or 'labels' in self._pa['legend']:
             if self._pa['icons'] and self._pa['icon_legend']:
                 self._pa['legend']['handles'] = [
-                    TextLegend(color=c, text=i) for c, i in zip(self._pa['colors'], self._pa['icons'])
+                    TextLegend(color=c, text=i)
+                    for c, i in zip(self._pa['colors'], self._pa['icons'])
                 ]
-                self._pa['legend']['handler_map'] = {TextLegend: TextLegendHandler()}
+                self._pa['legend']['handler_map'] = {
+                    TextLegend: TextLegendHandler()
+                }
             # elif not self._pa['legend'].get('handles'):
             elif 'handles' not in self._pa['legend']:
                 self._pa['legend']['handles'] = [
-                    Patch(color=c, label=str(l)) for c, l in zip(self._pa['colors'], self._pa['labels'])
+                    Patch(color=c, label=str(l))
+                    for c, l in zip(self._pa['colors'], self._pa['labels'])
                 ]
 
             # labels is an alias of legend['labels']
@@ -329,4 +348,3 @@ class Waffle(Figure):
 
     def remove(self):
         pass
-
