@@ -45,19 +45,14 @@ class TextLegend(object):
 
 
 class TextLegendHandler(HandlerBase):
-    def create_artists(self, legend, orig_handle, xdescent, ydescent, width,
-                       height, fontsize, trans):
+    def create_artists(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize, trans):
         x = xdescent + width / 2.0
         y = ydescent + height / 2.0
         kwargs = {
-            'horizontalalignment':
-            'center',
-            'verticalalignment':
-            'center',
-            'color':
-            orig_handle.color,
-            'fontproperties':
-            fm.FontProperties(fname=FONTAWESOME_FILE, size=fontsize)
+            'horizontalalignment': 'center',
+            'verticalalignment': 'center',
+            'color': orig_handle.color,
+            'fontproperties': fm.FontProperties(fname=FONTAWESOME_FILE, size=fontsize)
         }
         kwargs.update(orig_handle.kwargs)
         annotation = Text(x, y, orig_handle.text, **kwargs)
@@ -228,41 +223,36 @@ class Waffle(Figure):
             block_number_per_cat = self._pa['values']
         else:
             block_number_per_cat = [
-                round(v * self._pa['columns'] * self._pa['rows'] /
-                      self.value_sum) for v in self._pa['values']
+                round(v * self._pa['columns'] * self._pa['rows'] / self.value_sum) for v in self._pa['values']
             ]
 
         # Absolute height of the plot
         figure_height = 1
         block_y_length = figure_height / (
-            self._pa['rows'] + self._pa['rows'] * self._pa['interval_ratio_y']
-            - self._pa['interval_ratio_y'])
+            self._pa['rows'] + self._pa['rows'] * self._pa['interval_ratio_y'] - self._pa['interval_ratio_y']
+        )
         block_x_length = self._pa['block_aspect'] * block_y_length
 
         # Define the limit of X, Y axis
         self.ax.axis(
             xmin=0,
-            xmax=(self._pa['columns'] +
-                  self._pa['columns'] * self._pa['interval_ratio_x'] -
-                  self._pa['interval_ratio_x']) * block_x_length,
+            xmax=(
+                self._pa['columns'] + self._pa['columns'] * self._pa['interval_ratio_x'] - self._pa['interval_ratio_x']
+            ) * block_x_length,
             ymin=0,
-            ymax=figure_height)
+            ymax=figure_height
+        )
 
         # Default font size
         if self._pa['icons']:
             x, y = self.ax.transData.transform([(0, 0), (0, block_x_length)])
-            prop = fm.FontProperties(
-                fname=FONTAWESOME_FILE,
-                size=self._pa['icon_size'] or int((y[1] - x[1]) / 16 * 12))
+            prop = fm.FontProperties(fname=FONTAWESOME_FILE, size=self._pa['icon_size'] or int((y[1] - x[1]) / 16 * 12))
 
         # Build a color sequence if colors is empty
         if not self._pa['colors']:
             default_colors = cm.get_cmap(self._pa['cmap_name']).colors
             default_color_num = cm.get_cmap(self._pa['cmap_name']).N
-            self._pa['colors'] = array_resize(
-                array=default_colors,
-                length=self.values_len,
-                array_len=default_color_num)
+            self._pa['colors'] = array_resize(array=default_colors, length=self.values_len, array_len=default_color_num)
 
         # Plot blocks
         class_index = 0
@@ -286,10 +276,8 @@ class Waffle(Figure):
             row_order = -1
         else:
             raise ValueError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
-        
-        for col, row in product(
-                range(self._pa['columns'])[::column_order],
-                range(self._pa['rows'])[::row_order]):
+
+        for col, row in product(range(self._pa['columns'])[::column_order], range(self._pa['rows'])[::row_order]):
             x = x_full * col
             y = y_full * row
 
@@ -299,14 +287,14 @@ class Waffle(Figure):
                     y=y,
                     s=self._pa['icons'][class_index],
                     color=self._pa['colors'][class_index],
-                    fontproperties=prop)
+                    fontproperties=prop
+                )
             else:
                 self.ax.add_artist(
                     Rectangle(
-                        xy=(x, y),
-                        width=block_x_length,
-                        height=block_y_length,
-                        color=self._pa['colors'][class_index]))
+                        xy=(x, y), width=block_x_length, height=block_y_length, color=self._pa['colors'][class_index]
+                    )
+                )
 
             block_index += 1
             if block_index >= sum(block_number_per_cat[:class_index + 1]):
@@ -323,17 +311,13 @@ class Waffle(Figure):
         if self._pa['labels'] or 'labels' in self._pa['legend']:
             if self._pa['icons'] and self._pa['icon_legend']:
                 self._pa['legend']['handles'] = [
-                    TextLegend(color=c, text=i)
-                    for c, i in zip(self._pa['colors'], self._pa['icons'])
+                    TextLegend(color=c, text=i) for c, i in zip(self._pa['colors'], self._pa['icons'])
                 ]
-                self._pa['legend']['handler_map'] = {
-                    TextLegend: TextLegendHandler()
-                }
+                self._pa['legend']['handler_map'] = {TextLegend: TextLegendHandler()}
             # elif not self._pa['legend'].get('handles'):
             elif 'handles' not in self._pa['legend']:
                 self._pa['legend']['handles'] = [
-                    Patch(color=c, label=str(l))
-                    for c, l in zip(self._pa['colors'], self._pa['labels'])
+                    Patch(color=c, label=str(l)) for c, l in zip(self._pa['colors'], self._pa['labels'])
                 ]
 
             # labels is an alias of legend['labels']
