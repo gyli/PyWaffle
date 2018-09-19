@@ -135,7 +135,7 @@ class Waffle(Figure):
     'NW' means plots start at upper left and end at lower right.
     For 'SW', plots start at lower left and end at upper right.
     For 'NE', plots start at upper right and end at lower left.
-    For 'SW', plots start at lower right and end at upper left.
+    For 'SE', plots start at lower right and end at upper left.
     :type plot_direction: str
     """
 
