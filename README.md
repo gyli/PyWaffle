@@ -95,7 +95,7 @@ fig = plt.figure(
     values=data, 
     colors=("#232066", "#983D3D", "#DCB732"),
     legend={'loc': 'upper left', 'bbox_to_anchor': (1, 1)},
-    icons='child', icon_size=18, 
+    icons='child', icon_size=16, 
     icon_legend=True
 )
 ```
