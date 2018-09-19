@@ -130,13 +130,33 @@ class Waffle(Figure):
         Nested subplots is not supported.
         If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
-    :param plot_direction: {'NW', 'SW', 'NE', 'SE'}
+    :param plot_direction: {'NW', 'SW', 'NE', 'SE'}, the default value is SW.
+    Change the starting location plotting the blocks
     'NW' means plots start at upper left and end at lower right.
     For 'SW', plots start at lower left and end at upper right.
     For 'NE', plots start at upper right and end at lower left.
     For 'SW', plots start at lower right and end at upper left.
     :type plot_direction: str
     """
+
+    _direction_values = {
+        'NW': {
+            'column_order': 1,
+            'row_order': -1,
+        },
+        'SW': {
+            'column_order': 1,
+            'row_order': 1,
+        },
+        'NE': {
+            'column_order': -1,
+            'row_order': 1,
+        },
+        'SE': {
+            'column_order': -1,
+            'row_order': -1,
+        },
+    }
 
     def __init__(self, *args, **kwargs):
         self.fig_args = {
@@ -155,7 +175,7 @@ class Waffle(Figure):
             'icons': kwargs.pop('icons', None),
             'icon_size': kwargs.pop('icon_size', None),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
-            'plot_direction': kwargs.pop('plot_direction', 'NW')
+            'plot_direction': kwargs.pop('plot_direction', 'SW')
         }
         self.plots = kwargs.pop('plots', None)
 
@@ -175,14 +195,14 @@ class Waffle(Figure):
         # _pa is the arguments for this single plot
         self._pa = kwargs
 
-        if len(self._pa['values']) == 0 or not self._pa['rows']:
-            raise ValueError("Argument values or rows is required.")
-
         # Append figure args to plot args
         plot_fig_args = copy.deepcopy(self.fig_args)
         for arg, v in plot_fig_args.items():
             if arg not in self._pa:
                 self._pa[arg] = v
+
+        if len(self._pa['values']) == 0 or not self._pa['rows']:
+            raise ValueError("Argument values or rows is required.")
 
         self.values_len = len(self._pa['values'])
 
@@ -262,20 +282,11 @@ class Waffle(Figure):
 
         plot_direction = self._pa['plot_direction'].upper()
 
-        if plot_direction == 'NW':
-            column_order = 1
-            row_order = 1
-        elif plot_direction == 'SW':
-            column_order = 1
-            row_order = -1
-        elif plot_direction == 'NE':
-            column_order = -1
-            row_order = 1
-        elif plot_direction == 'SE':
-            column_order = -1
-            row_order = -1
-        else:
-            raise ValueError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
+        try:
+            column_order = self._direction_values[plot_direction]['column_order']
+            row_order = self._direction_values[plot_direction]['row_order']
+        except KeyError:
+            raise KeyError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
 
         for col, row in product(range(self._pa['columns'])[::column_order], range(self._pa['rows'])[::row_order]):
             x = x_full * col

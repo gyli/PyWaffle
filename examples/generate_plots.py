@@ -29,7 +29,7 @@ fig = plt.figure(
 fig.savefig(image_folder + 'absolute_block_numbers.svg', bbox_inches='tight')
 
 
-# Add title, legend and background color; and change block color
+# Add title, legend, background color, block color and direction
 # Data source https://en.wikipedia.org/wiki/United_States_presidential_election,_2016
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
 fig = plt.figure(
@@ -39,7 +39,8 @@ fig = plt.figure(
     colors=("#983D3D", "#232066", "#DCB732"),
     title={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
     labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
-    legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0}
+    legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0},
+    plot_direction='NW'
 )
 fig.gca().set_facecolor('#EEEEEE')
 fig.set_facecolor('#EEEEEE')
