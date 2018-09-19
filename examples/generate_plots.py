@@ -56,7 +56,7 @@ fig = plt.figure(
     values=data,
     colors=("#232066", "#983D3D", "#DCB732"),
     legend={'loc': 'upper left', 'bbox_to_anchor': (1, 1)},
-    icons='child', icon_size=16,
+    icons='child', icon_size=12,
     icon_legend=True
 )
 fig.savefig(image_folder + 'fontawesome.svg', bbox_inches='tight')
