@@ -41,7 +41,7 @@ fig = plt.figure(
 plt.show()
 ```
 
-![basic](examples/basic.svg)
+![basic](examples/basic.png)
 
 ### 2. Values in dict & Auto-columns
 
@@ -56,7 +56,7 @@ fig = plt.figure(
 plt.show()
 ```
 
-![Use values in dictionary; use absolute value as block number, without defining columns](examples/absolute_block_numbers.svg)
+![Use values in dictionary; use absolute value as block number, without defining columns](examples/absolute_block_numbers.png)
 
 If parameter `columns` is empty, PyWaffle uses absolute number in `values` as block number.
 
@@ -81,7 +81,7 @@ fig.set_facecolor('#EEEEEE')
 plt.show()
 ```
 
-![Add title, legend and background color; customize the block color](examples/title_and_legend.svg)
+![Add title, legend and background color; customize the block color](examples/title_and_legend.png)
 
 It is now clear to see that there are 3% votes to other parties/candidates.
 
@@ -100,7 +100,7 @@ fig = plt.figure(
 )
 ```
     
-![Use Font Awesome icons](examples/fontawesome.svg)
+![Use Font Awesome icons](examples/fontawesome.png)
 
 PyWaffle supports [Font Awesome](http://fontawesome.io/) icons in the chart.
 
@@ -153,7 +153,7 @@ fig = plt.figure(
 )
 ```
     
-![Multiple plots](examples/multiple_plots.svg)
+![Multiple plots](examples/multiple_plots.png)
 
 In this chart, 1 block = 30000 votes.
 

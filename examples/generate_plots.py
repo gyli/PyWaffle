@@ -15,7 +15,7 @@ fig = plt.figure(
     columns=10,
     values=[48, 46, 3]
 )
-fig.savefig(image_folder + 'basic.svg', bbox_inches='tight')
+fig.savefig(image_folder + 'basic.png', bbox_inches='tight')
 
 
 # Use values in dictionary; use absolute value as block number, without defining columns
@@ -26,7 +26,7 @@ fig = plt.figure(
     values=data,
     legend={'loc': 'upper left', 'bbox_to_anchor': (1.1, 1)}
 )
-fig.savefig(image_folder + 'absolute_block_numbers.svg', bbox_inches='tight')
+fig.savefig(image_folder + 'absolute_block_numbers.png', bbox_inches='tight')
 
 
 # Add title, legend, background color, block color and direction
@@ -45,7 +45,7 @@ fig = plt.figure(
 fig.gca().set_facecolor('#EEEEEE')
 fig.set_facecolor('#EEEEEE')
 plt.plot()
-fig.savefig(image_folder + 'title_and_legend.svg', bbox_inches='tight', facecolor='#EEEEEE')
+fig.savefig(image_folder + 'title_and_legend.png', bbox_inches='tight', facecolor='#EEEEEE')
 
 
 # Use icons from Awesomefont
@@ -59,7 +59,7 @@ fig = plt.figure(
     icons='child', icon_size=16,
     icon_legend=True
 )
-fig.savefig(image_folder + 'fontawesome.svg', bbox_inches='tight')
+fig.savefig(image_folder + 'fontawesome.png', bbox_inches='tight')
 
 
 # Multiple Plots
@@ -99,4 +99,4 @@ fig = plt.figure(
     colors=("#2196f3", "#ff5252", "#999999"),  # Default argument values for subplots
     figsize=(9, 5)  # figsize is a parameter of plt.figure
 )
-fig.savefig(image_folder + 'multiple_plots.svg', bbox_inches='tight')
+fig.savefig(image_folder + 'multiple_plots.png', bbox_inches='tight')
