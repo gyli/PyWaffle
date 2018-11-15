@@ -34,7 +34,12 @@ def array_resize(array, length, array_len=None):
     return array * (length // array_len) + array[:length % array_len]
 
 
-FONTAWESOME_FILE = os.path.join(font.__path__[0], 'FontAwesome.otf')
+_FONT_PATH = font.__path__[0]
+FONTAWESOME_FILES = {
+    'BRANDS': os.path.join(_FONT_PATH, 'Font Awesome 5 Brands-Regular-400.otf'),
+    'SOLID': os.path.join(_FONT_PATH, 'Font Awesome 5 Free-Solid-900.otf'),
+    'REGULAR': os.path.join(_FONT_PATH, 'Font Awesome 5 Free-Regular-400.otf'),
+}
 
 
 class TextLegend(object):
@@ -45,6 +50,10 @@ class TextLegend(object):
 
 
 class TextLegendHandler(HandlerBase):
+    def __init__(self, font_file):
+        super().__init__()
+        self.font_file = FONTAWESOME_FILES[font_file]
+
     def create_artists(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize, trans):
         x = xdescent + width / 2.0
         y = ydescent + height / 2.0
@@ -52,7 +61,7 @@ class TextLegendHandler(HandlerBase):
             'horizontalalignment': 'center',
             'verticalalignment': 'center',
             'color': orig_handle.color,
-            'fontproperties': fm.FontProperties(fname=FONTAWESOME_FILE, size=fontsize)
+            'fontproperties': fm.FontProperties(fname=self.font_file, size=fontsize)
         }
         kwargs.update(orig_handle.kwargs)
         annotation = Text(x, y, orig_handle.text, **kwargs)
@@ -112,6 +121,11 @@ class Waffle(Figure):
         If it's a list or tuple of icons, the length should be the same as values.
         See the full list of Font Awesome on http://fontawesome.io/icons/ [Default None]
     :type icons: str|list[str]|tuple[str]
+
+    :param icon_set: ('BRANDS', 'REGULAR', 'SOLID')
+        The set of icons to be used. Visit https://fontawesome.com/cheatsheet to see which icons belong to which set.
+        [Default 'SOLID']
+    :type icon_set: str
 
     :param icon_size: Fint size of the icons. The default size is not fixed and depends on the block size.
     :type icon_size: int
@@ -174,6 +188,7 @@ class Waffle(Figure):
             'title': kwargs.pop('title', None),
             'icons': kwargs.pop('icons', None),
             'icon_size': kwargs.pop('icon_size', None),
+            'icon_set': kwargs.pop('icon_set', 'SOLID'),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
             'plot_direction': kwargs.pop('plot_direction', 'SW')
         }
@@ -220,6 +235,10 @@ class Waffle(Figure):
         if self._pa['icons']:
             from pywaffle.fontawesome_mapping import icons
 
+            icon_set = self._pa['icon_set']
+            if icon_set not in icons.keys():
+                raise KeyError('icon_set should be one of {}'.format(', '.join(icons.keys())))
+
             # If icons is a string, convert it into a list of same icon. It's length is the label's length
             # '\uf26e' -> ['\uf26e', '\uf26e', '\uf26e', ]
             if isinstance(self._pa['icons'], str):
@@ -228,7 +247,7 @@ class Waffle(Figure):
             if len(self._pa['icons']) != self.values_len:
                 raise ValueError("Length of icons doesn't match the values.")
 
-            self._pa['icons'] = [icons[i] for i in self._pa['icons']]
+            self._pa['icons'] = [icons[icon_set][i] for i in self._pa['icons']]
 
         self.ax = self.add_subplot(loc, aspect='equal')
 
@@ -266,7 +285,7 @@ class Waffle(Figure):
         # Default font size
         if self._pa['icons']:
             x, y = self.ax.transData.transform([(0, 0), (0, block_x_length)])
-            prop = fm.FontProperties(fname=FONTAWESOME_FILE, size=self._pa['icon_size'] or int((y[1] - x[1]) / 16 * 12))
+            prop = fm.FontProperties(fname=FONTAWESOME_FILES[icon_set], size=self._pa['icon_size'] or int((y[1] - x[1]) / 16 * 12))
 
         # Build a color sequence if colors is empty
         if not self._pa['colors']:
@@ -324,7 +343,7 @@ class Waffle(Figure):
                 self._pa['legend']['handles'] = [
                     TextLegend(color=c, text=i) for c, i in zip(self._pa['colors'], self._pa['icons'])
                 ]
-                self._pa['legend']['handler_map'] = {TextLegend: TextLegendHandler()}
+                self._pa['legend']['handler_map'] = {TextLegend: TextLegendHandler(icon_set)}
             # elif not self._pa['legend'].get('handles'):
             elif 'handles' not in self._pa['legend']:
                 self._pa['legend']['handles'] = [
