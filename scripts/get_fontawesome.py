@@ -2,6 +2,8 @@
 # Run:
 # python3 scripts/get_fontawesome.py > pywaffle/fontawesome_mapping.py
 
+# The font files in folder font need to be updated manually when updating FontAwesome
+
 
 import json
 import requests
