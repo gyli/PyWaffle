@@ -24,7 +24,7 @@ def main(uri):
             style_name = style.upper()
             if style_name not in mapping.keys():
                 mapping[style_name] = {}
-            mapping[style_name][k] = v['unicode']
+            mapping[style_name][k] = chr(int(v['unicode'], 16))
 
     with open('pywaffle/fontawesome_mapping.py', 'w') as file:
         file.write("# This file belongs to Font Awesome, see license http://fontawesome.io/license/\n")
@@ -33,6 +33,7 @@ def main(uri):
         file.write('icons = ')
         file.write(json.dumps(mapping, indent=4))
         file.write('\n')
+
 
 if __name__ == '__main__':
     main(URI)

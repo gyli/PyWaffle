@@ -235,8 +235,7 @@ class Waffle(Figure):
         if self._pa['icons']:
             from pywaffle.fontawesome_mapping import icons
 
-            icon_set = self._pa['icon_set']
-            if icon_set not in icons.keys():
+            if self._pa['icon_set'] not in icons.keys():
                 raise KeyError('icon_set should be one of {}'.format(', '.join(icons.keys())))
 
             # If icons is a string, convert it into a list of same icon. It's length is the label's length
@@ -247,7 +246,7 @@ class Waffle(Figure):
             if len(self._pa['icons']) != self.values_len:
                 raise ValueError("Length of icons doesn't match the values.")
 
-            self._pa['icons'] = [icons[icon_set][i] for i in self._pa['icons']]
+            self._pa['icons'] = [icons[self._pa['icon_set']][i] for i in self._pa['icons']]
 
         self.ax = self.add_subplot(loc, aspect='equal')
 
@@ -285,7 +284,7 @@ class Waffle(Figure):
         # Default font size
         if self._pa['icons']:
             x, y = self.ax.transData.transform([(0, 0), (0, block_x_length)])
-            prop = fm.FontProperties(fname=FONTAWESOME_FILES[icon_set], size=self._pa['icon_size'] or int((y[1] - x[1]) / 16 * 12))
+            prop = fm.FontProperties(fname=FONTAWESOME_FILES[self._pa['icon_set']], size=self._pa['icon_size'] or int((y[1] - x[1]) / 16 * 12))
 
         # Build a color sequence if colors is empty
         if not self._pa['colors']:
@@ -343,7 +342,7 @@ class Waffle(Figure):
                 self._pa['legend']['handles'] = [
                     TextLegend(color=c, text=i) for c, i in zip(self._pa['colors'], self._pa['icons'])
                 ]
-                self._pa['legend']['handler_map'] = {TextLegend: TextLegendHandler(icon_set)}
+                self._pa['legend']['handler_map'] = {TextLegend: TextLegendHandler(self._pa['icon_set'])}
             # elif not self._pa['legend'].get('handles'):
             elif 'handles' not in self._pa['legend']:
                 self._pa['legend']['handles'] = [
