@@ -284,7 +284,10 @@ class Waffle(Figure):
         # Default font size
         if self._pa['icons']:
             x, y = self.ax.transData.transform([(0, 0), (0, block_x_length)])
-            prop = fm.FontProperties(fname=FONTAWESOME_FILES[self._pa['icon_set']], size=self._pa['icon_size'] or int((y[1] - x[1]) / 16 * 12))
+            prop = fm.FontProperties(
+                fname=FONTAWESOME_FILES[self._pa['icon_set']],
+                size=self._pa['icon_size'] or int((y[1] - x[1]) / 16 * 12)
+            )
 
         # Build a color sequence if colors is empty
         if not self._pa['colors']:

@@ -4,20 +4,18 @@
 
 # The font files in folder font need to be updated manually when updating FontAwesome
 
-
 import json
 import requests
-
 
 INDENT = ' ' * 4
 VERSION = '5.5.0'
 URI = 'https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/advanced-options/metadata/icons.json'
 
 
-def main(uri):
+def main():
+    icons = json.loads(requests.get(URI).text)
 
-    icons = json.loads(requests.get(uri).text)
-
+    # Group icons by style
     mapping = {}
     for k, v in icons.items():
         for style in v['styles']:
@@ -36,4 +34,4 @@ def main(uri):
 
 
 if __name__ == '__main__':
-    main(URI)
+    main()

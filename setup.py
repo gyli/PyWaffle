@@ -30,8 +30,12 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    package_data={'font': ['Font Awesome 5 Brands-Regular-400.otf',
-                           'Font Awesome 5 Free-Regular-400.otf',
-                           'Font Awesome 5 Free-Solid-900.otf']},
+    package_data={
+        'font': [
+            'Font Awesome 5 Brands-Regular-400.otf',
+            'Font Awesome 5 Free-Regular-400.otf',
+            'Font Awesome 5 Free-Solid-900.otf'
+        ]
+    },
     include_package_data=True
 )
