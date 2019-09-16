@@ -76,7 +76,7 @@ class Waffle(Figure):
     :param values: Numerical value of each category. If it is a dict, the keys would be used as labels.
     :type values: list|dict
 
-    :param rows: The number of lines of the waffle chart. This is required if plots is not assigned.
+    :param rows: The number of lines of the waffle chart. This is required unless it is specified in argument plots.
     :type rows: int
 
     :param columns: The number of columns of the waffle chart.
@@ -310,6 +310,12 @@ class Waffle(Figure):
             raise KeyError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
 
         for col, row in product(range(self._pa['columns'])[::column_order], range(self._pa['rows'])[::row_order]):
+            if block_number_per_cat[class_index] == 0:
+                class_index += 1
+
+                if class_index > self.values_len - 1:
+                    break
+
             x = x_full * col
             y = y_full * row
 
@@ -331,7 +337,6 @@ class Waffle(Figure):
             block_index += 1
             if block_index >= sum(block_number_per_cat[:class_index + 1]):
                 class_index += 1
-
                 if class_index > self.values_len - 1:
                     break
 
