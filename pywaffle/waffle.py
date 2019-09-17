@@ -315,6 +315,8 @@ class Waffle(Figure):
 
                 if class_index > self.values_len - 1:
                     break
+            elif block_number_per_cat[class_index] < 0:
+                raise ValueError("Negative value is not acceptable")
 
             x = x_full * col
             y = y_full * row
