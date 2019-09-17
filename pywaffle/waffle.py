@@ -151,6 +151,9 @@ class Waffle(Figure):
     For 'NE', plots start at upper right and end at lower left.
     For 'SE', plots start at lower right and end at upper left.
     :type plot_direction: str
+    :param vertical: decide whether to draw the plot vertically or horizontally.
+    Default False
+    :type vertical: bool
     """
 
     _direction_values = {
@@ -190,7 +193,8 @@ class Waffle(Figure):
             'icon_size': kwargs.pop('icon_size', None),
             'icon_set': kwargs.pop('icon_set', 'SOLID'),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
-            'plot_direction': kwargs.pop('plot_direction', 'SW')
+            'plot_direction': kwargs.pop('plot_direction', 'SW'),
+            'vertical': kwargs.pop('vertical', False)
         }
         self.plots = kwargs.pop('plots', None)
 
@@ -309,7 +313,17 @@ class Waffle(Figure):
         except KeyError:
             raise KeyError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
 
-        for col, row in product(range(self._pa['columns'])[::column_order], range(self._pa['rows'])[::row_order]):
+        if self.fig_args['vertical']:
+            block_iter = [c[::-1] for c in product(
+                range(self._pa['rows'])[::row_order],
+                range(self._pa['columns'])[::column_order]
+            )]
+        else:
+            block_iter = product(
+                range(self._pa['columns'])[::column_order],
+                range(self._pa['rows'])[::row_order]
+            )
+        for col, row in block_iter:
             if block_number_per_cat[class_index] == 0:
                 class_index += 1
 
