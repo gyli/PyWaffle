@@ -144,6 +144,7 @@ class Waffle(Figure):
         Nested subplots is not supported.
         If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
+
     :param plot_direction: {'NW', 'SW', 'NE', 'SE'}, the default value is SW.
     Change the starting location plotting the blocks
     'NW' means plots start at upper left and end at lower right.
@@ -151,8 +152,9 @@ class Waffle(Figure):
     For 'NE', plots start at upper right and end at lower left.
     For 'SE', plots start at lower right and end at upper left.
     :type plot_direction: str
+
     :param vertical: decide whether to draw the plot vertically or horizontally.
-    Default False
+        [Default False]
     :type vertical: bool
     """
 
@@ -313,16 +315,12 @@ class Waffle(Figure):
         except KeyError:
             raise KeyError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
 
-        if self.fig_args['vertical']:
-            block_iter = [c[::-1] for c in product(
-                range(self._pa['rows'])[::row_order],
-                range(self._pa['columns'])[::column_order]
-            )]
-        else:
-            block_iter = product(
-                range(self._pa['columns'])[::column_order],
-                range(self._pa['rows'])[::row_order]
-            )
+        block_iter = [
+            c[::-1] if self.fig_args['vertical'] else c
+            for c in product(range(self._pa['rows'])[::row_order],
+                             range(self._pa['columns'])[::column_order])
+        ]
+
         for col, row in block_iter:
             if block_number_per_cat[class_index] == 0:
                 class_index += 1
