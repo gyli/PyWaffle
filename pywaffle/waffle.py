@@ -13,10 +13,7 @@ import font
 from itertools import product
 
 
-def ceil(a, b):
-    """
-    Just like math.ceil
-    """
+def division_ceil(a, b):
     return int(a // b + bool(a % b))
 
 
@@ -263,7 +260,7 @@ class Waffle(Figure):
 
         # if column number is not given, use the values as number of blocks
         if self._pa['columns'] is None:
-            self._pa['columns'] = ceil(self.value_sum, self._pa['rows'])
+            self._pa['columns'] = division_ceil(self.value_sum, self._pa['rows'])
             block_number_per_cat = self._pa['values']
         else:
             block_number_per_cat = [
@@ -315,11 +312,16 @@ class Waffle(Figure):
         except KeyError:
             raise KeyError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
 
-        block_iter = [
-            c[::-1] if self.fig_args['vertical'] else c
-            for c in product(range(self._pa['rows'])[::row_order],
-                             range(self._pa['columns'])[::column_order])
-        ]
+        if self.fig_args['vertical']:
+            block_iter = [c[::-1] for c in product(
+                range(self._pa['rows'])[::row_order],
+                range(self._pa['columns'])[::column_order]
+            )]
+        else:
+            block_iter = product(
+                range(self._pa['columns'])[::column_order],
+                range(self._pa['rows'])[::row_order]
+            )
 
         for col, row in block_iter:
             if block_number_per_cat[class_index] == 0:
