@@ -6,16 +6,16 @@
 import matplotlib.pyplot as plt
 from pywaffle.waffle import Waffle
 
-image_folder = 'examples/'
+readme_image_folder = 'examples/readme/'
 
 # Basic
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3])
-fig.savefig(image_folder + 'basic.svg', bbox_inches='tight')
+fig.savefig(readme_image_folder + 'basic.svg', bbox_inches='tight')
 
 # Use values in dictionary; use absolute value as block number, without defining columns
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
 fig = plt.figure(FigureClass=Waffle, rows=5, values=data, legend={'loc': 'upper left', 'bbox_to_anchor': (1.1, 1)})
-fig.savefig(image_folder + 'absolute_block_numbers.svg', bbox_inches='tight')
+fig.savefig(readme_image_folder + 'absolute_block_numbers.svg', bbox_inches='tight')
 
 # Add title, legend, background color, block color and direction
 # Data source https://en.wikipedia.org/wiki/United_States_presidential_election,_2016
@@ -41,7 +41,7 @@ fig = plt.figure(
 fig.gca().set_facecolor('#EEEEEE')
 fig.set_facecolor('#EEEEEE')
 plt.plot()
-fig.savefig(image_folder + 'title_and_legend.svg', bbox_inches='tight', facecolor='#EEEEEE')
+fig.savefig(readme_image_folder + 'title_and_legend.svg', bbox_inches='tight', facecolor='#EEEEEE')
 
 # Use icons from Awesomefont
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
@@ -58,7 +58,7 @@ fig = plt.figure(
     icon_size=12,
     icon_legend=True
 )
-fig.savefig(image_folder + 'fontawesome.svg', bbox_inches='tight')
+fig.savefig(readme_image_folder + 'fontawesome.svg', bbox_inches='tight')
 
 # Multiple Plots
 import pandas as pd
@@ -121,4 +121,6 @@ fig = plt.figure(
     colors=("#2196f3", "#ff5252", "#999999"),  # Default argument values for subplots
     figsize=(9, 5)  # figsize is a parameter of plt.figure
 )
-fig.savefig(image_folder + 'multiple_plots.svg', bbox_inches='tight')
+fig.savefig(readme_image_folder + 'multiple_plots.svg', bbox_inches='tight')
+
+doc_examples_image_folder = 'examples/readme/'
