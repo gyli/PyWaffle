@@ -4,7 +4,7 @@ Installation
 
 The last stable release is available on PyPI and can be installed with ``pip``::
 
-   $ pip install PyMySQL
+   $ pip install pywaffle
 
 Requirements
 -------------
