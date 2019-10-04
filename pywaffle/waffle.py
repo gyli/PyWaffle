@@ -11,6 +11,7 @@ import copy
 import os
 import font
 from itertools import product
+import warnings
 
 
 def division_ceil(a, b):
@@ -142,17 +143,26 @@ class Waffle(Figure):
         If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
 
-    :param plot_direction: {'NW', 'SW', 'NE', 'SE'}, the default value is SW.
-    Change the starting location plotting the blocks
-    'NW' means plots start at upper left and end at lower right.
-    For 'SW', plots start at lower left and end at upper right.
-    For 'NE', plots start at upper right and end at lower left.
-    For 'SE', plots start at lower right and end at upper left.
+    :param plot_direction: Deprecated. Use starting_location instead.
+        {'NW', 'SW', 'NE', 'SE'}, the default value is SW.
+        Change the starting location plotting the blocks.
+        'NW' means plots start at upper left and end at lower right.
+        For 'SW', plots start at lower left and end at upper right.
+        For 'NE', plots start at upper right and end at lower left.
+        For 'SE', plots start at lower right and end at upper left.
     :type plot_direction: str
 
     :param vertical: decide whether to draw the plot vertically or horizontally.
         [Default False]
     :type vertical: bool
+
+    :param starting_location: {'NW', 'SW', 'NE', 'SE'}, the default value is SW.
+        Change the starting location plotting the blocks
+        'NW' means plots start at upper left and end at lower right.
+        For 'SW', plots start at lower left and end at upper right.
+        For 'NE', plots start at upper right and end at lower left.
+        For 'SE', plots start at lower right and end at upper left.
+    :type plot_direction: str
     """
 
     _direction_values = {
@@ -192,8 +202,9 @@ class Waffle(Figure):
             'icon_size': kwargs.pop('icon_size', None),
             'icon_set': kwargs.pop('icon_set', 'SOLID'),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
-            'plot_direction': kwargs.pop('plot_direction', 'SW'),
-            'vertical': kwargs.pop('vertical', False)
+            'plot_direction': kwargs.pop('plot_direction', ''),
+            'vertical': kwargs.pop('vertical', False),
+            'starting_location': kwargs.pop('starting_location', 'SW'),
         }
         self.plots = kwargs.pop('plots', None)
 
@@ -306,22 +317,30 @@ class Waffle(Figure):
 
         plot_direction = self._pa['plot_direction'].upper()
 
+        if plot_direction:
+            warnings.warn(
+                "Parameter plot_direction is deprecated and will be removed in future version. Use starting_location instead.",
+                DeprecationWarning
+            )
+            starting_location = self._pa['plot_direction'].upper()
+        else:
+            # TODO: starting_location will replace plot_direction in 0.3.0
+            starting_location = self._pa['starting_location'].upper()
+
         try:
-            column_order = self._direction_values[plot_direction]['column_order']
-            row_order = self._direction_values[plot_direction]['row_order']
+            column_order = self._direction_values[starting_location]['column_order']
+            row_order = self._direction_values[starting_location]['row_order']
         except KeyError:
-            raise KeyError("plot_direction should be one of 'NW', 'SW', 'NE', 'SE'")
+            raise KeyError("starting_location should be one of 'NW', 'SW', 'NE', 'SE'")
 
         if self.fig_args['vertical']:
-            block_iter = [c[::-1] for c in product(
-                range(self._pa['rows'])[::row_order],
-                range(self._pa['columns'])[::column_order]
-            )]
+            block_iter = [
+                c[::-1]
+                for c in product(range(self._pa['rows'])[::row_order],
+                                 range(self._pa['columns'])[::column_order])
+            ]
         else:
-            block_iter = product(
-                range(self._pa['columns'])[::column_order],
-                range(self._pa['rows'])[::row_order]
-            )
+            block_iter = product(range(self._pa['columns'])[::column_order], range(self._pa['rows'])[::row_order])
 
         for col, row in block_iter:
             if block_number_per_cat[class_index] == 0:
