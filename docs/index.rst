@@ -6,6 +6,8 @@
 Welcome to PyWaffle's documentation!
 ====================================
 
+PyWaffle: Make Waffle Charts in Python
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -13,12 +15,3 @@ Welcome to PyWaffle's documentation!
    installation
    examples
    class
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
