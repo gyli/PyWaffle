@@ -160,9 +160,6 @@ In this chart, 1 block = 30000 votes.
 <sub>Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).</sub>
 
 
-## Emoji 🧇
-Waffle emoji is on the way to iOS and macOS. Check it out! [https://emojipedia.org/waffle/](https://emojipedia.org/waffle/)
-
 ## License
 
 * PyWaffle is under MIT license, see `LICENSE` file for the details.
