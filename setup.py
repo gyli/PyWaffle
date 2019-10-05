@@ -18,7 +18,7 @@ setup(
     license='MIT',
     author="Guangyang Li",
     author_email="mail@guangyangli.com",
-    url="https://github.com/ligyxy/PyWaffle",
+    url="https://github.com/gyli/PyWaffle",
     packages=['pywaffle', 'font'],
     install_requires=['matplotlib'],
     classifiers=[
@@ -29,6 +29,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
     package_data={
         'font': [

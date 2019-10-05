@@ -15,22 +15,20 @@ import warnings
 from typing import List, Tuple, Union
 
 
-def division_ceil(a: int, b: int) -> int:
-    return int(a // b + bool(a % b))
+def division(x: int, y: int, method: str = 'FLOAT') -> Union[int, float]:
+    """
+    :param x: dividend
+    :param y: divisor
+    :param method: {'FLOAT', 'NEAREST', 'CEIL', 'FLOOR'}
+    """
+    method_mapping = {
+        'FLOAT': lambda a, b: a / b,
+        'NEAREST': lambda a, b: round(a / b),
+        'CEIL': lambda a, b: int(a // b + bool(a % b)),
+        'FLOOR': lambda a, b: a // b,
+    }
 
-
-def division_floor(a: int, b: int) -> int:
-    return a // b
-
-
-method_mapping = {
-    'ceil': division_ceil,
-    'floor': division_floor,
-}
-
-
-def division(a: int, b: int, method: str) -> int:
-    return method_mapping[method](a, b)
+    return method_mapping[method.upper()](x, y)
 
 
 def array_resize(array: Union[Tuple, List], length: int, array_len: int = None):
@@ -161,9 +159,9 @@ class Waffle(Figure):
     :param plot_direction: Deprecated. Use starting_location instead.
         {'NW', 'SW', 'NE', 'SE'}, the default value is SW.
         Change the starting location plotting the blocks.
-        'NW' means plots start at upper left and end at lower right.
-        For 'SW', plots start at lower left and end at upper right.
-        For 'NE', plots start at upper right and end at lower left.
+        'NW' means plots start at upper left and end at lower right;
+        For 'SW', plots start at lower left and end at upper right;
+        For 'NE', plots start at upper right and end at lower left;
         For 'SE', plots start at lower right and end at upper left.
     :type plot_direction: str
 
@@ -173,11 +171,18 @@ class Waffle(Figure):
 
     :param starting_location: {'NW', 'SW', 'NE', 'SE'}, the default value is SW.
         Change the starting location plotting the blocks
-        'NW' means plots start at upper left and end at lower right.
-        For 'SW', plots start at lower left and end at upper right.
-        For 'NE', plots start at upper right and end at lower left.
+        'NW' means plots start at upper left and end at lower right;
+        For 'SW', plots start at lower left and end at upper right;
+        For 'NE', plots start at upper right and end at lower left;
         For 'SE', plots start at lower right and end at upper left.
     :type plot_direction: str
+
+    :param rounding_rule: {'NEAREST', 'FLOOR', 'CEIL'}, the default value is NEAREST.
+        The rounding rule applied when shrinking values to fit the chart size.
+        'NEAREST' means "round to nearest, ties to even" rounding mode;
+        'FLOOR' means round to less of the two endpoints of the interval;
+        'CEIL' means round to greater of the two endpoints of the interval.
+    :type rounding_rule: str
     """
 
     _direction_values = {
@@ -220,6 +225,7 @@ class Waffle(Figure):
             'plot_direction': kwargs.pop('plot_direction', ''),
             'vertical': kwargs.pop('vertical', False),
             'starting_location': kwargs.pop('starting_location', 'SW'),
+            'rounding_rule': kwargs.pop('rounding_rule', 'NEAREST'),
         }
         self.plots = kwargs.pop('plots', None)
 
@@ -244,6 +250,11 @@ class Waffle(Figure):
         for arg, v in plot_fig_args.items():
             if arg not in self._pa:
                 self._pa[arg] = v
+
+        # Parameter Validation
+        self._pa['rounding_rule'] = self._pa['rounding_rule'].upper()
+        if self._pa['rounding_rule'] not in ('NEAREST', 'CEIL', 'FLOOR'):
+            raise ValueError("Argument rounding_rule should be one of NEAREST, CEIL or FLOOR.")
 
         if len(self._pa['values']) == 0 or not self._pa['rows']:
             raise ValueError("Argument values or rows is required.")
@@ -282,15 +293,15 @@ class Waffle(Figure):
         # Alignment of subplots
         self.ax.set_anchor(self._pa['plot_anchor'])
 
-        self.value_sum = float(sum(self._pa['values']))
+        self.value_sum = sum(self._pa['values'])
 
         # if column number is not given, use the values as number of blocks
         if self._pa['columns'] is None:
-            self._pa['columns'] = division_ceil(self.value_sum, self._pa['rows'])
+            self._pa['columns'] = division(self.value_sum, self._pa['rows'], method='CEIL')
             block_number_per_cat = self._pa['values']
         else:
             block_number_per_cat = [
-                round(v * self._pa['columns'] * self._pa['rows'] / self.value_sum) for v in self._pa['values']
+                division(v * self._pa['columns'] * self._pa['rows'], self.value_sum, method=self._pa['rounding_rule']) for v in self._pa['values']
             ]
 
         # Absolute height of the plot
