@@ -12,13 +12,28 @@ import os
 import font
 from itertools import product
 import warnings
+from typing import List, Tuple, Union
 
 
-def division_ceil(a, b):
+def division_ceil(a: int, b: int) -> int:
     return int(a // b + bool(a % b))
 
 
-def array_resize(array, length, array_len=None):
+def division_floor(a: int, b: int) -> int:
+    return a // b
+
+
+method_mapping = {
+    'ceil': division_ceil,
+    'floor': division_floor,
+}
+
+
+def division(a: int, b: int, method: str) -> int:
+    return method_mapping[method](a, b)
+
+
+def array_resize(array: Union[Tuple, List], length: int, array_len: int = None):
     """
     Resize array to given length. If the array is shorter than given length, repeat the array; If the array is longer
     than the length, trim the array.
