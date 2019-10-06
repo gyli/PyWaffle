@@ -2,7 +2,7 @@
 # Font Awesome version: 5.5.0
 
 icons = {
-    "BRANDS": {
+    "brands": {
         "500px": "\uf26e",
         "accessible-icon": "\uf368",
         "accusoft": "\uf369",
@@ -395,7 +395,7 @@ icons = {
         "youtube-square": "\uf431",
         "zhihu": "\uf63f"
     },
-    "SOLID": {
+    "solid": {
         "ad": "\uf641",
         "address-book": "\uf2b9",
         "address-card": "\uf2bb",
@@ -1266,7 +1266,7 @@ icons = {
         "yen-sign": "\uf157",
         "yin-yang": "\uf6ad"
     },
-    "REGULAR": {
+    "regular": {
         "address-book": "\uf2b9",
         "address-card": "\uf2bb",
         "angry": "\uf556",

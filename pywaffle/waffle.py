@@ -133,9 +133,9 @@ class Waffle(Figure):
         See the full list of Font Awesome on http://fontawesome.io/icons/ [Default None]
     :type icons: str|list[str]|tuple[str]
 
-    :param icon_set: ('BRANDS', 'REGULAR', 'SOLID')
+    :param icon_set: {'brands', 'regular', 'solid'}
         The set of icons to be used. Visit https://fontawesome.com/cheatsheet to see which icons belong to which set.
-        [Default 'SOLID']
+        [Default 'solid']
     :type icon_set: str
 
     :param icon_size: Fint size of the icons. The default size is not fixed and depends on the block size.
@@ -157,31 +157,34 @@ class Waffle(Figure):
     :type plots: dict
 
     :param plot_direction: Deprecated. Use starting_location instead.
-        {'NW', 'SW', 'NE', 'SE'}, the default value is SW.
+        {'NW', 'SW', 'NE', 'SE'}
         Change the starting location plotting the blocks.
         'NW' means plots start at upper left and end at lower right;
         For 'SW', plots start at lower left and end at upper right;
         For 'NE', plots start at upper right and end at lower left;
         For 'SE', plots start at lower right and end at upper left.
+        [Default 'SW']
     :type plot_direction: str
 
     :param vertical: decide whether to draw the plot vertically or horizontally.
         [Default False]
     :type vertical: bool
 
-    :param starting_location: {'NW', 'SW', 'NE', 'SE'}, the default value is SW.
+    :param starting_location: {'NW', 'SW', 'NE', 'SE'}.
         Change the starting location plotting the blocks
         'NW' means plots start at upper left and end at lower right;
         For 'SW', plots start at lower left and end at upper right;
         For 'NE', plots start at upper right and end at lower left;
         For 'SE', plots start at lower right and end at upper left.
+        [Default 'SW']
     :type plot_direction: str
 
-    :param rounding_rule: {'nearest', 'floor', 'ceil'}, the default value is NEAREST.
+    :param rounding_rule: {'nearest', 'floor', 'ceil'}.
         The rounding rule applied when shrinking values to fit the chart size.
         'NEAREST' means "round to nearest, ties to even" rounding mode;
         'FLOOR' means round to less of the two endpoints of the interval;
         'CEIL' means round to greater of the two endpoints of the interval.
+        [Default 'nearest']
     :type rounding_rule: str
     """
 
@@ -212,15 +215,15 @@ class Waffle(Figure):
             'colors': kwargs.pop('colors', None),
             'labels': kwargs.pop('labels', None),
             'legend': kwargs.pop('legend', {}),
+            'icons': kwargs.pop('icons', None),
+            'icon_size': kwargs.pop('icon_size', None),
+            'icon_set': kwargs.pop('icon_set', 'solid'),
             'icon_legend': kwargs.pop('icon_legend', False),
             'interval_ratio_x': kwargs.pop('interval_ratio_x', 0.2),
             'interval_ratio_y': kwargs.pop('interval_ratio_y', 0.2),
             'block_aspect': kwargs.pop('block_aspect', 1),
             'cmap_name': kwargs.pop('cmap_name', 'Set2'),
             'title': kwargs.pop('title', None),
-            'icons': kwargs.pop('icons', None),
-            'icon_size': kwargs.pop('icon_size', None),
-            'icon_set': kwargs.pop('icon_set', 'SOLID'),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
             'plot_direction': kwargs.pop('plot_direction', ''),
             'vertical': kwargs.pop('vertical', False),
@@ -275,6 +278,7 @@ class Waffle(Figure):
         if self._pa['icons']:
             from pywaffle.fontawesome_mapping import icons
 
+            self._pa['icon_set'] = self._pa['icon_set'].lower()
             if self._pa['icon_set'] not in icons.keys():
                 raise KeyError('icon_set should be one of {}'.format(', '.join(icons.keys())))
 
