@@ -1,4 +1,4 @@
-# Block Color and Background Color
+# Block Colors
 
 Parameter `colors` accepts colors in a list or tuple. The length must be the same as `values`.
 
@@ -10,10 +10,9 @@ fig = plt.figure(
     values=[48, 46, 3],
     colors=["#983D3D", "#232066", "#DCB732"]
 )
-fig.set_facecolor('#EEEEEE')
 ```
 
-<img class="img_middle" alt="Block Color and Background Color" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/block_color_and_background_color.svg?sanitize=true">
+<img class="img_middle" alt="Block Colors" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/block_colors.svg?sanitize=true">
 
 [Colormap](https://matplotlib.org/gallery/color/colormap_reference.html) could also be applied to waffle chart through parameter `cmap_name`, which sets colors automatically. 
 
@@ -29,4 +28,4 @@ fig = plt.figure(
 )
 ```
 
-<img class="img_middle" alt="Block Color with custom cmap_name" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/block_color_and_background_color_custom_cmap_name.svg?sanitize=true">
+<img class="img_middle" alt="Block Colors with custom cmap_name" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/block_colors_custom_cmap_name.svg?sanitize=true">

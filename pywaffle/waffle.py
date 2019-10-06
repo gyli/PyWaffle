@@ -132,10 +132,10 @@ class Waffle(Figure):
         See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
     :type legend: dict
 
-    :param interval_ratio_x: Ratio of distance between blocks on X to block's width. [Default 0.2]
+    :param interval_ratio_x: Ratio of horizontal distance between blocks to block's width. [Default 0.2]
     :type interval_ratio_x: float
 
-    :param interval_ratio_y: Ratio of distance between blocks on Y to block's height. [Default 0.2]
+    :param interval_ratio_y: Ratio of vertical distance between blocks to block's height. [Default 0.2]
     :type interval_ratio_y: float
 
     :param block_aspect_ratio: The ratio of block's width to height. [Default 1]
@@ -168,7 +168,9 @@ class Waffle(Figure):
         [Default 'solid']
     :type icon_style: str|list[str]|tuple[str]
 
-    :param icon_size: Fint size of the icons. The default size is not fixed and depends on the block size.
+    :param icon_size: Fint size of the icons.
+    The default size is not fixed and depends on the block size.
+    Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size, e.g., 12
     :type icon_size: int
 
     :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
@@ -205,10 +207,10 @@ class Waffle(Figure):
 
     :param starting_location: {'NW', 'SW', 'NE', 'SE'}.
         Change the starting location plotting the blocks
-        'NW' means plots start at upper left and end at lower right;
-        For 'SW', plots start at lower left and end at upper right;
-        For 'NE', plots start at upper right and end at lower left;
-        For 'SE', plots start at lower right and end at upper left.
+        'NW' means plots start at upper left;
+        For 'SW', plots start at lower left;
+        For 'NE', plots start at upper right;
+        For 'SE', plots start at lower right.
         [Default 'SW']
     :type plot_direction: str
 

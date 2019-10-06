@@ -10,8 +10,8 @@ Several examples are shown below by topics, which would go through every paramet
    examples/basic_examples
    examples/value_scaling_and_auto_columns
    examples/title_label_ledend
-   examples/block_color_and_background_color
+   examples/block_colors
    examples/icons
-   examples/block_directions
-   examples/block_size_and_locations
+   examples/block_shape_distance_location_and_direction
+   examples/adjust_figures
    examples/multiple_plots

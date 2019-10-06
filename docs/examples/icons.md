@@ -2,6 +2,8 @@
 
 PyWaffle supports [Font Awesome icons](https://fontawesome.com/). Blocks could be icons instead of squares.
 
+When using icons, the parameters for setting block size would be ignored, including `interval_ratio_x`, `interval_ratio_y` and `block_aspect_ratio`. Instead, use `icon_size` to set the size of icons. For availale sizes, visit [FontProperties.set_size](https://matplotlib.org/api/font_manager_api.html#matplotlib.font_manager.FontProperties.set_size).
+
 ```python
 fig = plt.figure(
     FigureClass=Waffle,

@@ -166,7 +166,7 @@ fig = plt.figure(
 )
 fig.savefig(doc_examples_image_folder + 'title_label_ledend.svg', bbox_inches='tight')
 
-# Block Color and Background Color
+# Block Colors
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
@@ -174,8 +174,7 @@ fig = plt.figure(
     values=[48, 46, 3],
     colors=["#983D3D", "#232066", "#DCB732"]
 )
-fig.set_facecolor('#EEEEEE')
-fig.savefig(doc_examples_image_folder + 'block_color_and_background_color.svg', bbox_inches='tight')
+fig.savefig(doc_examples_image_folder + 'block_colors.svg', bbox_inches='tight')
 
 fig = plt.figure(
     FigureClass=Waffle,
@@ -184,7 +183,7 @@ fig = plt.figure(
     values=[48, 46, 3],
     cmap_name="tab10"
 )
-fig.savefig(doc_examples_image_folder + 'block_color_and_background_color_custom_cmap_name.svg', bbox_inches='tight')
+fig.savefig(doc_examples_image_folder + 'block_colors_custom_cmap_name.svg', bbox_inches='tight')
 
 # Icons
 fig = plt.figure(
@@ -223,3 +222,61 @@ fig = plt.figure(
 )
 fig.savefig(doc_examples_image_folder + 'icons_different_style.svg', bbox_inches='tight')
 
+# Block shape, distance, location and direction
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[48, 46, 3],
+    block_aspect_ratio=1.618,
+)
+fig.savefig(doc_examples_image_folder + 'block_shape.svg', bbox_inches='tight')
+
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[48, 46, 3],
+    interval_ratio_x=1,
+    interval_ratio_y=0.5
+)
+fig.savefig(doc_examples_image_folder + 'block_distance.svg', bbox_inches='tight')
+
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[48, 46, 3],
+    starting_location='SE'
+)
+fig.savefig(doc_examples_image_folder + 'block_location.svg', bbox_inches='tight')
+
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[48, 46, 3],
+    vertical=True
+)
+fig.savefig(doc_examples_image_folder + 'block_direction.svg', bbox_inches='tight')
+
+# Adjust Figures
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[48, 46, 3],
+    colors=["#983D3D", "#232066", "#DCB732"]
+)
+fig.set_facecolor('#EEEEEE')
+fig.savefig(doc_examples_image_folder + 'adjust_figure_change_background.svg', bbox_inches='tight')
+
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[48, 46, 3],
+    plot_anchor='S'
+)
+fig.set_facecolor('#EEEEEE')
+fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg', bbox_inches='tight')
