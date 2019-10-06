@@ -6,6 +6,8 @@ Parameter `labels` accepts labels in a list. If it is not specified, key of `val
 
 Parameter `legend` accepts parameters of [matplotlib.pyplot.legend](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html) in a dict.
 
+> **_NOTE:_** Labels could also be specified in parameter `legend` under key `labels` instead.
+
 ```python
 data = {'Cat1': 48, 'Cat2': 46, 'Cat3': 3}
 fig = plt.figure(
@@ -31,5 +33,3 @@ fig = plt.figure(
 ```
 
 <img class="img_middle" alt="Title, Label and Legend" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/title_label_ledend.svg?sanitize=true">
-
-> **_NOTE:_** Labels could also be specified in parameter `legend` as an item instead.
