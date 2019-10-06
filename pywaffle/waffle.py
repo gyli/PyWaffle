@@ -127,7 +127,7 @@ class Waffle(Figure):
 
     :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
         If it's a list or tuple of icons, the length should be the same as values.
-        See the full list of Font Awesome on https://fontawesome.com/icons/ [Default None]
+        See the full list of Font Awesome on https://fontawesome.com/icons?d=gallery&m=free [Default None]
     :type icons: str|list[str]|tuple[str]
 
     :param icon_set: {'brands', 'regular', 'solid'}
@@ -217,7 +217,7 @@ class Waffle(Figure):
             'legend': kwargs.pop('legend', {}),
             'icons': kwargs.pop('icons', None),
             'icon_size': kwargs.pop('icon_size', None),
-            'icon_set': kwargs.pop('icon_set', 'solid'),
+            'icon_set': kwargs.pop('icon_set', 'solid'),  # TODO: icon_set can also be list or tuple
             'icon_legend': kwargs.pop('icon_legend', False),
             'interval_ratio_x': kwargs.pop('interval_ratio_x', 0.2),
             'interval_ratio_y': kwargs.pop('interval_ratio_y', 0.2),
@@ -267,6 +267,7 @@ class Waffle(Figure):
         if self._pa['colors'] and len(self._pa['colors']) != self.values_len:
             raise ValueError("Length of colors doesn't match the values.")
 
+        # lebels and values
         if isinstance(self._pa['values'], dict):
             if not self._pa['labels']:
                 self._pa['labels'] = self._pa['values'].keys()
@@ -411,6 +412,7 @@ class Waffle(Figure):
 
         # Add legend
         if self._pa['labels'] or 'labels' in self._pa['legend']:
+            labels = self._pa['labels'] or self._pa['legend'].get('labels')
             if self._pa['icons'] and self._pa['icon_legend']:
                 self._pa['legend']['handles'] = [
                     TextLegend(color=c, text=i) for c, i in zip(self._pa['colors'], self._pa['icons'])
@@ -419,7 +421,7 @@ class Waffle(Figure):
             # elif not self._pa['legend'].get('handles'):
             elif 'handles' not in self._pa['legend']:
                 self._pa['legend']['handles'] = [
-                    Patch(color=c, label=str(l)) for c, l in zip(self._pa['colors'], self._pa['labels'])
+                    Patch(color=c, label=str(l)) for c, l in zip(self._pa['colors'], labels)
                 ]
 
             # labels is an alias of legend['labels']

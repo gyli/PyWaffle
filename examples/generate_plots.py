@@ -128,7 +128,7 @@ doc_examples_image_folder = 'examples/docs/'
 
 # Basic
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 6])
-fig.savefig(doc_examples_image_folder + 'basic_list_values.svg', bbox_inches='tight', dpi=60)
+fig.savefig(doc_examples_image_folder + 'basic_list_values.svg', bbox_inches='tight')
 
 fig = plt.figure(
     FigureClass=Waffle,
@@ -144,14 +144,14 @@ fig = plt.figure(
         'bbox_to_anchor': (1, 1)
     }
 )
-fig.savefig(doc_examples_image_folder + 'basic_dict_values.svg', bbox_inches='tight', dpi=80)
+fig.savefig(doc_examples_image_folder + 'basic_dict_values.svg', bbox_inches='tight')
 
 # Value Scaling and Auto-columns
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3], rounding_rule='floor')
-fig.savefig(doc_examples_image_folder + 'value_scaling_and_auto_columns_rounding_rule.svg', bbox_inches='tight', dpi=60)
+fig.savefig(doc_examples_image_folder + 'value_scaling_and_auto_columns_rounding_rule.svg', bbox_inches='tight')
 
 fig = plt.figure(FigureClass=Waffle, rows=10, values=[48, 46, 3])
-fig.savefig(doc_examples_image_folder + 'value_scaling_and_auto_columns_ignore_columns.svg', bbox_inches='tight', dpi=80)
+fig.savefig(doc_examples_image_folder + 'value_scaling_and_auto_columns_ignore_columns.svg', bbox_inches='tight')
 
 # Title, Label and Legend
 data = {'Cat1': 48, 'Cat2': 46, 'Cat3': 3}
@@ -164,7 +164,7 @@ fig = plt.figure(
     labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.2), 'ncol': len(data), 'framealpha': 0, 'fontsize': 12}
 )
-fig.savefig(doc_examples_image_folder + 'title_label_ledend.svg', bbox_inches='tight', dpi=80)
+fig.savefig(doc_examples_image_folder + 'title_label_ledend.svg', bbox_inches='tight')
 
 # Block Color and Background Color
 fig = plt.figure(
@@ -175,15 +175,36 @@ fig = plt.figure(
     colors=["#983D3D", "#232066", "#DCB732"]
 )
 fig.set_facecolor('#EEEEEE')
-fig.savefig(doc_examples_image_folder + 'block_color_and_background_color.svg', bbox_inches='tight', dpi=80)
+fig.savefig(doc_examples_image_folder + 'block_color_and_background_color.svg', bbox_inches='tight')
+
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[48, 46, 3],
+    cmap_name="tab10"
+)
+fig.savefig(doc_examples_image_folder + 'block_color_and_background_color_custom_cmap_name.svg', bbox_inches='tight')
 
 # Icons
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=[48, 46, 3],
-    colors=("#232066", "#983D3D", "#DCB732"),
+    colors=["#232066", "#983D3D", "#DCB732"],
     icons='child',
     icon_size=12,
 )
-fig.savefig(doc_examples_image_folder + 'icons.svg', bbox_inches='tight', dpi=80)
+fig.savefig(doc_examples_image_folder + 'icons.svg', bbox_inches='tight')
+
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    values=[48, 46, 3],
+    colors=["#FFA500", "#4384FF", "#C0C0C0"],
+    icons=['sun', 'cloud-showers-heavy', 'snowflake'],
+    icon_size=12,
+    icon_legend=True,
+    legend={'labels': ['sun', 'shower', 'snow'], 'loc': 'upper left', 'bbox_to_anchor': (1, 1)}
+)
+fig.savefig(doc_examples_image_folder + 'icons_different_per_category.svg', bbox_inches='tight')

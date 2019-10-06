@@ -6,8 +6,7 @@ The last stable release is available on PyPI and can be installed with ``pip``::
 
    $ pip install pywaffle
 
-Requirements
--------------
+.. rubric:: Requirements
 
-* Python 3
+* Python 3.5+
 * Matplotlib
