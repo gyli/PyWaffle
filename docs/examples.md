@@ -20,7 +20,7 @@ plt.figure(
 )
 ```
 
-![basic](https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/readme/basic.svg)
+![basic](https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/readme/basic-1.svg)
 
 A more common case is, the chart size does not fit the total number of blocks. Then the values would be scaled to fit the chart size.
 
@@ -40,6 +40,8 @@ plt.figure(
 )
 ```
 
+![basic](https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/readme/basic-2.svg)
+
 To avoid scaling values as block numbers, argument `columns` can be ignored and only passing `rows`. Then `values` would be used as block number directly and `columns` would be calculated automatically.
 
 ```python
@@ -49,6 +51,8 @@ plt.figure(
     values=[48, 46, 3]
 )
 ```
+
+![basic](https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/readme/basic-3.svg)
 
 ## 2. Values in dict & Auto-columns
 
