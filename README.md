@@ -1,6 +1,6 @@
 # PyWaffle
 
-PyPI page: [https://pypi.org/project/PyWaffle/](https://pypi.org/project/PyWaffle/)
+PyPI page: [https://pypi.org/project/pywaffle/](https://pypi.org/project/pywaffle/)
 
 Documentation: [http://pywaffle.readthedocs.io/](http://pywaffle.readthedocs.io/)
 
@@ -159,6 +159,14 @@ In this chart, 1 block = 30000 votes.
 
 <sub>Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).</sub>
 
+
+## What's New
+Verion 0.2.5:
+
+* Rename `block_aspect` to `block_aspect_ratio`
+* Deprecate `icon_set`, use `icon_style` instead. `icon_style` accepts font style for each icon
+* Deprecate `plot_direction`, use `starting_location` instead
+* Finished documents with more examples. See [https://pywaffle.readthedocs.io/](https://pywaffle.readthedocs.io/)
 
 ## License
 
