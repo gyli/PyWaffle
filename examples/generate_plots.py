@@ -279,4 +279,4 @@ fig = plt.figure(
     plot_anchor='S'
 )
 fig.set_facecolor('#EEEEEE')
-fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg', bbox_inches='tight')
+fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg')
