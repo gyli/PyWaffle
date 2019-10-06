@@ -349,11 +349,42 @@ class Waffle(Figure):
             default_color_num = cm.get_cmap(self._pa['cmap_name']).N
             self._pa['colors'] = array_resize(array=default_colors, length=self.values_len, array_len=default_color_num)
 
-        # Plot blocks
-        class_index = 0
-        block_index = 0
-        x_full = (1 + self._pa['interval_ratio_x']) * block_x_length
-        y_full = (1 + self._pa['interval_ratio_y']) * block_y_length
+        # Set icons
+        if self._pa['icons']:
+            from pywaffle.fontawesome_mapping import icons
+
+            # TODO: deprecating icon_set
+            if self._pa['icon_set'] != 'solid' and self._pa['icon_style'] == 'solid':
+                self._pa['icon_style'] = self._pa['icon_set']
+                warnings.warn(
+                    "Parameter icon_set is deprecated and will be removed in future version. Use icon_style instead.",
+                    DeprecationWarning
+                )
+
+            # If icon_set is a string, convert it into a list of same icon. It's length is the label's length
+            # 'solid' -> ['solid', 'solid', 'solid', ]
+            if isinstance(self._pa['icon_style'], str):
+                self._pa['icon_style'] = [self._pa['icon_style'].lower()] * self.values_len
+            elif set(self._pa['icon_style']) - set(icons.keys()):
+                raise KeyError('icon_set should be one of {}'.format(', '.join(icons.keys())))
+
+            # If icons is a string, convert it into a list of same icon. It's length is the label's length
+            # '\uf26e' -> ['\uf26e', '\uf26e', '\uf26e', ]
+            if isinstance(self._pa['icons'], str):
+                self._pa['icons'] = [self._pa['icons']] * self.values_len
+
+            if len(self._pa['icons']) != self.values_len:
+                raise ValueError("Length of icons doesn't match the values.")
+
+            # Replace icon name with Unicode symbols in parameter icons
+            self._pa['icons'] = [
+                icons[icon_style][icon_name]
+                for icon_name, icon_style in zip(self._pa['icons'], self._pa['icon_style'])
+            ]
+
+            # Calculate icon size based on the block size
+            tx, ty = self.ax.transData.transform([(0, 0), (0, block_x_length)])
+            prop = fm.FontProperties(size=self._pa['icon_size'] or int((ty[1] - tx[1]) / 16 * 12))
 
         plot_direction = self._pa['plot_direction'].upper()
 
@@ -382,41 +413,11 @@ class Waffle(Figure):
         else:
             block_iter = product(range(self._pa['columns'])[::column_order], range(self._pa['rows'])[::row_order])
 
-        # Set icons
-        if self._pa['icons']:
-            from pywaffle.fontawesome_mapping import icons
-
-            # TODO: deprecating icon_set
-            if self._pa['icon_set'] != 'solid' and self._pa['icon_style'] == 'solid':
-                self._pa['icon_style'] = self._pa['icon_set']
-                warnings.warn(
-                    "Parameter icon_set is deprecated and will be removed in future version. Use icon_style instead.",
-                    DeprecationWarning
-                )
-
-            # If icon_set is a string, convert it into a list of same icon. It's length is the label's length
-            # 'solid' -> ['solid', 'solid', 'solid', ]
-            if isinstance(self._pa['icon_style'], str):
-                self._pa['icon_style'] = [self._pa['icon_style'].lower()] * self.values_len
-            elif set(self._pa['icon_style']) - set(icons.keys()):
-                raise KeyError('icon_set should be one of {}'.format(', '.join(icons.keys())))
-
-            # If icons is a string, convert it into a list of same icon. It's length is the label's length
-            # '\uf26e' -> ['\uf26e', '\uf26e', '\uf26e', ]
-            if isinstance(self._pa['icons'], str):
-                self._pa['icons'] = [self._pa['icons']] * self.values_len
-
-            if len(self._pa['icons']) != self.values_len:
-                raise ValueError("Length of icons doesn't match the values.")
-
-            self._pa['icons'] = [
-                icons[icon_style][icon_name]
-                for icon_name, icon_style in zip(self._pa['icons'], self._pa['icon_style'])
-            ]
-
-            # Calculate icon size based on the block size
-            tx, ty = self.ax.transData.transform([(0, 0), (0, block_x_length)])
-            prop = fm.FontProperties(size=self._pa['icon_size'] or int((ty[1] - tx[1]) / 16 * 12))
+        # Plot blocks
+        class_index = 0
+        block_index = 0
+        x_full = (1 + self._pa['interval_ratio_x']) * block_x_length
+        y_full = (1 + self._pa['interval_ratio_y']) * block_y_length
 
         for col, row in block_iter:
             if block_number_per_cat[class_index] == 0:
