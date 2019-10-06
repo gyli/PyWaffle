@@ -50,12 +50,12 @@ fig = plt.figure(
     rows=5,
     values=[48, 46, 3],
     colors=["#FFA500", "#4384FF", "#C0C0C0"],
-    icons=['sun', 'cloud-showers-heavy', 'snowflake'],
+    icons=['sun', 'cloud-showers-heavy', 'font-awesome-flag'],
     icon_size=12,
-    icon_style=['regular', 'solid', 'regular'],
+    icon_style=['regular', 'solid', 'brands'],
     icon_legend=False,
     legend={
-        'labels': ['sun', 'shower', 'snow'], 
+        'labels': ['sun', 'shower', 'flag'], 
         'loc': 'upper left', 
         'bbox_to_anchor': (1, 1)
     }

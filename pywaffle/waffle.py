@@ -81,7 +81,7 @@ LEGENDSTYLE = {'solid': SolidTextLegend, 'regular': RegularTextLegend, 'brands':
 class TextLegendHandler(HandlerBase):
     def __init__(self, font_file):
         super().__init__()
-        self.font_file = FONTAWESOME_FILES[font_file]
+        self.font_file = font_file
 
     def create_artists(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize, trans):
         x = xdescent + width / 2.0
@@ -98,9 +98,9 @@ class TextLegendHandler(HandlerBase):
 
 
 HANDLER_MAP = {
-    SolidTextLegend: TextLegendHandler('solid'),
-    RegularTextLegend: TextLegendHandler('regular'),
-    BrandsTextLegend: TextLegendHandler('brands')
+    SolidTextLegend: TextLegendHandler(FONTAWESOME_FILES['solid']),
+    RegularTextLegend: TextLegendHandler(FONTAWESOME_FILES['regular']),
+    BrandsTextLegend: TextLegendHandler(FONTAWESOME_FILES['brands'])
 }
 
 
