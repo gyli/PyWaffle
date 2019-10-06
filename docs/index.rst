@@ -8,8 +8,8 @@ PyWaffle Documentation
 
 PyWaffle is a Python package to plot waffle chart.
 
-A `Figure constructor class
-<https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html>`_ Waffle is provided, which could be passed to matplotlib.pyplot.figure and generate a matplotlib Figure object.
+A `Figure constructor
+<https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html>`_ class *Waffle* is provided, which could be passed to matplotlib.pyplot.figure and generate a matplotlib Figure object.
 
 .. toctree::
    :maxdepth: 2

@@ -123,4 +123,13 @@ fig = plt.figure(
 )
 fig.savefig(readme_image_folder + 'multiple_plots.svg', bbox_inches='tight')
 
-doc_examples_image_folder = 'examples/readme/'
+doc_examples_image_folder = 'examples/docs/'
+# Basic
+fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 6])
+fig.savefig(doc_examples_image_folder + 'basic-1.svg', bbox_inches='tight')
+
+fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3], rounding_rule='floor')
+fig.savefig(doc_examples_image_folder + 'basic-2.svg', bbox_inches='tight')
+
+fig = plt.figure(FigureClass=Waffle, rows=5, values=[48, 46, 3])
+fig.savefig(doc_examples_image_folder + 'basic-3.svg', bbox_inches='tight')
