@@ -28,7 +28,7 @@ def division(x: int, y: int, method: str = 'float') -> Union[int, float]:
         'floor': lambda a, b: a // b,
     }
 
-    return method_mapping[method.upper()](x, y)
+    return method_mapping[method.lower()](x, y)
 
 
 def array_resize(array: Union[Tuple, List], length: int, array_len: int = None):
@@ -47,9 +47,9 @@ def array_resize(array: Union[Tuple, List], length: int, array_len: int = None):
 
 _FONT_PATH = font.__path__[0]
 FONTAWESOME_FILES = {
-    'BRANDS': os.path.join(_FONT_PATH, 'Font Awesome 5 Brands-Regular-400.otf'),
-    'SOLID': os.path.join(_FONT_PATH, 'Font Awesome 5 Free-Solid-900.otf'),
-    'REGULAR': os.path.join(_FONT_PATH, 'Font Awesome 5 Free-Regular-400.otf'),
+    'brands': os.path.join(_FONT_PATH, 'Font Awesome 5 Brands-Regular-400.otf'),
+    'solid': os.path.join(_FONT_PATH, 'Font Awesome 5 Free-Solid-900.otf'),
+    'regular': os.path.join(_FONT_PATH, 'Font Awesome 5 Free-Regular-400.otf'),
 }
 
 
@@ -107,9 +107,6 @@ class Waffle(Figure):
         See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
     :type legend: dict
 
-    :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
-    :type icon_legend: bool
-
     :param interval_ratio_x: Ratio of distance between blocks on X to block's width. [Default 0.2]
     :type interval_ratio_x: float
 
@@ -140,6 +137,9 @@ class Waffle(Figure):
 
     :param icon_size: Fint size of the icons. The default size is not fixed and depends on the block size.
     :type icon_size: int
+
+    :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
+    :type icon_legend: bool
 
     :param plot_anchor: {'C', 'SW', 'S', 'SE', 'E', 'NE', 'N', 'NW', 'W'}
         The alignment method of subplots.
@@ -181,9 +181,9 @@ class Waffle(Figure):
 
     :param rounding_rule: {'nearest', 'floor', 'ceil'}.
         The rounding rule applied when shrinking values to fit the chart size.
-        'NEAREST' means "round to nearest, ties to even" rounding mode;
-        'FLOOR' means round to less of the two endpoints of the interval;
-        'CEIL' means round to greater of the two endpoints of the interval.
+        'nearest' means "round to nearest, ties to even" rounding mode;
+        'floor' means round to less of the two endpoints of the interval;
+        'ceil' means round to greater of the two endpoints of the interval.
         [Default 'nearest']
     :type rounding_rule: str
     """
@@ -257,7 +257,7 @@ class Waffle(Figure):
         # Parameter Validation
         self._pa['rounding_rule'] = self._pa['rounding_rule'].lower()
         if self._pa['rounding_rule'] not in ('nearest', 'ceil', 'floor'):
-            raise ValueError("Argument rounding_rule should be one of NEAREST, CEIL or FLOOR.")
+            raise ValueError("Argument rounding_rule should be one of nearest, ceil or floor.")
 
         if len(self._pa['values']) == 0 or not self._pa['rows']:
             raise ValueError("Argument values or rows is required.")

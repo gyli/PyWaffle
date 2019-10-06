@@ -6,6 +6,7 @@
 import matplotlib.pyplot as plt
 from pywaffle.waffle import Waffle
 
+# For README
 readme_image_folder = 'examples/readme/'
 
 # Basic
@@ -38,7 +39,6 @@ fig = plt.figure(
     },
     plot_direction='NW'
 )
-fig.gca().set_facecolor('#EEEEEE')
 fig.set_facecolor('#EEEEEE')
 plt.plot()
 fig.savefig(readme_image_folder + 'title_and_legend.svg', bbox_inches='tight', facecolor='#EEEEEE')
@@ -123,13 +123,54 @@ fig = plt.figure(
 )
 fig.savefig(readme_image_folder + 'multiple_plots.svg', bbox_inches='tight')
 
+# For documents
 doc_examples_image_folder = 'examples/docs/'
+
 # Basic
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 6])
-fig.savefig(doc_examples_image_folder + 'basic-1.png', bbox_inches='tight', dpi=60)
+fig.savefig(doc_examples_image_folder + 'basic_list_values.png', bbox_inches='tight', dpi=60)
 
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values={
+        'Cat1': 20,
+        'Cat2': 12,
+        'Cat3': 8
+    },
+    legend={
+        'loc': 'upper left',
+        'bbox_to_anchor': (1, 1)
+    }
+)
+fig.savefig(doc_examples_image_folder + 'basic_dict_values.png', bbox_inches='tight', dpi=60)
+
+# Scaling and Auto-columns
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3], rounding_rule='floor')
-fig.savefig(doc_examples_image_folder + 'basic-2.png', bbox_inches='tight', dpi=60)
+fig.savefig(doc_examples_image_folder + 'value_scaling_and_auto_columns_rounding_rule.png', bbox_inches='tight', dpi=60)
 
 fig = plt.figure(FigureClass=Waffle, rows=10, values=[48, 46, 3])
-fig.savefig(doc_examples_image_folder + 'basic-3.png', bbox_inches='tight', dpi=80)
+fig.savefig(doc_examples_image_folder + 'value_scaling_and_auto_columns_ignore_columns.png', bbox_inches='tight', dpi=80)
+
+# Title, Label and Legend
+data = {'Cat1': 48, 'Cat2': 46, 'Cat3': 3}
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    values=data,
+    title={'label': 'Example plot', 'loc': 'left'},
+    labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
+    legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0}
+)
+fig.savefig(doc_examples_image_folder + 'title_label_ledend.png', bbox_inches='tight', dpi=80)
+
+# Block Color and Background Color
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    values=[48, 46, 3],
+    colors=("#983D3D", "#232066", "#DCB732"),
+)
+fig.set_facecolor('#EEEEEE')
+fig.savefig(doc_examples_image_folder + 'block_color_and_background_color.png', bbox_inches='tight', dpi=80)

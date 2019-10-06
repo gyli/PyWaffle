@@ -58,7 +58,7 @@ plt.show()
 
 ![Use values in dictionary; use absolute value as block number, without defining columns](examples/readme/absolute_block_numbers.svg)
 
-If parameter `columns` is empty, PyWaffle uses absolute number in `values` as block number.
+If argument `columns` is empty, PyWaffle uses absolute number in `values` as block number.
 
 If `values` is a dict, its keys are used as labels.
 
@@ -76,7 +76,6 @@ fig = plt.figure(
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0},
     plot_direction='NW'
 )
-fig.gca().set_facecolor('#EEEEEE')
 fig.set_facecolor('#EEEEEE')
 plt.show()
 ```
