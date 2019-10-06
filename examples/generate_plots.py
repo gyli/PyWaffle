@@ -222,3 +222,4 @@ fig = plt.figure(
     legend={'labels': ['sun', 'shower', 'flag'], 'loc': 'upper left', 'bbox_to_anchor': (1, 1)}
 )
 fig.savefig(doc_examples_image_folder + 'icons_different_style.svg', bbox_inches='tight')
+

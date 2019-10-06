@@ -110,7 +110,7 @@ class Waffle(Figure):
     A custom Figure class to make waffle charts.
 
     :param values: Numerical value of each category. If it is a dict, the keys would be used as labels.
-    :type values: list|dict
+    :type values: list|dict|pandas.Series
 
     :param rows: The number of lines of the waffle chart. This is required unless it is specified in argument plots.
     :type rows: int
@@ -155,7 +155,8 @@ class Waffle(Figure):
         See the full list of Font Awesome on https://fontawesome.com/icons?d=gallery&m=free [Default None]
     :type icons: str|list[str]|tuple[str]
 
-    :param icon_set: {'brands', 'regular', 'solid'}The style of icons to be used.
+    :param icon_set: Deprecated. {'brands', 'regular', 'solid'}
+        The style of icons to be used.
         [Default 'solid']
     :type icon_set: str|list[str]|tuple[str]
 
@@ -188,8 +189,8 @@ class Waffle(Figure):
         If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
 
-    :param plot_direction: Deprecated. Use starting_location instead.
-        {'NW', 'SW', 'NE', 'SE'}
+    :param plot_direction: Deprecated. {'NW', 'SW', 'NE', 'SE'}
+        Use starting_location instead.
         Change the starting location plotting the blocks.
         'NW' means plots start at upper left and end at lower right;
         For 'SW', plots start at lower left and end at upper right;

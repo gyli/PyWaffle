@@ -1,8 +1,8 @@
 # PyWaffle
 
-PyPI page: [https://pypi.python.org/pypi/pywaffle](https://pypi.python.org/pypi/pywaffle)
+PyPI page: [https://pypi.org/project/PyWaffle/](https://pypi.org/project/PyWaffle/)
 
-Documentation: [http://pywaffle.readthedocs.io](http://pywaffle.readthedocs.io)
+Documentation: [http://pywaffle.readthedocs.io/](http://pywaffle.readthedocs.io/)
 
 ## Introduction
 
@@ -147,8 +147,8 @@ fig = plt.figure(
             'title': {'label': '2016 West Virginia Presidential Election Results', 'loc': 'left'}
         },
     },
-    rows=5,
-    colors=("#2196f3", "#ff5252", "#999999"),  # Default argument values for subplots
+    rows=5,  # shared parameter among subplots
+    colors=("#2196f3", "#ff5252", "#999999"),  # shared parameter among subplots
     figsize=(9, 5)  # figsize is a parameter of plt.figure
 )
 ```
