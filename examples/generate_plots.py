@@ -126,10 +126,10 @@ fig.savefig(readme_image_folder + 'multiple_plots.svg', bbox_inches='tight')
 doc_examples_image_folder = 'examples/docs/'
 # Basic
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 6])
-fig.savefig(doc_examples_image_folder + 'basic-1.png', bbox_inches='tight')
+fig.savefig(doc_examples_image_folder + 'basic-1.png', bbox_inches='tight', dpi=60)
 
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3], rounding_rule='floor')
-fig.savefig(doc_examples_image_folder + 'basic-2.png', bbox_inches='tight')
+fig.savefig(doc_examples_image_folder + 'basic-2.png', bbox_inches='tight', dpi=60)
 
-fig = plt.figure(FigureClass=Waffle, rows=5, values=[48, 46, 3])
-fig.savefig(doc_examples_image_folder + 'basic-3.png', bbox_inches='tight')
+fig = plt.figure(FigureClass=Waffle, rows=10, values=[48, 46, 3])
+fig.savefig(doc_examples_image_folder + 'basic-3.png', bbox_inches='tight', dpi=80)
