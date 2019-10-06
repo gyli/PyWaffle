@@ -138,8 +138,8 @@ class Waffle(Figure):
     :param interval_ratio_y: Ratio of distance between blocks on Y to block's height. [Default 0.2]
     :type interval_ratio_y: float
 
-    :param block_aspect: The ratio of block's width to height. [Default 1]
-    :type block_aspect: float
+    :param block_aspect_ratio: The ratio of block's width to height. [Default 1]
+    :type block_aspect_ratio: float
 
     :param cmap_name: Name of colormaps for default color, if colors is not assigned.
         See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
@@ -255,7 +255,7 @@ class Waffle(Figure):
             'icon_legend': kwargs.pop('icon_legend', False),
             'interval_ratio_x': kwargs.pop('interval_ratio_x', 0.2),
             'interval_ratio_y': kwargs.pop('interval_ratio_y', 0.2),
-            'block_aspect': kwargs.pop('block_aspect', 1),
+            'block_aspect_ratio': kwargs.pop('block_aspect_ratio', 1),
             'cmap_name': kwargs.pop('cmap_name', 'Set2'),
             'title': kwargs.pop('title', None),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
@@ -332,7 +332,7 @@ class Waffle(Figure):
         block_y_length = figure_height / (
             self._pa['rows'] + self._pa['rows'] * self._pa['interval_ratio_y'] - self._pa['interval_ratio_y']
         )
-        block_x_length = self._pa['block_aspect'] * block_y_length
+        block_x_length = self._pa['block_aspect_ratio'] * block_y_length
 
         # Define the limit of X, Y axis
         self.ax.axis(
