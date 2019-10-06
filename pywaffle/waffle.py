@@ -53,11 +53,29 @@ FONTAWESOME_FILES = {
 }
 
 
-class TextLegend(object):
+class TextLegendBase(object):
     def __init__(self, text, color, **kwargs):
         self.text = text
         self.color = color
         self.kwargs = kwargs
+
+
+class SolidTextLegend(TextLegendBase):
+    def __init__(self, text, color, **kwargs):
+        super().__init__(text, color, **kwargs)
+
+
+class RegularTextLegend(TextLegendBase):
+    def __init__(self, text, color, **kwargs):
+        super().__init__(text, color, **kwargs)
+
+
+class BrandsTextLegend(TextLegendBase):
+    def __init__(self, text, color, **kwargs):
+        super().__init__(text, color, **kwargs)
+
+
+LEGENDSTYLE = {'solid': SolidTextLegend, 'regular': RegularTextLegend, 'brands': BrandsTextLegend}
 
 
 class TextLegendHandler(HandlerBase):
@@ -77,6 +95,13 @@ class TextLegendHandler(HandlerBase):
         kwargs.update(orig_handle.kwargs)
         annotation = Text(x, y, orig_handle.text, **kwargs)
         return [annotation]
+
+
+HANDLER_MAP = {
+    SolidTextLegend: TextLegendHandler('solid'),
+    RegularTextLegend: TextLegendHandler('regular'),
+    BrandsTextLegend: TextLegendHandler('brands')
+}
 
 
 class Waffle(Figure):
@@ -130,10 +155,17 @@ class Waffle(Figure):
         See the full list of Font Awesome on https://fontawesome.com/icons?d=gallery&m=free [Default None]
     :type icons: str|list[str]|tuple[str]
 
-    :param icon_set: {'brands', 'regular', 'solid'}
-        The set of icons to be used. Visit https://fontawesome.com/cheatsheet to see which icons belong to which set.
+    :param icon_set: {'brands', 'regular', 'solid'}The style of icons to be used.
         [Default 'solid']
-    :type icon_set: str
+    :type icon_set: str|list[str]|tuple[str]
+
+    :param icon_style: The style of icons to be used.
+        Font Awesome Icons find an icon by style and icon name. The style could be 'brands', 'regular' and 'solid'.
+        Visit https://fontawesome.com/cheatsheet for detail.
+        If it is a string, it would search icons within given style. If it is a list or a tuple, the length should be
+        the same as values and it means the style for each icon.
+        [Default 'solid']
+    :type icon_style: str|list[str]|tuple[str]
 
     :param icon_size: Fint size of the icons. The default size is not fixed and depends on the block size.
     :type icon_size: int
@@ -217,7 +249,8 @@ class Waffle(Figure):
             'legend': kwargs.pop('legend', {}),
             'icons': kwargs.pop('icons', None),
             'icon_size': kwargs.pop('icon_size', None),
-            'icon_set': kwargs.pop('icon_set', 'solid'),  # TODO: icon_set can also be list or tuple
+            'icon_set': kwargs.pop('icon_set', 'solid'),  # Deprecated
+            'icon_style': kwargs.pop('icon_style', 'solid'),
             'icon_legend': kwargs.pop('icon_legend', False),
             'interval_ratio_x': kwargs.pop('interval_ratio_x', 0.2),
             'interval_ratio_y': kwargs.pop('interval_ratio_y', 0.2),
@@ -225,7 +258,7 @@ class Waffle(Figure):
             'cmap_name': kwargs.pop('cmap_name', 'Set2'),
             'title': kwargs.pop('title', None),
             'plot_anchor': kwargs.pop('plot_anchor', 'W'),
-            'plot_direction': kwargs.pop('plot_direction', ''),
+            'plot_direction': kwargs.pop('plot_direction', ''),  # Deprecated
             'vertical': kwargs.pop('vertical', False),
             'starting_location': kwargs.pop('starting_location', 'SW'),
             'rounding_rule': kwargs.pop('rounding_rule', 'nearest'),
@@ -276,23 +309,6 @@ class Waffle(Figure):
         if self._pa['labels'] and len(self._pa['labels']) != self.values_len:
             raise ValueError("Length of labels doesn't match the values.")
 
-        if self._pa['icons']:
-            from pywaffle.fontawesome_mapping import icons
-
-            self._pa['icon_set'] = self._pa['icon_set'].lower()
-            if self._pa['icon_set'] not in icons.keys():
-                raise KeyError('icon_set should be one of {}'.format(', '.join(icons.keys())))
-
-            # If icons is a string, convert it into a list of same icon. It's length is the label's length
-            # '\uf26e' -> ['\uf26e', '\uf26e', '\uf26e', ]
-            if isinstance(self._pa['icons'], str):
-                self._pa['icons'] = [self._pa['icons']] * self.values_len
-
-            if len(self._pa['icons']) != self.values_len:
-                raise ValueError("Length of icons doesn't match the values.")
-
-            self._pa['icons'] = [icons[self._pa['icon_set']][i] for i in self._pa['icons']]
-
         self.ax = self.add_subplot(loc, aspect='equal')
 
         # Alignment of subplots
@@ -306,7 +322,8 @@ class Waffle(Figure):
             block_number_per_cat = self._pa['values']
         else:
             block_number_per_cat = [
-                division(v * self._pa['columns'] * self._pa['rows'], self.value_sum, method=self._pa['rounding_rule']) for v in self._pa['values']
+                division(v * self._pa['columns'] * self._pa['rows'], self.value_sum, method=self._pa['rounding_rule'])
+                for v in self._pa['values']
             ]
 
         # Absolute height of the plot
@@ -325,14 +342,6 @@ class Waffle(Figure):
             ymin=0,
             ymax=figure_height
         )
-
-        # Default font size
-        if self._pa['icons']:
-            x, y = self.ax.transData.transform([(0, 0), (0, block_x_length)])
-            prop = fm.FontProperties(
-                fname=FONTAWESOME_FILES[self._pa['icon_set']],
-                size=self._pa['icon_size'] or int((y[1] - x[1]) / 16 * 12)
-            )
 
         # Build a color sequence if colors is empty
         if not self._pa['colors']:
@@ -373,6 +382,42 @@ class Waffle(Figure):
         else:
             block_iter = product(range(self._pa['columns'])[::column_order], range(self._pa['rows'])[::row_order])
 
+        # Set icons
+        if self._pa['icons']:
+            from pywaffle.fontawesome_mapping import icons
+
+            # TODO: deprecating icon_set
+            if self._pa['icon_set'] != 'solid' and self._pa['icon_style'] == 'solid':
+                self._pa['icon_style'] = self._pa['icon_set']
+                warnings.warn(
+                    "Parameter icon_set is deprecated and will be removed in future version. Use icon_style instead.",
+                    DeprecationWarning
+                )
+
+            # If icon_set is a string, convert it into a list of same icon. It's length is the label's length
+            # 'solid' -> ['solid', 'solid', 'solid', ]
+            if isinstance(self._pa['icon_style'], str):
+                self._pa['icon_style'] = [self._pa['icon_style'].lower()] * self.values_len
+            elif set(self._pa['icon_style']) - set(icons.keys()):
+                raise KeyError('icon_set should be one of {}'.format(', '.join(icons.keys())))
+
+            # If icons is a string, convert it into a list of same icon. It's length is the label's length
+            # '\uf26e' -> ['\uf26e', '\uf26e', '\uf26e', ]
+            if isinstance(self._pa['icons'], str):
+                self._pa['icons'] = [self._pa['icons']] * self.values_len
+
+            if len(self._pa['icons']) != self.values_len:
+                raise ValueError("Length of icons doesn't match the values.")
+
+            self._pa['icons'] = [
+                icons[icon_style][icon_name]
+                for icon_name, icon_style in zip(self._pa['icons'], self._pa['icon_style'])
+            ]
+
+            # Calculate icon size based on the block size
+            tx, ty = self.ax.transData.transform([(0, 0), (0, block_x_length)])
+            prop = fm.FontProperties(size=self._pa['icon_size'] or int((ty[1] - tx[1]) / 16 * 12))
+
         for col, row in block_iter:
             if block_number_per_cat[class_index] == 0:
                 class_index += 1
@@ -386,6 +431,7 @@ class Waffle(Figure):
             y = y_full * row
 
             if self._pa['icons']:
+                prop.set_file(FONTAWESOME_FILES[self._pa['icon_style'][class_index]])
                 self.ax.text(
                     x=x,
                     y=y,
@@ -413,11 +459,12 @@ class Waffle(Figure):
         # Add legend
         if self._pa['labels'] or 'labels' in self._pa['legend']:
             labels = self._pa['labels'] or self._pa['legend'].get('labels')
-            if self._pa['icons'] and self._pa['icon_legend']:
+            if self._pa['icons'] and self._pa['icon_legend'] is True:
                 self._pa['legend']['handles'] = [
-                    TextLegend(color=c, text=i) for c, i in zip(self._pa['colors'], self._pa['icons'])
+                    LEGENDSTYLE[style](color=color, text=icon)
+                    for color, icon, style in zip(self._pa['colors'], self._pa['icons'], self._pa['icon_style'])
                 ]
-                self._pa['legend']['handler_map'] = {TextLegend: TextLegendHandler(self._pa['icon_set'])}
+                self._pa['legend']['handler_map'] = HANDLER_MAP
             # elif not self._pa['legend'].get('handles'):
             elif 'handles' not in self._pa['legend']:
                 self._pa['legend']['handles'] = [

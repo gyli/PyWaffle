@@ -192,7 +192,7 @@ fig = plt.figure(
     rows=5,
     values=[48, 46, 3],
     colors=["#232066", "#983D3D", "#DCB732"],
-    icons='child',
+    icons='star',
     icon_size=12,
 )
 fig.savefig(doc_examples_image_folder + 'icons.svg', bbox_inches='tight')
@@ -204,7 +204,21 @@ fig = plt.figure(
     colors=["#FFA500", "#4384FF", "#C0C0C0"],
     icons=['sun', 'cloud-showers-heavy', 'snowflake'],
     icon_size=12,
+    icon_style='solid',
     icon_legend=True,
     legend={'labels': ['sun', 'shower', 'snow'], 'loc': 'upper left', 'bbox_to_anchor': (1, 1)}
 )
 fig.savefig(doc_examples_image_folder + 'icons_different_per_category.svg', bbox_inches='tight')
+
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    values=[48, 46, 3],
+    colors=["#FFA500", "#4384FF", "#C0C0C0"],
+    icons=['sun', 'cloud-showers-heavy', 'snowflake'],
+    icon_size=12,
+    icon_style=['regular', 'solid', 'regular'],
+    icon_legend=True,
+    legend={'labels': ['sun', 'shower', 'snow'], 'loc': 'upper left', 'bbox_to_anchor': (1, 1)}
+)
+fig.savefig(doc_examples_image_folder + 'icons_different_style.svg', bbox_inches='tight')
