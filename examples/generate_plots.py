@@ -39,8 +39,6 @@ fig = plt.figure(
     },
     plot_direction='NW'
 )
-fig.set_facecolor('#EEEEEE')
-plt.plot()
 fig.savefig(readme_image_folder + 'title_and_legend.svg', bbox_inches='tight', facecolor='#EEEEEE')
 
 # Use icons from Awesomefont
@@ -268,8 +266,7 @@ fig = plt.figure(
     values=[48, 46, 3],
     colors=["#983D3D", "#232066", "#DCB732"]
 )
-fig.set_facecolor('#EEEEEE')
-fig.savefig(doc_examples_image_folder + 'adjust_figure_change_background.svg', bbox_inches='tight')
+fig.savefig(doc_examples_image_folder + 'adjust_figure_change_background.svg', bbox_inches='tight', facecolor='#EEEEEE')
 
 fig = plt.figure(
     FigureClass=Waffle,
@@ -278,5 +275,4 @@ fig = plt.figure(
     values=[48, 46, 3],
     plot_anchor='S'
 )
-fig.set_facecolor('#EEEEEE')
-fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg')
+fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg', facecolor='#EEEEEE')
