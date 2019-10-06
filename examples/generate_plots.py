@@ -163,7 +163,7 @@ fig = plt.figure(
     labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0}
 )
-fig.savefig(doc_examples_image_folder + 'title_label_ledend.png', bbox_inches='tight', dpi=80)
+fig.savefig(doc_examples_image_folder + 'title_label_ledend.png', bbox_inches='tight')
 
 # Block Color and Background Color
 fig = plt.figure(
