@@ -11,7 +11,7 @@ fig = plt.figure(
     values=[48, 46, 3],
     colors=["#983D3D", "#232066", "#DCB732"]
 )
-fig.set_facecolor('#EEEEEE')
+fig.set_facecolor('#888888')
 ```
 
 <img class="img_middle" alt="Adjust Figures - Change Background Color" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/adjust_figure_change_background.svg?sanitize=true">
@@ -30,7 +30,7 @@ fig = plt.figure(
     values=[48, 46, 3],
     plot_anchor='S'
 )
-fig.set_facecolor('#EEEEEE')
+fig.set_facecolor('#888888')
 ```
 
 <img class="img_middle" alt="Adjust Figures - Change Plot Location" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/adjust_figure_location.svg?sanitize=true">

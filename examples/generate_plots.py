@@ -12,11 +12,13 @@ readme_image_folder = 'examples/readme/'
 # Basic
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3])
 fig.savefig(readme_image_folder + 'basic.svg', bbox_inches='tight')
+plt.close(fig)
 
 # Use values in dictionary; use absolute value as block number, without defining columns
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
 fig = plt.figure(FigureClass=Waffle, rows=5, values=data, legend={'loc': 'upper left', 'bbox_to_anchor': (1.1, 1)})
 fig.savefig(readme_image_folder + 'absolute_block_numbers.svg', bbox_inches='tight')
+plt.close(fig)
 
 # Add title, legend, background color, block color and direction
 # Data source https://en.wikipedia.org/wiki/United_States_presidential_election,_2016
@@ -40,6 +42,7 @@ fig = plt.figure(
     plot_direction='NW'
 )
 fig.savefig(readme_image_folder + 'title_and_legend.svg', bbox_inches='tight', facecolor='#EEEEEE')
+plt.close(fig)
 
 # Use icons from Awesomefont
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
@@ -57,6 +60,7 @@ fig = plt.figure(
     icon_legend=True
 )
 fig.savefig(readme_image_folder + 'fontawesome.svg', bbox_inches='tight')
+plt.close(fig)
 
 # Multiple Plots
 import pandas as pd
@@ -120,6 +124,7 @@ fig = plt.figure(
     figsize=(9, 5)  # figsize is a parameter of plt.figure
 )
 fig.savefig(readme_image_folder + 'multiple_plots.svg', bbox_inches='tight')
+plt.close(fig)
 
 # For documents
 doc_examples_image_folder = 'examples/docs/'
@@ -127,6 +132,7 @@ doc_examples_image_folder = 'examples/docs/'
 # Basic
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 6])
 fig.savefig(doc_examples_image_folder + 'basic_list_values.svg', bbox_inches='tight')
+plt.close(fig)
 
 fig = plt.figure(
     FigureClass=Waffle,
@@ -143,13 +149,16 @@ fig = plt.figure(
     }
 )
 fig.savefig(doc_examples_image_folder + 'basic_dict_values.svg', bbox_inches='tight')
+plt.close(fig)
 
 # Value Scaling and Auto-columns
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3], rounding_rule='floor')
 fig.savefig(doc_examples_image_folder + 'value_scaling_and_auto_columns_rounding_rule.svg', bbox_inches='tight')
+plt.close(fig)
 
 fig = plt.figure(FigureClass=Waffle, rows=10, values=[48, 46, 3])
 fig.savefig(doc_examples_image_folder + 'value_scaling_and_auto_columns_ignore_columns.svg', bbox_inches='tight')
+plt.close(fig)
 
 # Title, Label and Legend
 data = {'Cat1': 48, 'Cat2': 46, 'Cat3': 3}
@@ -163,6 +172,7 @@ fig = plt.figure(
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.2), 'ncol': len(data), 'framealpha': 0, 'fontsize': 12}
 )
 fig.savefig(doc_examples_image_folder + 'title_label_ledend.svg', bbox_inches='tight')
+plt.close(fig)
 
 # Block Colors
 fig = plt.figure(
@@ -173,6 +183,7 @@ fig = plt.figure(
     colors=["#983D3D", "#232066", "#DCB732"]
 )
 fig.savefig(doc_examples_image_folder + 'block_colors.svg', bbox_inches='tight')
+plt.close(fig)
 
 fig = plt.figure(
     FigureClass=Waffle,
@@ -182,6 +193,7 @@ fig = plt.figure(
     cmap_name="tab10"
 )
 fig.savefig(doc_examples_image_folder + 'block_colors_custom_cmap_name.svg', bbox_inches='tight')
+plt.close(fig)
 
 # Icons
 fig = plt.figure(
@@ -193,6 +205,7 @@ fig = plt.figure(
     icon_size=12,
 )
 fig.savefig(doc_examples_image_folder + 'icons.svg', bbox_inches='tight')
+plt.close(fig)
 
 fig = plt.figure(
     FigureClass=Waffle,
@@ -206,6 +219,7 @@ fig = plt.figure(
     legend={'labels': ['sun', 'shower', 'snow'], 'loc': 'upper left', 'bbox_to_anchor': (1, 1)}
 )
 fig.savefig(doc_examples_image_folder + 'icons_different_per_category.svg', bbox_inches='tight')
+plt.close(fig)
 
 fig = plt.figure(
     FigureClass=Waffle,
@@ -219,6 +233,7 @@ fig = plt.figure(
     legend={'labels': ['sun', 'shower', 'flag'], 'loc': 'upper left', 'bbox_to_anchor': (1, 1)}
 )
 fig.savefig(doc_examples_image_folder + 'icons_different_style.svg', bbox_inches='tight')
+plt.close(fig)
 
 # Block shape, distance, location and direction
 fig = plt.figure(
@@ -229,6 +244,7 @@ fig = plt.figure(
     block_aspect_ratio=1.618,
 )
 fig.savefig(doc_examples_image_folder + 'block_shape.svg', bbox_inches='tight')
+plt.close(fig)
 
 fig = plt.figure(
     FigureClass=Waffle,
@@ -239,6 +255,7 @@ fig = plt.figure(
     interval_ratio_y=0.5
 )
 fig.savefig(doc_examples_image_folder + 'block_distance.svg', bbox_inches='tight')
+plt.close(fig)
 
 fig = plt.figure(
     FigureClass=Waffle,
@@ -248,6 +265,7 @@ fig = plt.figure(
     starting_location='SE'
 )
 fig.savefig(doc_examples_image_folder + 'block_location.svg', bbox_inches='tight')
+plt.close(fig)
 
 fig = plt.figure(
     FigureClass=Waffle,
@@ -257,6 +275,7 @@ fig = plt.figure(
     vertical=True
 )
 fig.savefig(doc_examples_image_folder + 'block_direction.svg', bbox_inches='tight')
+plt.close(fig)
 
 # Adjust Figures
 fig = plt.figure(
@@ -266,7 +285,9 @@ fig = plt.figure(
     values=[48, 46, 3],
     colors=["#983D3D", "#232066", "#DCB732"]
 )
-fig.savefig(doc_examples_image_folder + 'adjust_figure_change_background.svg', bbox_inches='tight', facecolor='#EEEEEE')
+fig.set_facecolor('#888888')
+fig.savefig(doc_examples_image_folder + 'adjust_figure_change_background.svg', bbox_inches='tight', facecolor='#888888')
+plt.close(fig)
 
 fig = plt.figure(
     FigureClass=Waffle,
@@ -275,4 +296,6 @@ fig = plt.figure(
     values=[48, 46, 3],
     plot_anchor='S'
 )
-fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg', facecolor='#EEEEEE')
+fig.set_facecolor('#888888')
+fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg', facecolor='#888888')
+plt.close(fig)
