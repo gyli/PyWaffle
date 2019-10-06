@@ -1,10 +1,6 @@
 PyWaffle
 ========
 
-PyPI page: `https://pypi.python.org/pypi/pywaffle <https://pypi.python.org/pypi/pywaffle>`_
-
-Documentation: `http://pywaffle.readthedocs.io <http://pywaffle.readthedocs.io>`_
-
 Introduction
 ------------
 
@@ -18,6 +14,11 @@ Installation
 .. code:: bash
 
     pip install pywaffle
+
+Documentation
+-------------
+
+`http://pywaffle.readthedocs.io <http://pywaffle.readthedocs.io>`_
 
 License
 -------
