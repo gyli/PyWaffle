@@ -1,4 +1,4 @@
-# This file belongs to Font Awesome, see license http://fontawesome.io/license/
+# This file belongs to Font Awesome, see license https://fontawesome.com/license
 # Font Awesome version: 5.5.0
 
 icons = {

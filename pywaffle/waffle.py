@@ -127,7 +127,7 @@ class Waffle(Figure):
 
     :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
         If it's a list or tuple of icons, the length should be the same as values.
-        See the full list of Font Awesome on http://fontawesome.io/icons/ [Default None]
+        See the full list of Font Awesome on https://fontawesome.com/icons/ [Default None]
     :type icons: str|list[str]|tuple[str]
 
     :param icon_set: {'brands', 'regular', 'solid'}

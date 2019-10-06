@@ -20,7 +20,7 @@ plt.figure(
 )
 ```
 
-<img class="img_middle" alt="With list values" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/basic_list_values.png">
+<img class="img_middle" alt="With list values" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/basic_list_values.svg?sanitize=true">
 
 Parameter `values` also accept dict data. The key of the dict would be used as labels and legends.
 
@@ -34,7 +34,7 @@ plt.figure(
 )
 ```
 
-<img class="img_middle" alt="With dict values" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/basic_dict_values.png">
+<img class="img_middle" alt="With dict values" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/basic_dict_values.svg?sanitize=true">
 
 ## Value Scaling and Auto-columns
 
@@ -56,7 +56,7 @@ plt.figure(
 )
 ```
 
-<img class="img_middle" alt="Rounding rule" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/value_scaling_and_auto_columns_rounding_rule.png">
+<img class="img_middle" alt="Rounding rule" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/value_scaling_and_auto_columns_rounding_rule.svg?sanitize=true">
 
 To avoid scaling values as block numbers, argument `columns` can be ignored and only passing `rows`. Then the absolute number of `values` would be used as block number directly and `columns` would be calculated automatically.
 
@@ -68,7 +68,7 @@ plt.figure(
 )
 ```
 
-<img class="img_middle" alt="Ignore columns" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/value_scaling_and_auto_columns_ignore_columns.png">
+<img class="img_middle" alt="Ignore columns" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/value_scaling_and_auto_columns_ignore_columns.svg?sanitize=true">
 
 ## Title, Label and Legend
 
@@ -86,54 +86,59 @@ fig = plt.figure(
     values=data,
     title={
         'label': 'Example plot', 
-        'loc': 'left'
+        'loc': 'left', 
+        'fontdict': {
+            'fontsize': 20
+        }
     },
     labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
     legend={
         'loc': 'lower left', 
         'bbox_to_anchor': (0, -0.4), 
         'ncol': len(data), 
-        'framealpha': 0
+        'framealpha': 0, 
+        'fontsize': 12
     }
 )
 ```
 
-<img class="img_middle" alt="Title, Label and Legend" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/title_label_ledend.png">
+<img class="img_middle" alt="Title, Label and Legend" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/title_label_ledend.svg?sanitize=true">
 
 > **_NOTE:_** Labels could also be specified in parameter `legend` as an item instead.
 
 ## Block Color and Background Color
+
+Parameter `colors` accepts colors in a list or tuple. The length must be the same as values.
+
+```python
+fig = plt.figure(
+    FigureClass=Waffle, 
+    rows=5,
+    columns=10,
+    values=[48, 46, 3], 
+    colors=["#983D3D", "#232066", "#DCB732"]
+)
+fig.set_facecolor('#EEEEEE')
+```
+
+<img class="img_middle" alt="Block Color and Background Color" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/block_color_and_background_color.svg?sanitize=true">
+
+## Icons
+
+PyWaffle supports [Font Awesome icons](https://fontawesome.com/). Blocks could be icons instead of squares.
 
 ```python
 fig = plt.figure(
     FigureClass=Waffle, 
     rows=5, 
     values=[48, 46, 3], 
-    colors=("#983D3D", "#232066", "#DCB732"),
-)
-fig.set_facecolor('#EEEEEE')
-```
-
-<img class="img_middle" alt="Block Color and Background Color" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/block_color_and_background_color.png">
-
-### 4. Icons
-
-```python
-data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
-fig = plt.figure(
-    FigureClass=Waffle, 
-    rows=5, 
-    values=data, 
     colors=("#232066", "#983D3D", "#DCB732"),
-    legend={'loc': 'upper left', 'bbox_to_anchor': (1, 1)},
-    icons='child', icon_size=12, 
-    icon_legend=True
+    icons='child', 
+    icon_size=12, 
 )
 ```
     
-![Use Font Awesome icons](examples/readme/fontawesome.svg)
-
-PyWaffle supports [Font Awesome](http://fontawesome.io/) icons in the chart.
+<img class="img_middle" alt="Icons" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/icons.svg?sanitize=true">
 
 ### 5. Multiple Plots
 

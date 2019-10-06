@@ -101,7 +101,7 @@ fig = plt.figure(
     
 ![Use Font Awesome icons](examples/readme/fontawesome.svg)
 
-PyWaffle supports [Font Awesome](http://fontawesome.io/) icons in the chart.
+PyWaffle supports [Font Awesome](https://fontawesome.com/) icons in the chart.
 
 ### 5. Multiple Plots
 
