@@ -15,17 +15,17 @@ import warnings
 from typing import List, Tuple, Union
 
 
-def division(x: int, y: int, method: str = 'FLOAT') -> Union[int, float]:
+def division(x: int, y: int, method: str = 'float') -> Union[int, float]:
     """
     :param x: dividend
     :param y: divisor
-    :param method: {'FLOAT', 'NEAREST', 'CEIL', 'FLOOR'}
+    :param method: {'float', 'nearest', 'ceil', 'floor'}
     """
     method_mapping = {
-        'FLOAT': lambda a, b: a / b,
-        'NEAREST': lambda a, b: round(a / b),
-        'CEIL': lambda a, b: int(a // b + bool(a % b)),
-        'FLOOR': lambda a, b: a // b,
+        'float': lambda a, b: a / b,
+        'nearest': lambda a, b: round(a / b),
+        'ceil': lambda a, b: int(a // b + bool(a % b)),
+        'floor': lambda a, b: a // b,
     }
 
     return method_mapping[method.upper()](x, y)
@@ -177,7 +177,7 @@ class Waffle(Figure):
         For 'SE', plots start at lower right and end at upper left.
     :type plot_direction: str
 
-    :param rounding_rule: {'NEAREST', 'FLOOR', 'CEIL'}, the default value is NEAREST.
+    :param rounding_rule: {'nearest', 'floor', 'ceil'}, the default value is NEAREST.
         The rounding rule applied when shrinking values to fit the chart size.
         'NEAREST' means "round to nearest, ties to even" rounding mode;
         'FLOOR' means round to less of the two endpoints of the interval;
@@ -225,7 +225,7 @@ class Waffle(Figure):
             'plot_direction': kwargs.pop('plot_direction', ''),
             'vertical': kwargs.pop('vertical', False),
             'starting_location': kwargs.pop('starting_location', 'SW'),
-            'rounding_rule': kwargs.pop('rounding_rule', 'NEAREST'),
+            'rounding_rule': kwargs.pop('rounding_rule', 'nearest'),
         }
         self.plots = kwargs.pop('plots', None)
 
@@ -252,8 +252,8 @@ class Waffle(Figure):
                 self._pa[arg] = v
 
         # Parameter Validation
-        self._pa['rounding_rule'] = self._pa['rounding_rule'].upper()
-        if self._pa['rounding_rule'] not in ('NEAREST', 'CEIL', 'FLOOR'):
+        self._pa['rounding_rule'] = self._pa['rounding_rule'].lower()
+        if self._pa['rounding_rule'] not in ('nearest', 'ceil', 'floor'):
             raise ValueError("Argument rounding_rule should be one of NEAREST, CEIL or FLOOR.")
 
         if len(self._pa['values']) == 0 or not self._pa['rows']:
@@ -297,7 +297,7 @@ class Waffle(Figure):
 
         # if column number is not given, use the values as number of blocks
         if self._pa['columns'] is None:
-            self._pa['columns'] = division(self.value_sum, self._pa['rows'], method='CEIL')
+            self._pa['columns'] = division(self.value_sum, self._pa['rows'], method='ceil')
             block_number_per_cat = self._pa['values']
         else:
             block_number_per_cat = [
