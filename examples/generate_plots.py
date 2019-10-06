@@ -285,8 +285,8 @@ fig = plt.figure(
     values=[48, 46, 3],
     colors=["#983D3D", "#232066", "#DCB732"]
 )
-fig.set_facecolor('#888888')
-fig.savefig(doc_examples_image_folder + 'adjust_figure_change_background.svg', bbox_inches='tight', facecolor='#888888')
+fig.set_facecolor('#DDDDDD')
+fig.savefig(doc_examples_image_folder + 'adjust_figure_change_background.svg', bbox_inches='tight', facecolor='#DDDDDD')
 plt.close(fig)
 
 fig = plt.figure(
@@ -296,6 +296,6 @@ fig = plt.figure(
     values=[48, 46, 3],
     plot_anchor='S'
 )
-fig.set_facecolor('#888888')
-fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg', facecolor='#888888')
+fig.set_facecolor('#DDDDDD')
+fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg', facecolor='#DDDDDD')
 plt.close(fig)
