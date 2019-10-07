@@ -6,10 +6,14 @@
 PyWaffle Documentation
 ======================
 
-PyWaffle is a Python package to plot waffle chart.
+PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts.
 
 A `Figure constructor
 <https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html>`_ class *Waffle* is provided, which could be passed to matplotlib.pyplot.figure and generate a matplotlib Figure object.
+
+Visit PyWaffle on `Github
+<https://github.com/gyli/PyWaffle>`_ and `PyPI
+<https://pypi.org/project/pywaffle/>`_.
 
 .. toctree::
    :maxdepth: 2
