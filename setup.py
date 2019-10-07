@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*-coding: utf-8 -*-
 
-from setuptools import setup, find_packages
 from os import path
+
+from setuptools import setup
 
 here = path.abspath(path.dirname(__file__))
 
@@ -22,9 +23,9 @@ setup(
     packages=['pywaffle', 'font'],
     install_requires=['matplotlib'],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
-        'Topic :: Software Development :: Build Tools',
+        'Topic :: Scientific/Engineering :: Visualization',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',

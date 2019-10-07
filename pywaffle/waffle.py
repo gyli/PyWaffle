@@ -1,26 +1,28 @@
 #!/usr/bin/python
 # -*-coding: utf-8 -*-
 
-from matplotlib.pyplot import cm
-from matplotlib.figure import Figure
-from matplotlib.patches import Rectangle, Patch
-import matplotlib.font_manager as fm
-from matplotlib.text import Text
-from matplotlib.legend_handler import HandlerBase
 import copy
-import os
-import font
-from itertools import product
-import warnings
-from typing import List, Tuple, Union
 import math
+import os
+import warnings
+from itertools import product
+from typing import List, Tuple, Union
+
+import font
+import matplotlib.font_manager as fm
+from matplotlib.figure import Figure
+from matplotlib.legend_handler import HandlerBase
+from matplotlib.patches import Patch, Rectangle
+from matplotlib.pyplot import cm
+from matplotlib.text import Text
 
 METHOD_MAPPING = {
-        'float': lambda a, b: a / b,
-        'nearest': lambda a, b: round(a / b),
-        'ceil': lambda a, b: math.ceil(a/b),
-        'floor': lambda a, b: a // b,
-    }
+    'float': lambda a, b: a / b,
+    'nearest': lambda a, b: round(a / b),
+    'ceil': lambda a, b: math.ceil(a / b),
+    'floor': lambda a, b: a // b,
+}
+
 
 def division(x: int, y: int, method: str = 'float') -> Union[int, float]:
     """
@@ -28,7 +30,6 @@ def division(x: int, y: int, method: str = 'float') -> Union[int, float]:
     :param y: divisor
     :param method: {'float', 'nearest', 'ceil', 'floor'}
     """
-
     return METHOD_MAPPING[method.lower()](x, y)
 
 
