@@ -13,7 +13,14 @@ import font
 from itertools import product
 import warnings
 from typing import List, Tuple, Union
+import math
 
+METHOD_MAPPING = {
+        'float': lambda a, b: a / b,
+        'nearest': lambda a, b: round(a / b),
+        'ceil': lambda a, b: math.ceil(a/b),
+        'floor': lambda a, b: a // b,
+    }
 
 def division(x: int, y: int, method: str = 'float') -> Union[int, float]:
     """
@@ -21,14 +28,8 @@ def division(x: int, y: int, method: str = 'float') -> Union[int, float]:
     :param y: divisor
     :param method: {'float', 'nearest', 'ceil', 'floor'}
     """
-    method_mapping = {
-        'float': lambda a, b: a / b,
-        'nearest': lambda a, b: round(a / b),
-        'ceil': lambda a, b: int(a // b + bool(a % b)),
-        'floor': lambda a, b: a // b,
-    }
 
-    return method_mapping[method.lower()](x, y)
+    return METHOD_MAPPING[method.lower()](x, y)
 
 
 def array_resize(array: Union[Tuple, List], length: int, array_len: int = None):
@@ -408,11 +409,11 @@ class Waffle(Figure):
             raise KeyError("starting_location should be one of 'NW', 'SW', 'NE', 'SE'")
 
         if self.fig_args['vertical']:
-            block_iter = [
+            block_iter = (
                 c[::-1]
                 for c in product(range(self._pa['rows'])[::row_order],
                                  range(self._pa['columns'])[::column_order])
-            ]
+            )
         else:
             block_iter = product(range(self._pa['columns'])[::column_order], range(self._pa['rows'])[::row_order])
 
