@@ -169,8 +169,8 @@ class Waffle(Figure):
     :type icon_style: str|list[str]|tuple[str]
 
     :param icon_size: Fint size of the icons.
-    The default size is not fixed and depends on the block size.
-    Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size, e.g., 12
+        The default size is not fixed and depends on the block size.
+        Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size, e.g., 12
     :type icon_size: int
 
     :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
