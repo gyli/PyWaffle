@@ -20,13 +20,13 @@ sys.path.insert(0, os.path.abspath('../'))
 # -- Project information -----------------------------------------------------
 
 project = 'PyWaffle'
-copyright = '2018, Guangyang Li'
+copyright = 'Guangyang Li'
 author = 'Guangyang Li'
 
 # The short X.Y version
-version = ''
+version = '0.2.5'
 # The full version, including alpha/beta/rc tags
-release = '0.0.9'
+release = '0.2.5'
 
 
 # -- General configuration ---------------------------------------------------

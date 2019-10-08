@@ -13,7 +13,7 @@ from matplotlib.legend_handler import HandlerBase
 from matplotlib.patches import Patch, Rectangle
 from matplotlib.pyplot import cm
 from matplotlib.text import Text
-from pywaffle.font import FONTAWESOME_FILES
+from pywaffle.fontawesome import FONTAWESOME_FILES
 
 METHOD_MAPPING = {
     'float': lambda a, b: a / b,

@@ -12,7 +12,6 @@ with open('README_pypi.rst') as f:
 
 setup(
     name="pywaffle",
-    version="0.2.5",
     description="A FigureClass of Matplotlib to make waffle chart.",
     keywords="matplotlib waffle chart pie plot data visualization",
     long_description=long_description,
@@ -20,7 +19,7 @@ setup(
     author="Guangyang Li",
     author_email="mail@guangyangli.com",
     url="https://github.com/gyli/PyWaffle",
-    packages=['pywaffle', 'font'],
+    packages=['pywaffle'],
     install_requires=['matplotlib'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -33,10 +32,8 @@ setup(
         'Programming Language :: Python :: 3.8',
     ],
     package_data={
-        'font': [
-            'Font Awesome 5 Brands-Regular-400.otf',
-            'Font Awesome 5 Free-Regular-400.otf',
-            'Font Awesome 5 Free-Solid-900.otf'
+        'pywaffle': [
+            'fontawesome/*',
         ]
     },
     include_package_data=True
