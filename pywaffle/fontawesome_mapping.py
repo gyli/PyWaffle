@@ -393,7 +393,7 @@ icons = {
         "yoast": "\uf2b1",
         "youtube": "\uf167",
         "youtube-square": "\uf431",
-        "zhihu": "\uf63f"
+        "zhihu": "\uf63f",
     },
     "solid": {
         "ad": "\uf641",
@@ -1264,7 +1264,7 @@ icons = {
         "wrench": "\uf0ad",
         "x-ray": "\uf497",
         "yen-sign": "\uf157",
-        "yin-yang": "\uf6ad"
+        "yin-yang": "\uf6ad",
     },
     "regular": {
         "address-book": "\uf2b9",
@@ -1418,6 +1418,6 @@ icons = {
         "window-close": "\uf410",
         "window-maximize": "\uf2d0",
         "window-minimize": "\uf2d1",
-        "window-restore": "\uf2d2"
-    }
+        "window-restore": "\uf2d2",
+    },
 }

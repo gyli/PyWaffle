@@ -24,9 +24,9 @@ copyright = 'Guangyang Li'
 author = 'Guangyang Li'
 
 # The short X.Y version
-version = '0.2.5'
+# version = ''
 # The full version, including alpha/beta/rc tags
-release = '0.2.5'
+# release = ''
 
 
 # -- General configuration ---------------------------------------------------
