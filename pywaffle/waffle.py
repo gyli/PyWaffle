@@ -3,18 +3,17 @@
 
 import copy
 import math
-import os
 import warnings
 from itertools import product
 from typing import List, Tuple, Union
 
-import font
 import matplotlib.font_manager as fm
 from matplotlib.figure import Figure
 from matplotlib.legend_handler import HandlerBase
 from matplotlib.patches import Patch, Rectangle
 from matplotlib.pyplot import cm
 from matplotlib.text import Text
+from pywaffle.font import FONTAWESOME_FILES
 
 METHOD_MAPPING = {
     'float': lambda a, b: a / b,
@@ -45,14 +44,6 @@ def array_resize(array: Union[Tuple, List], length: int, array_len: int = None):
     if not array_len:
         array_len = len(array)
     return array * (length // array_len) + array[:length % array_len]
-
-
-_FONT_PATH = font.__path__[0]
-FONTAWESOME_FILES = {
-    'brands': os.path.join(_FONT_PATH, 'Font Awesome 5 Brands-Regular-400.otf'),
-    'solid': os.path.join(_FONT_PATH, 'Font Awesome 5 Free-Solid-900.otf'),
-    'regular': os.path.join(_FONT_PATH, 'Font Awesome 5 Free-Regular-400.otf'),
-}
 
 
 class TextLegendBase(object):
