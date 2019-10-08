@@ -7,9 +7,9 @@
 import json
 import requests
 
-INDENT = ' ' * 4
-VERSION = '5.5.0'
-URI = 'https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/advanced-options/metadata/icons.json'
+INDENT = " " * 4
+VERSION = "5.5.0"
+URI = "https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/advanced-options/metadata/icons.json"
 
 
 def main():
@@ -18,20 +18,20 @@ def main():
     # Group icons by style
     mapping = {}
     for k, v in icons.items():
-        for style in v['styles']:
+        for style in v["styles"]:
             style_name = style.upper()
             if style_name not in mapping.keys():
                 mapping[style_name] = {}
-            mapping[style_name][k] = chr(int(v['unicode'], 16))
+            mapping[style_name][k] = chr(int(v["unicode"], 16))
 
-    with open('pywaffle/fontawesome_mapping.py', 'w') as file:
+    with open("pywaffle/fontawesome_mapping.py", "w") as file:
         file.write("# This file belongs to Font Awesome, see license https://fontawesome.com/license/\n")
-        file.write('# Font Awesome version: {0}\n'.format(VERSION))
-        file.write('\n')
-        file.write('icons = ')
+        file.write("# Font Awesome version: {0}\n".format(VERSION))
+        file.write("\n")
+        file.write("icons = ")
         file.write(json.dumps(mapping, indent=4))
-        file.write('\n')
+        file.write("\n")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

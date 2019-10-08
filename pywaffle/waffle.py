@@ -68,11 +68,7 @@ class BrandsTextLegend(TextLegendBase):
         super().__init__(text, color, **kwargs)
 
 
-LEGENDSTYLE = {
-    "solid": SolidTextLegend,
-    "regular": RegularTextLegend,
-    "brands": BrandsTextLegend,
-}
+LEGENDSTYLE = {"solid": SolidTextLegend, "regular": RegularTextLegend, "brands": BrandsTextLegend}
 
 
 class TextLegendHandler(HandlerBase):
@@ -80,9 +76,7 @@ class TextLegendHandler(HandlerBase):
         super().__init__()
         self.font_file = font_file
 
-    def create_artists(
-        self, legend, orig_handle, xdescent, ydescent, width, height, fontsize, trans
-    ):
+    def create_artists(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize, trans):
         x = xdescent + width / 2.0
         y = ydescent + height / 2.0
         kwargs = {
@@ -280,9 +274,7 @@ class Waffle(Figure):
         # Parameter Validation
         self._pa["rounding_rule"] = self._pa["rounding_rule"].lower()
         if self._pa["rounding_rule"] not in ("nearest", "ceil", "floor"):
-            raise ValueError(
-                "Argument rounding_rule should be one of nearest, ceil or floor."
-            )
+            raise ValueError("Argument rounding_rule should be one of nearest, ceil or floor.")
 
         if len(self._pa["values"]) == 0 or not self._pa["rows"]:
             raise ValueError("Argument values or rows is required.")
@@ -310,26 +302,18 @@ class Waffle(Figure):
 
         # if column number is not given, use the values as number of blocks
         if self._pa["columns"] is None:
-            self._pa["columns"] = division(
-                self.value_sum, self._pa["rows"], method="ceil"
-            )
+            self._pa["columns"] = division(self.value_sum, self._pa["rows"], method="ceil")
             block_number_per_cat = self._pa["values"]
         else:
             block_number_per_cat = [
-                division(
-                    v * self._pa["columns"] * self._pa["rows"],
-                    self.value_sum,
-                    method=self._pa["rounding_rule"],
-                )
+                division(v * self._pa["columns"] * self._pa["rows"], self.value_sum, method=self._pa["rounding_rule"])
                 for v in self._pa["values"]
             ]
 
         # Absolute height of the plot
         figure_height = 1
         block_y_length = figure_height / (
-            self._pa["rows"]
-            + self._pa["rows"] * self._pa["interval_ratio_y"]
-            - self._pa["interval_ratio_y"]
+            self._pa["rows"] + self._pa["rows"] * self._pa["interval_ratio_y"] - self._pa["interval_ratio_y"]
         )
         block_x_length = self._pa["block_aspect_ratio"] * block_y_length
 
@@ -337,9 +321,7 @@ class Waffle(Figure):
         self.ax.axis(
             xmin=0,
             xmax=(
-                self._pa["columns"]
-                + self._pa["columns"] * self._pa["interval_ratio_x"]
-                - self._pa["interval_ratio_x"]
+                self._pa["columns"] + self._pa["columns"] * self._pa["interval_ratio_x"] - self._pa["interval_ratio_x"]
             )
             * block_x_length,
             ymin=0,
@@ -350,11 +332,7 @@ class Waffle(Figure):
         if not self._pa["colors"]:
             default_colors = cm.get_cmap(self._pa["cmap_name"]).colors
             default_color_num = cm.get_cmap(self._pa["cmap_name"]).N
-            self._pa["colors"] = array_resize(
-                array=default_colors,
-                length=self.values_len,
-                array_len=default_color_num,
-            )
+            self._pa["colors"] = array_resize(array=default_colors, length=self.values_len, array_len=default_color_num)
 
         # Set icons
         if self._pa["icons"]:
@@ -371,13 +349,9 @@ class Waffle(Figure):
             # If icon_set is a string, convert it into a list of same icon. It's length is the label's length
             # 'solid' -> ['solid', 'solid', 'solid', ]
             if isinstance(self._pa["icon_style"], str):
-                self._pa["icon_style"] = [
-                    self._pa["icon_style"].lower()
-                ] * self.values_len
+                self._pa["icon_style"] = [self._pa["icon_style"].lower()] * self.values_len
             elif set(self._pa["icon_style"]) - set(icons.keys()):
-                raise KeyError(
-                    "icon_set should be one of {}".format(", ".join(icons.keys()))
-                )
+                raise KeyError("icon_set should be one of {}".format(", ".join(icons.keys())))
 
             # If icons is a string, convert it into a list of same icon. It's length is the label's length
             # '\uf26e' -> ['\uf26e', '\uf26e', '\uf26e', ]
@@ -389,17 +363,12 @@ class Waffle(Figure):
 
             # Replace icon name with Unicode symbols in parameter icons
             self._pa["icons"] = [
-                icons[icon_style][icon_name]
-                for icon_name, icon_style in zip(
-                    self._pa["icons"], self._pa["icon_style"]
-                )
+                icons[icon_style][icon_name] for icon_name, icon_style in zip(self._pa["icons"], self._pa["icon_style"])
             ]
 
             # Calculate icon size based on the block size
             tx, ty = self.ax.transData.transform([(0, 0), (0, block_x_length)])
-            prop = fm.FontProperties(
-                size=self._pa["icon_size"] or int((ty[1] - tx[1]) / 16 * 12)
-            )
+            prop = fm.FontProperties(size=self._pa["icon_size"] or int((ty[1] - tx[1]) / 16 * 12))
 
         plot_direction = self._pa["plot_direction"].upper()
 
@@ -422,16 +391,10 @@ class Waffle(Figure):
         if self.fig_args["vertical"]:
             block_iter = (
                 c[::-1]
-                for c in product(
-                    range(self._pa["rows"])[::row_order],
-                    range(self._pa["columns"])[::column_order],
-                )
+                for c in product(range(self._pa["rows"])[::row_order], range(self._pa["columns"])[::column_order])
             )
         else:
-            block_iter = product(
-                range(self._pa["columns"])[::column_order],
-                range(self._pa["rows"])[::row_order],
-            )
+            block_iter = product(range(self._pa["columns"])[::column_order], range(self._pa["rows"])[::row_order])
 
         # Plot blocks
         class_index = 0
@@ -463,10 +426,7 @@ class Waffle(Figure):
             else:
                 self.ax.add_artist(
                     Rectangle(
-                        xy=(x, y),
-                        width=block_x_length,
-                        height=block_y_length,
-                        color=self._pa["colors"][class_index],
+                        xy=(x, y), width=block_x_length, height=block_y_length, color=self._pa["colors"][class_index]
                     )
                 )
 
@@ -486,16 +446,13 @@ class Waffle(Figure):
             if self._pa["icons"] and self._pa["icon_legend"] is True:
                 self._pa["legend"]["handles"] = [
                     LEGENDSTYLE[style](color=color, text=icon)
-                    for color, icon, style in zip(
-                        self._pa["colors"], self._pa["icons"], self._pa["icon_style"]
-                    )
+                    for color, icon, style in zip(self._pa["colors"], self._pa["icons"], self._pa["icon_style"])
                 ]
                 self._pa["legend"]["handler_map"] = HANDLER_MAP
             # elif not self._pa['legend'].get('handles'):
             elif "handles" not in self._pa["legend"]:
                 self._pa["legend"]["handles"] = [
-                    Patch(color=c, label=str(l))
-                    for c, l in zip(self._pa["colors"], labels)
+                    Patch(color=c, label=str(l)) for c, l in zip(self._pa["colors"], labels)
                 ]
 
             # labels is an alias of legend['labels']
