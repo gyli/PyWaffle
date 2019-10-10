@@ -23,6 +23,7 @@ fig = plt.figure(
     },
     labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
     legend={
+        # 'labels': ["{0} ({1}%)".format(k, v) for k, v in data.items()],  # lebels could also be under legend instead
         'loc': 'lower left',
         'bbox_to_anchor': (0, -0.4),
         'ncol': len(data),

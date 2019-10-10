@@ -35,7 +35,7 @@ fig = plt.figure(
     icon_style='solid',
     icon_legend=True,
     legend={
-        'labels': ['sun', 'shower', 'snow'], 
+        'labels': ['Sun', 'Shower', 'Snow'], 
         'loc': 'upper left', 
         'bbox_to_anchor': (1, 1)
     }
@@ -57,7 +57,7 @@ fig = plt.figure(
     icon_style=['regular', 'solid', 'brands'],
     icon_legend=False,
     legend={
-        'labels': ['sun', 'shower', 'flag'], 
+        'labels': ['Sun', 'Shower', 'Flag'], 
         'loc': 'upper left', 
         'bbox_to_anchor': (1, 1)
     }
