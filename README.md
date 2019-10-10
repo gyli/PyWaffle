@@ -1,14 +1,17 @@
 # PyWaffle
 
-PyPI page: [https://pypi.org/project/pywaffle/](https://pypi.org/project/pywaffle/)
-
-Documentation: [http://pywaffle.readthedocs.io/](http://pywaffle.readthedocs.io/)
-
-## Introduction
+[![PyPI version](https://badge.fury.io/py/pywaffle.svg)](https://badge.fury.io/py/pywaffle)
+[![ReadTheDocs](https://readthedocs.org/projects/pywaffle/badge/?version=latest&style=flat)](https://readthedocs.org/projects/pywaffle/badge/?version=latest&style=flat)
 
 PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts.
 
 It provides a [Figure constructor class](https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html) `Waffle`, which could be passed to [matplotlib.pyplot.figure](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.figure.html) and generate a matplotlib Figure object.
+
+For more information, please visit:
+
+PyPI Page: [https://pypi.org/project/pywaffle/](https://pypi.org/project/pywaffle/)
+
+Documentation: [http://pywaffle.readthedocs.io/](http://pywaffle.readthedocs.io/)
 
 ## Installation
 
