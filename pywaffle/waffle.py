@@ -46,7 +46,7 @@ def array_resize(array: Union[Tuple, List], length: int, array_len: int = None):
     return array * (length // array_len) + array[: length % array_len]
 
 
-class TextLegendBase(object):
+class TextLegendBase:
     def __init__(self, text, color, **kwargs):
         self.text = text
         self.color = color
@@ -276,7 +276,7 @@ class Waffle(Figure):
         if self._pa["rounding_rule"] not in ("nearest", "ceil", "floor"):
             raise ValueError("Argument rounding_rule should be one of nearest, ceil or floor.")
 
-        if len(self._pa["values"]) == 0 or not self._pa["rows"]:
+        if not self._pa["values"] or not self._pa["rows"]:
             raise ValueError("Argument values or rows is required.")
 
         self.values_len = len(self._pa["values"])
