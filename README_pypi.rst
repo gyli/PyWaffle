@@ -24,10 +24,15 @@ Installation
 
     pip install pywaffle
 
+Demo
+----
+
+`Online Demo <https://mybinder.org/v2/gh/gyli/PyWaffle/master?filepath=demo.ipynb>`_
+
 Documentation
 -------------
 
-`http://pywaffle.readthedocs.io <http://pywaffle.readthedocs.io>`_
+`https://pywaffle.readthedocs.io/ <https://pywaffle.readthedocs.io/>`_
 
 License
 -------
