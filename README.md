@@ -164,12 +164,8 @@ In this chart, 1 block = 30000 votes.
 
 
 ## What's New
-Verion 0.2.5:
 
-* Rename `block_aspect` to `block_aspect_ratio`
-* Deprecate `icon_set`, use `icon_style` instead. `icon_style` accepts font style for each icon
-* Deprecate `plot_direction`, use `starting_location` instead
-* Finished documents with more examples. See [https://pywaffle.readthedocs.io/](https://pywaffle.readthedocs.io/)
+See [CHANGELOG](CHANGELOG.md)
 
 ## License
 
