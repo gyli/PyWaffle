@@ -7,7 +7,7 @@ PyWaffle
 .. image:: https://readthedocs.org/projects/pywaffle/badge/?version=latest&style=flat
  :target: https://readthedocs.org/projects/pywaffle/badge/?version=latest&style=flat
 
-.. image:: https://mybinder.org/badge_logo.svg
+.. image:: https://img.shields.io/badge/run-Online%20Demo-blue
  :target: https://mybinder.org/v2/gh/gyli/PyWaffle/master?filepath=demo.ipynb
 
 Introduction

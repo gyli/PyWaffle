@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/pywaffle.svg)](https://pypi.org/project/pywaffle/)
 [![ReadTheDocs](https://readthedocs.org/projects/pywaffle/badge/?version=latest&style=flat)](https://readthedocs.org/projects/pywaffle/badge/?version=latest&style=flat)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/gyli/PyWaffle/master?filepath=demo.ipynb)
+[![Binder](https://img.shields.io/badge/run-Online%20Demo-blue)](https://mybinder.org/v2/gh/gyli/PyWaffle/master?filepath=demo.ipynb)
 
 PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts.
 
