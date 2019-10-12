@@ -1,5 +1,4 @@
-v0.3.2:
-2019-10-11
+v0.3.2 (2019-10-11)
 
 * Add parameter `characters`, `font_file` and `font_size` for plotting with characters.
 * Add parameter `tight`
@@ -7,8 +6,7 @@ v0.3.2:
 
 ---
 
-v0.2.5:
-2019-10-06
+v0.2.5 (2019-10-06)
 
 * Rename parameter `block_aspect` to `block_aspect_ratio`
 * Deprecate `icon_set`, use `icon_style` instead. `icon_style` accepts font style for each icon
@@ -17,14 +15,12 @@ v0.2.5:
 
 ---
 
-v0.2.0:
-2018-11-25
+v0.2.0 (2018-11-25)
 
 * Update Font Awesome to 5.5.0
 
 ---
 
-v0.0.7:
-2017-11-22
+v0.0.7 (2017-11-22)
 
 * First public version
