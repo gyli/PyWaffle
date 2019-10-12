@@ -34,3 +34,5 @@ fig.set_facecolor('#DDDDDD')
 ```
 
 <img class="img_middle" alt="Adjust Figures - Change Plot Location" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/adjust_figure_location.svg?sanitize=true">
+
+Parameter `tight` controls whether `tight_layout` in matplotlib is called when drawing.

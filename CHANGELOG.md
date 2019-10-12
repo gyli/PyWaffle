@@ -1,7 +1,8 @@
-v0.3.1:
+v0.3.2:
 2019-10-11
 
 * Add parameter `characters`, `font_file` and `font_size` for plotting with characters.
+* Add parameter `tight`
 * Add more tests
 
 ---

@@ -166,9 +166,11 @@ class Waffle(Figure):
     :type icon_set: str|list[str]|tuple[str]
 
     :param icon_style: The style of icons to be used.
-        Font Awesome Icons find an icon by style and icon name. The style could be 'brands', 'regular' and 'solid'.
+        Font Awesome Icons find an icon by style and icon name.
+        The style could be 'brands', 'regular' and 'solid'.
         Visit https://fontawesome.com/cheatsheet for detail.
-        If it is a string, it would search icons within given style. If it is a list or a tuple, the length should be
+        If it is a string, it would search icons within given style.
+        If it is a list or a tuple, the length should be
         the same as values and it means the style for each icon.
         [Default 'solid']
     :type icon_style: str|list[str]|tuple[str]
@@ -194,7 +196,8 @@ class Waffle(Figure):
         the subplot is the Ith plot on a grid with J rows and K columns.
         The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
         Nested subplots is not supported.
-        If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
+        If any parameter of subplots is not assigned, it use the same parameter
+        in Waffle class as default value.
     :type plots: dict
 
     :param plot_direction: Deprecated. {'NW', 'SW', 'NE', 'SE'}
@@ -227,6 +230,15 @@ class Waffle(Figure):
         'ceil' means round to greater of the two endpoints of the interval.
         [Default 'nearest']
     :type rounding_rule: str
+
+    :param tight: Set whether and how `.tight_layout` is called when drawing.
+        It could be bool or dict with keys "pad", "w_pad", "h_pad", "rect" or None
+        If a bool, sets whether to call `.tight_layout` upon drawing.
+        If ``None``, use the ``figure.autolayout`` rcparam instead.
+        If a dict, pass it as kwargs to `.tight_layout`, overriding the
+        default paddings.
+        [Default True]
+    :type tight: bool|dict
     """
 
     _direction_values = {
@@ -262,6 +274,7 @@ class Waffle(Figure):
             "vertical": kwargs.pop("vertical", False),
             "starting_location": kwargs.pop("starting_location", "SW"),
             "rounding_rule": kwargs.pop("rounding_rule", "nearest"),
+            "tight": kwargs.pop("tight", True),
         }
         self.plots = kwargs.pop("plots", None)
 
@@ -275,7 +288,7 @@ class Waffle(Figure):
             self._waffle(loc, **copy.deepcopy(setting))
 
         # Adjust the layout
-        self.set_tight_layout(True)
+        self.set_tight_layout(self.fig_args["tight"])
 
     def _waffle(self, loc, **kwargs):
         # _pa is the arguments for this single plot
