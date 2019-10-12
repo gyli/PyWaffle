@@ -1,4 +1,28 @@
-# Icons
+# Plot with characters or icons
+
+## Characters
+
+```python
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[48, 46, 3],
+    colors=["#4c8cb5", "#b7cbd7", "#C0C0C0"],
+    characters='⬤',
+    font_size=14,
+)
+```
+
+<img class="img_middle" alt="Icons" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/characters.svg?sanitize=true">
+
+Categories could have different characters by passing parameter `characters` a list or tuple of characters. The length must be the same as `values`.
+
+A font may be specified by passing the absolute path to a .ttf or .otf file to parameter `font_file`.
+
+---
+
+## Icons
 
 PyWaffle supports [Font Awesome icons](https://fontawesome.com/). Blocks could be icons instead of squares.
 
@@ -12,7 +36,7 @@ fig = plt.figure(
     values=[48, 46, 3],
     colors=["#232066", "#983D3D", "#DCB732"],
     icons='star',
-    icon_size=12,
+    font_size=12,
 )
 ```
     
@@ -31,7 +55,7 @@ fig = plt.figure(
     values=[48, 46, 3],
     colors=["#FFA500", "#4384FF", "#C0C0C0"],
     icons=['sun', 'cloud-showers-heavy', 'snowflake'],
-    icon_size=12,
+    font_size=12,
     icon_style='solid',
     icon_legend=True,
     legend={

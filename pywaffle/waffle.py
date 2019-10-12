@@ -143,6 +143,18 @@ class Waffle(Figure):
         See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
     :type title: dict
 
+    :param characters: A character in string or a list of characters for each category. [Default None]
+    :type icons: str|list[str]|tuple[str]
+
+    :param font_size: Font size of Font Awesome icons.
+        The default size is not fixed and depends on the block size.
+        Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'
+        or an absolute font size, e.g., 12
+    :type icons: int|str
+
+    :param font_file: Path to custom font file.
+    :type icons: str
+
     :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
         If it's a list or tuple of icons, the length should be the same as values.
         See the full list of Font Awesome on https://fontawesome.com/icons?d=gallery&m=free [Default None]
@@ -161,10 +173,11 @@ class Waffle(Figure):
         [Default 'solid']
     :type icon_style: str|list[str]|tuple[str]
 
-    :param icon_size: Fint size of the icons.
+    :param icon_size: Font size of Font Awesome icons.
         The default size is not fixed and depends on the block size.
-        Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size, e.g., 12
-    :type icon_size: int
+        Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'
+        or an absolute font size, e.g., 12
+    :type icon_size: int|str
 
     :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
     :type icon_legend: bool
@@ -231,6 +244,9 @@ class Waffle(Figure):
             "colors": kwargs.pop("colors", None),
             "labels": kwargs.pop("labels", None),
             "legend": kwargs.pop("legend", {}),
+            "characters": kwargs.pop("characters", None),
+            "font_file": kwargs.pop("font_file", None),
+            "font_size": kwargs.pop("font_size", None),
             "icons": kwargs.pop("icons", None),
             "icon_size": kwargs.pop("icon_size", None),
             "icon_set": kwargs.pop("icon_set", "solid"),  # Deprecated
@@ -276,7 +292,7 @@ class Waffle(Figure):
         if self._pa["rounding_rule"] not in ("nearest", "ceil", "floor"):
             raise ValueError("Argument rounding_rule should be one of nearest, ceil or floor.")
 
-        if not self._pa["values"] or not self._pa["rows"]:
+        if len(self._pa["values"]) == 0 or not self._pa["rows"]:
             raise ValueError("Argument values or rows is required.")
 
         self.values_len = len(self._pa["values"])
@@ -338,6 +354,11 @@ class Waffle(Figure):
         if self._pa["icons"]:
             from pywaffle.fontawesome_mapping import icons
 
+            # icon_size should be replaced with font_size in the future
+            if self._pa["icon_size"]:
+                # warnings.warn("Parameter icon_size is deprecated. Use font_size instead.", DeprecationWarning)
+                self._pa["font_size"] = self._pa["icon_size"]
+
             # TODO: deprecating icon_set
             if self._pa["icon_set"] != "solid" and self._pa["icon_style"] == "solid":
                 self._pa["icon_style"] = self._pa["icon_set"]
@@ -346,14 +367,14 @@ class Waffle(Figure):
                     DeprecationWarning,
                 )
 
-            # If icon_set is a string, convert it into a list of same icon. It's length is the label's length
+            # If icon_set is a string, convert it into a list of same icon. It's length is the value's length
             # 'solid' -> ['solid', 'solid', 'solid', ]
             if isinstance(self._pa["icon_style"], str):
                 self._pa["icon_style"] = [self._pa["icon_style"].lower()] * self.values_len
             elif set(self._pa["icon_style"]) - set(icons.keys()):
                 raise KeyError("icon_set should be one of {}".format(", ".join(icons.keys())))
 
-            # If icons is a string, convert it into a list of same icon. It's length is the label's length
+            # If icons is a string, convert it into a list of same icon. It's length is the value's length
             # '\uf26e' -> ['\uf26e', '\uf26e', '\uf26e', ]
             if isinstance(self._pa["icons"], str):
                 self._pa["icons"] = [self._pa["icons"]] * self.values_len
@@ -368,7 +389,21 @@ class Waffle(Figure):
 
             # Calculate icon size based on the block size
             tx, ty = self.ax.transData.transform([(0, 0), (0, block_x_length)])
-            prop = fm.FontProperties(size=self._pa["icon_size"] or int((ty[1] - tx[1]) / 16 * 12))
+            prop = fm.FontProperties(size=self._pa["font_size"] or int((ty[1] - tx[1]) / 16 * 12))
+
+        elif self._pa["characters"]:
+            # If characters is a string, convert it into a list of same characters. It's length is the value's length
+            if isinstance(self._pa["characters"], str):
+                self._pa["characters"] = [self._pa["characters"]] * self.values_len
+
+            if len(self._pa["characters"]) != self.values_len:
+                raise ValueError("Length of characters doesn't match the values.")
+
+            # Calculate icon size based on the block size
+            tx, ty = self.ax.transData.transform([(0, 0), (0, block_x_length)])
+            prop = fm.FontProperties(
+                size=self._pa["font_size"] or int((ty[1] - tx[1]) / 16 * 12), fname=self._pa["font_file"]
+            )
 
         plot_direction = self._pa["plot_direction"].upper()
 
@@ -420,6 +455,14 @@ class Waffle(Figure):
                     x=x,
                     y=y,
                     s=self._pa["icons"][class_index],
+                    color=self._pa["colors"][class_index],
+                    fontproperties=prop,
+                )
+            elif self._pa["characters"]:
+                self.ax.text(
+                    x=x,
+                    y=y,
+                    s=self._pa["characters"][class_index],
                     color=self._pa["colors"][class_index],
                     fontproperties=prop,
                 )

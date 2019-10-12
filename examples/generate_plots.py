@@ -56,7 +56,7 @@ fig = plt.figure(
         'bbox_to_anchor': (1, 1)
     },
     icons='child',
-    icon_size=12,
+    font_size=12,
     icon_legend=True
 )
 fig.savefig(readme_image_folder + 'fontawesome.svg', bbox_inches='tight')
@@ -195,6 +195,18 @@ fig = plt.figure(
 fig.savefig(doc_examples_image_folder + 'block_colors_custom_cmap_name.svg', bbox_inches='tight')
 plt.close(fig)
 
+# Characters
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    values=[48, 46, 3],
+    colors=["#4c8cb5", "#b7cbd7", "#C0C0C0"],
+    characters='⬤',
+    font_size=12,
+)
+fig.savefig(doc_examples_image_folder + 'characters.svg', bbox_inches='tight')
+plt.close(fig)
+
 # Icons
 fig = plt.figure(
     FigureClass=Waffle,
@@ -202,7 +214,7 @@ fig = plt.figure(
     values=[48, 46, 3],
     colors=["#232066", "#983D3D", "#DCB732"],
     icons='star',
-    icon_size=12,
+    font_size=12,
 )
 fig.savefig(doc_examples_image_folder + 'icons.svg', bbox_inches='tight')
 plt.close(fig)
@@ -213,7 +225,7 @@ fig = plt.figure(
     values=[48, 46, 3],
     colors=["#FFA500", "#4384FF", "#C0C0C0"],
     icons=['sun', 'cloud-showers-heavy', 'snowflake'],
-    icon_size=12,
+    font_size=12,
     icon_style='solid',
     icon_legend=True,
     legend={'labels': ['sun', 'shower', 'snow'], 'loc': 'upper left', 'bbox_to_anchor': (1, 1)}
@@ -227,7 +239,7 @@ fig = plt.figure(
     values=[48, 46, 3],
     colors=["#FFA500", "#4384FF", "#C0C0C0"],
     icons=['sun', 'cloud-showers-heavy', 'font-awesome-flag'],
-    icon_size=12,
+    font_size=12,
     icon_style=['regular', 'solid', 'brands'],
     icon_legend=True,
     legend={'labels': ['sun', 'shower', 'flag'], 'loc': 'upper left', 'bbox_to_anchor': (1, 1)}
