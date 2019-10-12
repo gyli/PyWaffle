@@ -1,6 +1,15 @@
 PyWaffle
 ========
 
+.. image:: https://badge.fury.io/py/pywaffle.svg
+ :target: https://pypi.org/project/pywaffle/
+
+.. image:: https://readthedocs.org/projects/pywaffle/badge/?version=latest&style=flat
+ :target: https://readthedocs.org/projects/pywaffle/badge/?version=latest&style=flat
+
+.. image:: https://mybinder.org/badge_logo.svg
+ :target: https://mybinder.org/v2/gh/gyli/PyWaffle/master?filepath=demo.ipynb
+
 Introduction
 ------------
 

@@ -1,7 +1,8 @@
 # PyWaffle
 
-[![PyPI version](https://badge.fury.io/py/pywaffle.svg)](https://badge.fury.io/py/pywaffle)
+[![PyPI version](https://badge.fury.io/py/pywaffle.svg)](https://pypi.org/project/pywaffle/)
 [![ReadTheDocs](https://readthedocs.org/projects/pywaffle/badge/?version=latest&style=flat)](https://readthedocs.org/projects/pywaffle/badge/?version=latest&style=flat)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/gyli/PyWaffle/master?filepath=demo.ipynb)
 
 PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts.
 
@@ -162,6 +163,9 @@ In this chart, 1 block = 30000 votes.
 
 <sub>Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).</sub>
 
+## Demo
+
+You want to try it your self? There is [Online Demo](https://mybinder.org/v2/gh/gyli/PyWaffle/master?filepath=demo.ipynb)!
 
 ## What's New
 
