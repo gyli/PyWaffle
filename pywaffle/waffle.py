@@ -105,7 +105,8 @@ class Waffle(Figure):
     :param values: Numerical value of each category. If it is a dict, the keys would be used as labels.
     :type values: list|dict|pandas.Series
 
-    :param rows: The number of lines of the waffle chart. This is required unless it is specified in argument plots.
+    :param rows: The number of lines of the waffle chart.
+        This is required unless it is specified in argument plots or `columns` is specified.
     :type rows: int
 
     :param columns: The number of columns of the waffle chart.
@@ -305,8 +306,8 @@ class Waffle(Figure):
         if self._pa["rounding_rule"] not in ("nearest", "ceil", "floor"):
             raise ValueError("Argument rounding_rule should be one of nearest, ceil or floor.")
 
-        if len(self._pa["values"]) == 0 or not self._pa["rows"]:
-            raise ValueError("Argument values or rows is required.")
+        if len(self._pa["values"]) == 0 or not (self._pa["rows"] or self._pa["columns"]):
+            raise ValueError("Argument values or at least one of rows and columns required.")
 
         self.values_len = len(self._pa["values"])
 
@@ -329,8 +330,11 @@ class Waffle(Figure):
 
         self.value_sum = sum(self._pa["values"])
 
-        # if column number is not given, use the values as number of blocks
-        if self._pa["columns"] is None:
+        # if only one of rows/columns given, use the values as number of blocks
+        if self._pa["rows"] is None:
+            self._pa["rows"] = division(self.value_sum, self._pa["columns"], method="ceil")
+            block_number_per_cat = self._pa["values"]
+        elif self._pa["columns"] is None:
             self._pa["columns"] = division(self.value_sum, self._pa["rows"], method="ceil")
             block_number_per_cat = self._pa["values"]
         else:
