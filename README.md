@@ -78,7 +78,7 @@ fig = plt.figure(
     title={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
     labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0},
-    plot_direction='NW'
+    starting_location='NW'
 )
 fig.set_facecolor('#EEEEEE')
 plt.show()

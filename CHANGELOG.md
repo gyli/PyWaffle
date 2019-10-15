@@ -1,3 +1,11 @@
+v0.4.1 (2019-10-14)
+
+* Make either one of `rows` and `columsn` optional
+* Remove deprecated parameter `plot_direction`
+* Add online demo
+
+---
+
 v0.3.2 (2019-10-11)
 
 * Add parameter `characters`, `font_file` and `font_size` for plotting with characters.

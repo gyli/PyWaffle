@@ -39,7 +39,7 @@ fig = plt.figure(
         'ncol': len(data),
         'framealpha': 0
     },
-    plot_direction='NW'
+    starting_location='NW'
 )
 fig.savefig(readme_image_folder + 'title_and_legend.svg', bbox_inches='tight', facecolor='#EEEEEE')
 plt.close(fig)
