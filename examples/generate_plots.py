@@ -10,7 +10,7 @@ from pywaffle.waffle import Waffle
 readme_image_folder = 'examples/readme/'
 
 # Basic
-fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3])
+fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3], figsize=(5, 3))
 fig.savefig(readme_image_folder + 'basic.svg', bbox_inches='tight')
 plt.close(fig)
 
