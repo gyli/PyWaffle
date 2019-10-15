@@ -49,7 +49,7 @@ plt.show()
 
 Note that the values are scaled to 25, 24 and 3 to fit 5 * 10 chart size.
 
-### 2. Values in dict & Auto-columns
+### 2. Values in dict & Auto-size
 
 ```python
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
@@ -64,7 +64,7 @@ plt.show()
 
 ![Use values in dictionary; use absolute value as block number, without defining columns](examples/readme/absolute_block_numbers.svg)
 
-If argument `columns` is empty, PyWaffle uses absolute number in `values` as block number.
+In this example, we set `columns` empty, then PyWaffle would use absolute number of `values` as block number and calculate number of rows automatically. Similarly, `rows` could also be optional if `columns` is passed.
 
 If `values` is a dict, its keys are used as labels.
 
