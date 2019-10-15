@@ -35,17 +35,19 @@ from pywaffle import Waffle
 ```
 
 ```python
-# The values are rounded to 10 * 5 blocks
 fig = plt.figure(
     FigureClass=Waffle, 
     rows=5, 
     columns=10, 
-    values=[48, 46, 3]
+    values=[48, 46, 3],
+    figsize=(5, 3)  # figsize is a parameter of matplotlib.pyplot.figure
 )
 plt.show()
 ```
 
 ![basic](examples/readme/basic.svg)
+
+Note that the values are scaled to 24, 23 and 1 to fit 5 * 10 chart size.
 
 ### 2. Values in dict & Auto-columns
 
