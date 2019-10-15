@@ -47,7 +47,7 @@ plt.show()
 
 ![basic](examples/readme/basic.svg)
 
-Note that the values are scaled to 25, 24 and 1 to fit 5 * 10 chart size.
+Note that the values are scaled to 25, 24 and 3 to fit 5 * 10 chart size.
 
 ### 2. Values in dict & Auto-columns
 
