@@ -12,7 +12,7 @@ with open('README_pypi.rst') as f:
 
 setup(
     name="pywaffle",
-    description="A FigureClass of Matplotlib to make waffle chart.",
+    description="PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts.",
     keywords="matplotlib waffle chart pie plot data visualization",
     long_description=long_description,
     license='MIT',

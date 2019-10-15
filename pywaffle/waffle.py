@@ -204,16 +204,6 @@ class Waffle(Figure):
         in Waffle class as default value.
     :type plots: dict
 
-    :param plot_direction: Deprecated. {'NW', 'SW', 'NE', 'SE'}
-        Use starting_location instead.
-        Change the starting location plotting the blocks.
-        'NW' means plots start at upper left and end at lower right;
-        For 'SW', plots start at lower left and end at upper right;
-        For 'NE', plots start at upper right and end at lower left;
-        For 'SE', plots start at lower right and end at upper left.
-        [Default 'SW']
-    :type plot_direction: str
-
     :param vertical: decide whether to draw the plot vertically or horizontally.
         [Default False]
     :type vertical: bool
@@ -225,7 +215,7 @@ class Waffle(Figure):
         For 'NE', plots start at upper right;
         For 'SE', plots start at lower right.
         [Default 'SW']
-    :type plot_direction: str
+    :type starting_location: str
 
     :param rounding_rule: {'nearest', 'floor', 'ceil'}.
         The rounding rule applied when shrinking values to fit the chart size.
@@ -274,7 +264,6 @@ class Waffle(Figure):
             "cmap_name": kwargs.pop("cmap_name", "Set2"),
             "title": kwargs.pop("title", None),
             "plot_anchor": kwargs.pop("plot_anchor", "W"),
-            "plot_direction": kwargs.pop("plot_direction", ""),  # Deprecated
             "vertical": kwargs.pop("vertical", False),
             "starting_location": kwargs.pop("starting_location", "SW"),
             "rounding_rule": kwargs.pop("rounding_rule", "nearest"),
@@ -425,17 +414,7 @@ class Waffle(Figure):
                 size=self._pa["font_size"] or int((ty[1] - tx[1]) / 16 * 12), fname=self._pa["font_file"]
             )
 
-        plot_direction = self._pa["plot_direction"].upper()
-
-        if plot_direction:
-            warnings.warn(
-                "Parameter plot_direction is deprecated and will be removed in future version. Use starting_location instead.",
-                DeprecationWarning,
-            )
-            starting_location = self._pa["plot_direction"].upper()
-        else:
-            # TODO: starting_location will replace plot_direction in 0.3.0
-            starting_location = self._pa["starting_location"].upper()
+        starting_location = self._pa["starting_location"].upper()
 
         try:
             column_order = self._direction_values[starting_location]["column_order"]
