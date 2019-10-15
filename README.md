@@ -165,7 +165,7 @@ In this chart, 1 block = 30000 votes.
 
 ## Demo
 
-You want to try it yourself? There is [Online Demo](https://mybinder.org/v2/gh/gyli/PyWaffle/master?filepath=demo.ipynb)!
+Wanna try it yourself? There is [Online Demo](https://mybinder.org/v2/gh/gyli/PyWaffle/master?filepath=demo.ipynb)!
 
 ## What's New
 

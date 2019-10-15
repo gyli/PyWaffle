@@ -156,7 +156,7 @@ fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3], rou
 fig.savefig(doc_examples_image_folder + 'value_scaling_and_auto_columns_rounding_rule.svg', bbox_inches='tight')
 plt.close(fig)
 
-fig = plt.figure(FigureClass=Waffle, rows=10, values=[48, 46, 3])
+fig = plt.figure(FigureClass=Waffle, rows=5, values=[48, 46, 3])
 fig.savefig(doc_examples_image_folder + 'value_scaling_and_auto_columns_ignore_columns.svg', bbox_inches='tight')
 plt.close(fig)
 

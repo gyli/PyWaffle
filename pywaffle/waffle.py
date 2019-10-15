@@ -106,11 +106,14 @@ class Waffle(Figure):
     :type values: list|dict|pandas.Series
 
     :param rows: The number of lines of the waffle chart.
-        This is required unless it is specified in argument plots or `columns` is specified.
     :type rows: int
 
     :param columns: The number of columns of the waffle chart.
-        If it is not None, the total number of blocks would be decided through rows and columns. [Default None]
+        At least one of rows and columns is required.
+        If either rows or columns is passed, the other parameter would be calculated automatically through the absolute
+        value of values.
+        If both of rows and columns are passed, the block number is fixed and block numbers are calculated from scaled
+        values.
     :type columns: int
 
     :param colors: A list of colors for each category. Its length should be the same as values.
