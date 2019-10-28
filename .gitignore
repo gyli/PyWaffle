@@ -1,6 +1,7 @@
 .idea/
 dev/
 venv/
+venv-test/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
