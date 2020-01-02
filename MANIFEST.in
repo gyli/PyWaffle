@@ -1,10 +1,6 @@
 include LICENSE
 include *.md
 include *.rst
-include requirements*.txt
-
-graft docs
-graft examples
-graft tests
+include requirements.txt
 
 recursive-include pywaffle *.py *.otf
