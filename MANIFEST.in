@@ -1,0 +1,10 @@
+include LICENSE
+include *.md
+include *.rst
+include requirements*.txt
+
+graft docs
+graft examples
+graft tests
+
+recursive-include pywaffle *.py *.otf
