@@ -47,7 +47,7 @@ plt.show()
 
 ![basic](examples/readme/basic.svg)
 
-Note that the values are scaled to 25, 24 and 3 to fit 5 * 10 chart size.
+Note that the values are scaled to 24, 23 and 3 to fit 5 * 10 chart size.
 
 ### 2. Values in dict & Auto-size
 
@@ -64,7 +64,7 @@ plt.show()
 
 ![Use values in dictionary; use absolute value as block number, without defining columns](examples/readme/absolute_block_numbers.svg)
 
-In this example, we set `columns` empty, then PyWaffle would use absolute number of `values` as block number and calculate number of rows automatically. Similarly, `rows` could also be optional if `columns` is passed.
+In this example, we set `columns` to empty, then PyWaffle would use the absolute value in `values` as block number and calculate rows automatically. Similarly, `rows` could also be optional if `columns` is passed.
 
 If `values` is a dict, its keys are used as labels.
 
