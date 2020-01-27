@@ -2,6 +2,7 @@
 dev/
 venv/
 venv-test/
+test_plots/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
