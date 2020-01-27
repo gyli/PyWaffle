@@ -194,12 +194,17 @@ class Waffle(Figure):
         [Default 'W']
     :type plot_anchor: str
 
-    :param plots: Location and parameters of Waffle class for subplots in a dict,
-        with format like {loc: {subplot_args: values, }, }.
-        loc is a 3-digit integer. If the three integers are I, J, and K,
-        the subplot is the Ith plot on a grid with J rows and K columns.
-        The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
-        Nested subplots is not supported.
+    :param plots: Position and parameters of Waffle class for subplots in a dict,
+        with format like {pos: {subplot_args: values, }, }.
+        pos could be a tuple of three integer, where the first digit is the number
+        of rows, the second the number of columns, and the third the index of the
+        subplot.
+        pos could also be a 3-digit number in int or string type. For example, it
+        accept 235 or '235' standing for the Ith plot on a grid with J rows and
+        K columns. Note that all integers must be less than 10 for this form to
+        work.
+        The parameters of subplots are the same as Waffle class parameters,
+        excluding plots itself.
         If any parameter of subplots is not assigned, it use the same parameter
         in Waffle class as default value.
     :type plots: dict
@@ -315,7 +320,12 @@ class Waffle(Figure):
         if self._pa["labels"] and len(self._pa["labels"]) != self.values_len:
             raise ValueError("Length of labels doesn't match the values.")
 
-        self.ax = self.add_subplot(loc, aspect="equal")
+        if isinstance(loc, tuple):
+            self.ax = self.add_subplot(*loc, aspect="equal")
+        elif isinstance(loc, str) or isinstance(loc, int):
+            self.ax = self.add_subplot(loc, aspect="equal")
+        else:
+            raise TypeError("Subplot position should be tuple, int, or string.")
 
         # Alignment of subplots
         self.ax.set_anchor(self._pa["plot_anchor"])
