@@ -1,6 +1,6 @@
-# Multiple Plots
+# Subplots
 
-It is quite common that we would like to show multiple waffle charts in one plot. Multiple plots is supportted by
+It is quite common that we would like to show multiple waffle charts in one plot. Multiple plots is supported by
 PyWaffle so that duplicated legends, titles and other components could be avoided.
 
 Let's say we have sample data as shown below:
@@ -26,7 +26,7 @@ data = pd.DataFrame(
 
 To convert the vote numbers into reasonable block numbers, we can simply passing in values like `data['Virginia'] / 30000`. Note that parameter `values` also accpet column data in pandas.Series type. For now, unlike values in dict, pandas.Series value does not support auto labeling yet.
 
-To make multiple plots, move and merge the parameters for each plot to parameter `plots` as dict values. The keys are 3-digit integer describing the position of the subplot. Take a look of [matplotlib.pyplot.subplot](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplot.html) in Matplotlib document for detail.
+To make multiple subplots in one figure, merge the parameters for each plot to parameter `plots` as dict values. The keys are integers describing the position of the subplot. It accepts tuple, int and string. If position is tuple, the format should be like `(nrows, ncols, index)`; if it is int or string, it should be a 3-digit integer lile `312` or `"213"`, standing for nrows, ncols, and index in order. Note that all integers must be less than 10 for the later form to work. See arguments of [matplotlib.pyplot.subplot](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplot.html) for more detail.
 
 Parameters could also be shared among plots, simply by keeping passing them to matplotlib.pyplot.figure like for single plot, instead of moving to `plots`.
 
