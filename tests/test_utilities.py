@@ -23,3 +23,7 @@ class TestUtilities(unittest.TestCase):
 
         self.assertEqual(division(x=2, y=3, method="floor"), 0)
         self.assertIsInstance(division(x=2, y=3, method="floor"), int)
+
+
+if __name__ == "__main__":
+    unittest.main()
