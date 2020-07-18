@@ -1,3 +1,10 @@
+v0.5.0 (2020-07-18)
+
+* Add
+* Fix parameter `vertical` not being used when it's set in `plots`
+
+---
+
 v0.4.1 (2019-10-14)
 
 * Make either one of `rows` and `columsn` optional

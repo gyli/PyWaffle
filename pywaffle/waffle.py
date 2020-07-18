@@ -165,7 +165,7 @@ class Waffle(Figure):
     :type icons: str|list[str]|tuple[str]
 
     :param icon_set: Deprecated. {'brands', 'regular', 'solid'}
-        The style of icons to be used.
+        The style of icons to be used. This parameter will be replaced by icon_style.
         [Default 'solid']
     :type icon_set: str|list[str]|tuple[str]
 
@@ -288,6 +288,16 @@ class Waffle(Figure):
         # Adjust the layout
         self.set_tight_layout(self.fig_args["tight"])
 
+    @staticmethod
+    def block_arranger(rows: int, columns: int, row_order: int, column_order: int, is_vertical: bool):
+        if is_vertical:
+            x, x_order, y, y_order = rows, row_order, columns, column_order
+            vertical_order = 1
+        else:
+            x, x_order, y, y_order = columns, column_order, rows, row_order
+            vertical_order = -1
+        return (c[::vertical_order] for c in product(range(x)[::x_order], range(y)[::y_order]))
+
     def _waffle(self, loc, **kwargs):
         # _pa is the arguments for this single plot
         self._pa = kwargs
@@ -311,7 +321,7 @@ class Waffle(Figure):
         if self._pa["colors"] and len(self._pa["colors"]) != self.values_len:
             raise ValueError("Length of colors doesn't match the values.")
 
-        # lebels and values
+        # labels and values
         if isinstance(self._pa["values"], dict):
             if not self._pa["labels"]:
                 self._pa["labels"] = self._pa["values"].keys()
@@ -432,21 +442,19 @@ class Waffle(Figure):
         except KeyError:
             raise KeyError("starting_location should be one of 'NW', 'SW', 'NE', 'SE'")
 
-        if self.fig_args["vertical"]:
-            block_iter = (
-                c[::-1]
-                for c in product(range(self._pa["rows"])[::row_order], range(self._pa["columns"])[::column_order])
-            )
-        else:
-            block_iter = product(range(self._pa["columns"])[::column_order], range(self._pa["rows"])[::row_order])
-
         # Plot blocks
         class_index = 0
         block_index = 0
         x_full = (1 + self._pa["interval_ratio_x"]) * block_x_length
         y_full = (1 + self._pa["interval_ratio_y"]) * block_y_length
 
-        for col, row in block_iter:
+        for col, row in self.block_arranger(
+            rows=self._pa["rows"],
+            columns=self._pa["columns"],
+            row_order=row_order,
+            column_order=column_order,
+            is_vertical=self._pa["vertical"],
+        ):
             if block_number_per_cat[class_index] == 0:
                 class_index += 1
 

@@ -30,6 +30,17 @@ class TestWaffle(unittest.TestCase):
         self.assertEqual(fig.values_len, len(values))
         self.assertEqual(fig.value_sum, 30)
 
+    def test_block_arranger(self):
+        self.assertEqual(
+            Waffle.block_arranger(rows=3, columns=3, row_order=1, column_order=1, is_vertical=False),
+            [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)],
+        )
+        self.assertEqual(
+            Waffle.block_arranger(rows=3, columns=3, row_order=-1, column_order=1, is_vertical=True),
+            [(0, 2), (1, 2), (2, 2), (0, 1), (1, 1), (2, 1), (0, 0), (1, 0), (2, 0)],
+        )
+        self.assertEqual(Waffle.block_arranger(rows=0, columns=0, row_order=1, column_order=1, is_vertical=True), [])
+
     def test_legend(self):
         fig = plt.figure(FigureClass=Waffle, rows=10, values=[10], labels=["cat1"])
         self.assertEqual(fig.gca().get_legend().texts[0]._text, "cat1")
