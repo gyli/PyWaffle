@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*-coding: utf-8 -*-
 
-from pywaffle.waffle import array_resize, division
+from pywaffle.waffle import array_resize, division, round_up_to_multiple
 import unittest
 
 
@@ -10,8 +10,14 @@ class TestUtilities(unittest.TestCase):
         self.assertEqual(array_resize(array=[1, 2, 3, 4, 5], length=2), [1, 2])
         self.assertEqual(array_resize(array=[1, 2, 3, 4, 5], length=2, array_len=5), [1, 2])
         self.assertEqual(array_resize(array=[1, 2], length=5, array_len=2), [1, 2, 1, 2, 1])
+        # when a tuple is passed
+        self.assertEqual(array_resize(array=(1, 2), length=5, array_len=2), (1, 2, 1, 2, 1))
 
-    def test_utilities(self):
+    def test_round_up_to_multiple(self):
+        self.assertEqual(round_up_to_multiple(x=12, base=5), 15)
+        self.assertIsInstance(round_up_to_multiple(x=12, base=5), int)
+
+    def test_division(self):
         self.assertEqual(division(x=2, y=3, method="float"), 2 / 3)
         self.assertIsInstance(division(x=2, y=3, method="float"), float)
 

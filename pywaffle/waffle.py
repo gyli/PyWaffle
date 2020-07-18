@@ -32,14 +32,22 @@ def division(x: int, y: int, method: str = "float") -> Union[int, float]:
     return METHOD_MAPPING[method.lower()](x, y)
 
 
-def array_resize(array: Union[Tuple, List], length: int, array_len: int = None):
+def round_up_to_multiple(x: int, base: int) -> int:
+    """
+    Round a positive integer up to the nearest multiple of given base number
+    For example: 12 -> 15, with base = 5
+    """
+    return base * math.ceil(x / base)
+
+
+def array_resize(array: Union[Tuple, List], length: int, array_len: int = None) -> Union[Tuple, List]:
     """
     Resize array to given length. If the array is shorter than given length, repeat the array; If the array is longer
     than the length, trim the array.
     :param array: array
     :param length: target length
     :param array_len: if length of original array is known, pass it in here
-    :return: axtended array
+    :return: resized array
     """
     if not array_len:
         array_len = len(array)
@@ -273,6 +281,7 @@ class Waffle(Figure):
             "starting_location": kwargs.pop("starting_location", "SW"),
             "rounding_rule": kwargs.pop("rounding_rule", "nearest"),
             "tight": kwargs.pop("tight", True),
+            "contiguous_blocks": kwargs.pop("contiguous_blocks", True),
         }
         self.plots = kwargs.pop("plots", None)
 
@@ -292,10 +301,10 @@ class Waffle(Figure):
     def block_arranger(rows: int, columns: int, row_order: int, column_order: int, is_vertical: bool):
         if is_vertical:
             x, x_order, y, y_order = rows, row_order, columns, column_order
-            vertical_order = 1
+            vertical_order = -1
         else:
             x, x_order, y, y_order = columns, column_order, rows, row_order
-            vertical_order = -1
+            vertical_order = 1
         return (c[::vertical_order] for c in product(range(x)[::x_order], range(y)[::y_order]))
 
     def _waffle(self, loc, **kwargs):
@@ -313,8 +322,8 @@ class Waffle(Figure):
         if self._pa["rounding_rule"] not in ("nearest", "ceil", "floor"):
             raise ValueError("Argument rounding_rule should be one of nearest, ceil or floor.")
 
-        if len(self._pa["values"]) == 0 or not (self._pa["rows"] or self._pa["columns"]):
-            raise ValueError("Argument values or at least one of rows and columns required.")
+        if len(self._pa["values"]) == 0:
+            raise ValueError("Argument values is required.")
 
         self.values_len = len(self._pa["values"])
 
@@ -340,18 +349,33 @@ class Waffle(Figure):
         # Alignment of subplots
         self.ax.set_anchor(self._pa["plot_anchor"])
 
-        self.value_sum = sum(self._pa["values"])
-
         # if only one of rows/columns given, use the values as number of blocks
-        if self._pa["rows"] is None:
-            self._pa["rows"] = division(self.value_sum, self._pa["columns"], method="ceil")
-            block_number_per_cat = self._pa["values"]
+        if not self._pa["rows"] and not self._pa["columns"]:
+            raise ValueError("At least one of rows and columns is required.")
+        # if columns is given, rows is not
+        elif self._pa["rows"] is None:
+            if self._pa["contiguous_blocks"]:
+                block_number_per_cat = colored_block_number_per_cat = self._pa["values"]
+            else:
+                block_number_per_cat = [round_up_to_multiple(i, base=self._pa["columns"]) for i in self._pa["values"]]
+                colored_block_number_per_cat = self._pa["values"]
+            self._pa["rows"] = division(sum(block_number_per_cat), self._pa["columns"], method="ceil")
+        # if rows is given, columns is not
         elif self._pa["columns"] is None:
-            self._pa["columns"] = division(self.value_sum, self._pa["rows"], method="ceil")
-            block_number_per_cat = self._pa["values"]
+            if self._pa["contiguous_blocks"]:
+                block_number_per_cat = colored_block_number_per_cat = self._pa["values"]
+            else:
+                block_number_per_cat = [round_up_to_multiple(i, base=self._pa["rows"]) for i in self._pa["values"]]
+                colored_block_number_per_cat = self._pa["values"]
+            self._pa["columns"] = division(sum(block_number_per_cat), self._pa["rows"], method="ceil")
+        # if both of rows and columns are given
         else:
-            block_number_per_cat = [
-                division(v * self._pa["columns"] * self._pa["rows"], self.value_sum, method=self._pa["rounding_rule"])
+            block_number_per_cat = colored_block_number_per_cat = [
+                division(
+                    v * self._pa["columns"] * self._pa["rows"],
+                    sum(self._pa["values"]),
+                    method=self._pa["rounding_rule"],
+                )
                 for v in self._pa["values"]
             ]
 
@@ -361,7 +385,10 @@ class Waffle(Figure):
             self._pa["rows"] + self._pa["rows"] * self._pa["interval_ratio_y"] - self._pa["interval_ratio_y"]
         )
         block_x_length = self._pa["block_aspect_ratio"] * block_y_length
-
+        print(
+            (self._pa["columns"] + self._pa["columns"] * self._pa["interval_ratio_x"] - self._pa["interval_ratio_x"])
+            * block_x_length
+        )
         # Define the limit of X, Y axis
         self.ax.axis(
             xmin=0,
@@ -445,6 +472,7 @@ class Waffle(Figure):
         # Plot blocks
         class_index = 0
         block_index = 0
+        this_cat_block_count = 0
         x_full = (1 + self._pa["interval_ratio_x"]) * block_x_length
         y_full = (1 + self._pa["interval_ratio_y"]) * block_y_length
 
@@ -455,13 +483,20 @@ class Waffle(Figure):
             column_order=column_order,
             is_vertical=self._pa["vertical"],
         ):
+            # Value could be 0. If so, skip it
             if block_number_per_cat[class_index] == 0:
                 class_index += 1
-
                 if class_index > self.values_len - 1:
                     break
+
+                this_cat_block_count = 0
             elif block_number_per_cat[class_index] < 0:
                 raise ValueError("Negative value is not acceptable")
+
+            if this_cat_block_count > colored_block_number_per_cat[class_index]:
+                color = (0, 0, 0, 0)  # transparent
+            else:
+                color = self._pa["colors"][class_index]
 
             x = x_full * col
             y = y_full * row
@@ -469,32 +504,22 @@ class Waffle(Figure):
             if self._pa["icons"]:
                 prop.set_file(FONTAWESOME_FILES[self._pa["icon_style"][class_index]])
                 self.ax.text(
-                    x=x,
-                    y=y,
-                    s=self._pa["icons"][class_index],
-                    color=self._pa["colors"][class_index],
-                    fontproperties=prop,
+                    x=x, y=y, s=self._pa["icons"][class_index], color=color, fontproperties=prop,
                 )
             elif self._pa["characters"]:
                 self.ax.text(
-                    x=x,
-                    y=y,
-                    s=self._pa["characters"][class_index],
-                    color=self._pa["colors"][class_index],
-                    fontproperties=prop,
+                    x=x, y=y, s=self._pa["characters"][class_index], color=color, fontproperties=prop,
                 )
             else:
-                self.ax.add_artist(
-                    Rectangle(
-                        xy=(x, y), width=block_x_length, height=block_y_length, color=self._pa["colors"][class_index]
-                    )
-                )
+                self.ax.add_artist(Rectangle(xy=(x, y), width=block_x_length, height=block_y_length, color=color))
 
             block_index += 1
+            this_cat_block_count += 1
             if block_index >= sum(block_number_per_cat[: class_index + 1]):
                 class_index += 1
                 if class_index > self.values_len - 1:
                     break
+                this_cat_block_count = 0
 
         # Add title
         if self._pa["title"] is not None:
