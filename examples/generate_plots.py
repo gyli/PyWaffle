@@ -282,6 +282,15 @@ plt.close(fig)
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
+    values=[48, 46, 3],
+    contiguous_blocks=False
+)
+fig.savefig(doc_examples_image_folder + 'contiguous_blocks.svg', bbox_inches='tight')
+plt.close(fig)
+
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
     columns=10,
     values=[48, 46, 3],
     vertical=True

@@ -385,10 +385,7 @@ class Waffle(Figure):
             self._pa["rows"] + self._pa["rows"] * self._pa["interval_ratio_y"] - self._pa["interval_ratio_y"]
         )
         block_x_length = self._pa["block_aspect_ratio"] * block_y_length
-        print(
-            (self._pa["columns"] + self._pa["columns"] * self._pa["interval_ratio_x"] - self._pa["interval_ratio_x"])
-            * block_x_length
-        )
+
         # Define the limit of X, Y axis
         self.ax.axis(
             xmin=0,
