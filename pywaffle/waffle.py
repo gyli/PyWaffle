@@ -354,19 +354,19 @@ class Waffle(Figure):
             raise ValueError("At least one of rows and columns is required.")
         # if columns is given, rows is not
         elif self._pa["rows"] is None:
-            if self._pa["contiguous_blocks"]:
-                block_number_per_cat = colored_block_number_per_cat = self._pa["values"]
-            else:
+            if not self._pa["contiguous_blocks"] and self._pa["vertical"]:
                 block_number_per_cat = [round_up_to_multiple(i, base=self._pa["columns"]) for i in self._pa["values"]]
                 colored_block_number_per_cat = self._pa["values"]
+            else:
+                block_number_per_cat = colored_block_number_per_cat = self._pa["values"]
             self._pa["rows"] = division(sum(block_number_per_cat), self._pa["columns"], method="ceil")
         # if rows is given, columns is not
         elif self._pa["columns"] is None:
-            if self._pa["contiguous_blocks"]:
-                block_number_per_cat = colored_block_number_per_cat = self._pa["values"]
-            else:
+            if not self._pa["contiguous_blocks"] and not self._pa["vertical"]:
                 block_number_per_cat = [round_up_to_multiple(i, base=self._pa["rows"]) for i in self._pa["values"]]
                 colored_block_number_per_cat = self._pa["values"]
+            else:
+                block_number_per_cat = colored_block_number_per_cat = self._pa["values"]
             self._pa["columns"] = division(sum(block_number_per_cat), self._pa["rows"], method="ceil")
         # if both of rows and columns are given
         else:

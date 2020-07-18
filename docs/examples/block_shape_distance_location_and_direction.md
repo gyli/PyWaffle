@@ -61,14 +61,15 @@ fig = plt.figure(
 
 Use parameter `contiguous_blocks` to set whether starting each category from a new column or new row. By default it is True, so when drawing a new category it will start from where last category ends.
 
-Parameter `contiguous_blocks` only works when only one of `columns` and `rows` is set. It will be ignored if both of `columns` and `rows` are set. 
+Non-contiguous blocks only works when only `columns` is passed and `vertical`=`True`, or `rows` is passes and `vertical`=`False`. It will be ignored if both of `columns` and `rows` are set. 
 
 ```python
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=[48, 46, 3],
-    contiguous_blocks=False
+    contiguous_blocks=False,
+    vertical=False
 )
 ```
 
