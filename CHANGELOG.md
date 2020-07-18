@@ -1,6 +1,6 @@
-v0.5.0 (2020-07-18)
+v0.6.0 (2020-07-18)
 
-* Add
+* Add parameter `contiguous_blocks`
 * Fix parameter `vertical` not being used when it's set in `plots`
 
 ---
