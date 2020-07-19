@@ -1,7 +1,8 @@
 v0.6.0 (2020-07-18)
 
-* Add parameter `contiguous_blocks`
+* Add parameter `block_arranging_style`
 * Fix parameter `vertical` not being used when it's set in `plots`
+* Fix wrong direction when `starting_location` is `SE` or `NE`
 
 ---
 

@@ -4,7 +4,7 @@
 import copy
 import math
 import warnings
-from itertools import product
+from itertools import islice, product
 from typing import List, Tuple, Union
 
 import matplotlib.font_manager as fm
@@ -52,6 +52,28 @@ def array_resize(array: Union[Tuple, List], length: int, array_len: int = None) 
     if not array_len:
         array_len = len(array)
     return array * (length // array_len) + array[: length % array_len]
+
+
+def chunks(iterable, step: int) -> List:
+    """
+    Yield successive step-sized chunks from list
+    """
+    iterable = iter(iterable)
+
+    # Another approach
+    # yield from iter(lambda: list(islice(iterable, step)), [])
+
+    while True:
+        lines = list(islice(iterable, step))
+        if not lines:
+            return
+        yield lines
+
+
+def flip_lines(matrix, base):
+    for line_number, line in enumerate(chunks(matrix, base)):
+        for item in line if line_number % 2 == 0 else line[::-1]:
+            yield item
 
 
 class TextLegendBase:
@@ -239,20 +261,30 @@ class Waffle(Figure):
     :type rounding_rule: str
 
     :param tight: Set whether and how `.tight_layout` is called when drawing.
-        It could be bool or dict with keys "pad", "w_pad", "h_pad", "rect" or None
-        If a bool, sets whether to call `.tight_layout` upon drawing.
-        If ``None``, use the ``figure.autolayout`` rcparam instead.
-        If a dict, pass it as kwargs to `.tight_layout`, overriding the
-        default paddings.
-        [Default True]
+
+        | It could be bool or dict with keys "pad", "w_pad", "h_pad", "rect" or None
+        | If a bool, sets whether to call `.tight_layout` upon drawing.
+        | If ``None``, use the ``figure.autolayout`` rcparam instead.
+        | If a dict, pass it as kwargs to `.tight_layout`, overriding the default paddings.
+        | [Default True]
     :type tight: bool|dict
+
+    :param block_arranging_style: Set how to arrange blocks: {'normal', 'snake', 'new-line'}
+
+        | If it is 'normal', it draws blocks line by line with same direction.
+        | If it is 'snake', it draws blocks with snake pattern.
+        | If it is 'new-line', it starts with a new line when drawing each category. This only works when only one of
+        `rows` and `columns` is assigned, and `vertical`=`False` when `rows` is assigned or `vertical`=`True`
+        when `rows` is assigned.
+        | [Default 'normal']
+    :type block_arranging_style: string
     """
 
     _direction_values = {
         "NW": {"column_order": 1, "row_order": -1},
         "SW": {"column_order": 1, "row_order": 1},
-        "NE": {"column_order": -1, "row_order": 1},
-        "SE": {"column_order": -1, "row_order": -1},
+        "NE": {"column_order": -1, "row_order": -1},
+        "SE": {"column_order": -1, "row_order": 1},
     }
 
     def __init__(self, *args, **kwargs):
@@ -281,7 +313,7 @@ class Waffle(Figure):
             "starting_location": kwargs.pop("starting_location", "SW"),
             "rounding_rule": kwargs.pop("rounding_rule", "nearest"),
             "tight": kwargs.pop("tight", True),
-            "contiguous_blocks": kwargs.pop("contiguous_blocks", True),
+            "block_arranging_style": kwargs.pop("block_arranging_style", "normal"),
         }
         self.plots = kwargs.pop("plots", None)
 
@@ -298,14 +330,21 @@ class Waffle(Figure):
         self.set_tight_layout(self.fig_args["tight"])
 
     @staticmethod
-    def block_arranger(rows: int, columns: int, row_order: int, column_order: int, is_vertical: bool):
+    def block_arranger(rows: int, columns: int, row_order: int, column_order: int, is_vertical: bool, is_snake: bool):
         if is_vertical:
             x, x_order, y, y_order = rows, row_order, columns, column_order
             vertical_order = -1
         else:
             x, x_order, y, y_order = columns, column_order, rows, row_order
             vertical_order = 1
-        return (c[::vertical_order] for c in product(range(x)[::x_order], range(y)[::y_order]))
+
+        block_matrix = product(range(x)[::x_order], range(y)[::y_order])
+        line_base = columns if is_vertical else rows
+
+        if is_snake:
+            block_matrix = flip_lines(block_matrix, base=line_base)
+
+        return (c[::vertical_order] for c in block_matrix)
 
     def _waffle(self, loc, **kwargs):
         # _pa is the arguments for this single plot
@@ -354,7 +393,7 @@ class Waffle(Figure):
             raise ValueError("At least one of rows and columns is required.")
         # if columns is given, rows is not
         elif self._pa["rows"] is None:
-            if not self._pa["contiguous_blocks"] and self._pa["vertical"]:
+            if self._pa["block_arranging_style"] == 'new-line' and self._pa["vertical"]:
                 block_number_per_cat = [round_up_to_multiple(i, base=self._pa["columns"]) for i in self._pa["values"]]
                 colored_block_number_per_cat = self._pa["values"]
             else:
@@ -362,7 +401,7 @@ class Waffle(Figure):
             self._pa["rows"] = division(sum(block_number_per_cat), self._pa["columns"], method="ceil")
         # if rows is given, columns is not
         elif self._pa["columns"] is None:
-            if not self._pa["contiguous_blocks"] and not self._pa["vertical"]:
+            if self._pa["block_arranging_style"] == 'new-line' and not self._pa["vertical"]:
                 block_number_per_cat = [round_up_to_multiple(i, base=self._pa["rows"]) for i in self._pa["values"]]
                 colored_block_number_per_cat = self._pa["values"]
             else:
@@ -479,6 +518,7 @@ class Waffle(Figure):
             row_order=row_order,
             column_order=column_order,
             is_vertical=self._pa["vertical"],
+            is_snake=self._pa["block_arranging_style"] == 'snake'
         ):
             # Value could be 0. If so, skip it
             if block_number_per_cat[class_index] == 0:

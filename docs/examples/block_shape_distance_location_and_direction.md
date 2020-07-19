@@ -59,21 +59,34 @@ fig = plt.figure(
 
 ## Where to start each category
 
-Use parameter `contiguous_blocks` to set whether starting each category from a new column or new row. By default it is True, so when drawing a new category it will start from where last category ends.
+Use parameter `block_arranging_style` to set how to arrange blocks for each category. By default it is `'normal'`, which draws block of new category from where last category ends.
 
-Non-contiguous blocks only works when only `columns` is passed and `vertical`=`True`, or `rows` is passes and `vertical`=`False`. It will be ignored if both of `columns` and `rows` are set. 
+When it is `'snake'`, it draws with snake pattern, starting a new line from an opposite direction every time. 
 
 ```python
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=[48, 46, 3],
-    contiguous_blocks=False,
-    vertical=False
+    block_arranging_style='snake'
 )
 ```
 
-<img class="img_middle" alt="Change Starting Location" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/contiguous_blocks.svg?sanitize=true">
+<img class="img_middle" alt="Change Starting Location" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/snake_pattern.svg?sanitize=true">
+
+When it is `'new-line'`, it draws every category from a new line. While it only works when only `columns` is passed and `vertical`=`True`, or `rows` is passes and `vertical`=`False`. It will be ignored if both of `columns` and `rows` are passed. 
+
+```python
+fig = plt.figure(
+    FigureClass=Waffle,
+    columns=20,
+    values=[48, 46, 3],
+    block_arranging_style='new-line',
+    vertical=True
+)
+```
+
+<img class="img_middle" alt="Change Starting Location" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/new_line_pattern.svg?sanitize=true">
 
 ---
 

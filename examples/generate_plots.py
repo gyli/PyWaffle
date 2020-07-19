@@ -283,10 +283,19 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=[48, 46, 3],
-    contiguous_blocks=False,
-    vertical=False
+    block_arranging_style='snake'
 )
-fig.savefig(doc_examples_image_folder + 'contiguous_blocks.svg', bbox_inches='tight')
+fig.savefig(doc_examples_image_folder + 'snake_pattern.svg', bbox_inches='tight')
+plt.close(fig)
+
+fig = plt.figure(
+    FigureClass=Waffle,
+    columns=20,
+    values=[48, 46, 3],
+    block_arranging_style='new-line',
+    vertical=True
+)
+fig.savefig(doc_examples_image_folder + 'new_line_pattern.svg', bbox_inches='tight')
 plt.close(fig)
 
 fig = plt.figure(
