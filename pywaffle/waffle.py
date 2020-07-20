@@ -261,6 +261,7 @@ class Waffle(Figure):
     :type rounding_rule: str
 
     :param tight: Set whether and how `.tight_layout` is called when drawing.
+
         | It could be bool or dict with keys "pad", "w_pad", "h_pad", "rect" or None
         | If a bool, sets whether to call `.tight_layout` upon drawing.
         | If ``None``, use the ``figure.autolayout`` rcparam instead.
@@ -269,6 +270,7 @@ class Waffle(Figure):
     :type tight: bool|dict
 
     :param block_arranging_style: {'normal', 'snake', 'new-line'}
+
         | Set how to arrange blocks
         | If it is 'normal', it draws blocks line by line with same direction.
         | If it is 'snake', it draws blocks with snake pattern.
