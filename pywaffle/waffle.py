@@ -133,10 +133,8 @@ class Waffle(Figure):
     :param columns: The number of columns of the waffle chart.
 
         | At least one of rows and columns is required.
-        | If either rows or columns is passed, the other parameter would be calculated automatically through the absolute
-        value of values.
-        | If both of rows and columns are passed, the block number is fixed and block numbers are calculated from scaled
-        values.
+        | If either rows or columns is passed, the other parameter would be calculated automatically through the absolute value of values.
+        | If both of rows and columns are passed, the block number is fixed and block numbers are calculated from scaled values.
     :type columns: int
 
     :param colors: A list of colors for each category. Its length should be the same as values.
@@ -187,8 +185,9 @@ class Waffle(Figure):
     :param font_file: Path to custom font file.
     :type icons: str
 
-    :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
+    :param icons: Icon name of Font Awesome.
 
+        | If it is a string, all categories use the same icon;
         | If it's a list or tuple of icons, the length should be the same as values.
         | See the full list of Font Awesome on https://fontawesome.com/icons?d=gallery&m=free
         | [Default None]
@@ -233,17 +232,12 @@ class Waffle(Figure):
         with format like {pos: {subplot_args: values, }, }.
 
         | Pos could be a tuple of three integer, where the first digit is the number of rows, the second the number of columns, and the third the index of the subplot.
-
         | Pos could also be a 3-digit number in int or string type. For example, it accept 235 or '235' standing for the Ith plot on a grid with J rows and K columns. Note that all integers must be less than 10 for this form to work.
-
         | The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
-
         | If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
 
-    :param vertical: Whether to draw the plot vertically or horizontally.
-
-        | [Default False]
+    :param vertical: Whether to draw the plot vertically or horizontally. [Default False]
     :type vertical: bool
 
     :param starting_location: Change the starting location plotting the blocks. ``{'NW', 'SW', 'NE', 'SE'}``
@@ -255,7 +249,7 @@ class Waffle(Figure):
         | [Default 'SW']
     :type starting_location: str
 
-    :param rounding_rule: The rounding rule applied when shrinking values to fit the chart size. {'nearest', 'floor', 'ceil'}
+    :param rounding_rule: The rounding rule applied when shrinking values to fit the chart size. ``{'nearest', 'floor', 'ceil'}``
 
         | 'nearest' means "round to nearest, ties to even" rounding mode;
         | 'floor' means round to less of the two endpoints of the interval;
@@ -267,7 +261,7 @@ class Waffle(Figure):
 
         | It could be bool or dict with keys "pad", "w_pad", "h_pad", "rect" or None
         | If a bool, sets whether to call `.tight_layout` upon drawing.
-        | If ``None``, use the ``figure.autolayout`` rcparam instead.
+        | If ``None``, use the ``figure.autolayout`` param instead.
         | If a dict, pass it as kwargs to `.tight_layout`, overriding the default paddings.
         | [Default True]
     :type tight: bool|dict
@@ -276,7 +270,7 @@ class Waffle(Figure):
 
         | If it is 'normal', it draws blocks line by line with same direction.
         | If it is 'snake', it draws blocks with snake pattern.
-        | If it is 'new-line', it starts with a new line when drawing each category. This only works when only one of `rows` and `columns` is assigned, and `vertical`=`False` when `rows` is assigned or `vertical`=`True` when `rows` is assigned.
+        | If it is 'new-line', it starts with a new line when drawing each category. This only works when only one of ``rows`` and ``columns`` is assigned, and ``vertical``=``False`` when ``rows`` is assigned or ``vertical``=``True`` when ``rows`` is assigned.
         | [Default 'normal']
     :type block_arranging_style: string
     """
@@ -363,7 +357,7 @@ class Waffle(Figure):
             self._pa[ls] = self._pa[ls].lower().strip()
 
         upper_string_par = ["starting_location"]
-        for us in lower_string_par:
+        for us in upper_string_par:
             self._pa[us] = self._pa[us].upper().strip()
 
         # Parameter Validation
