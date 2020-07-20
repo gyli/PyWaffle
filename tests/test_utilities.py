@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*-coding: utf-8 -*-
 
-from pywaffle.waffle import array_resize, division, round_up_to_multiple
 import unittest
+
+from pywaffle.waffle import array_resize, division, flip_lines, round_up_to_multiple
 
 
 class TestUtilities(unittest.TestCase):
@@ -16,6 +17,20 @@ class TestUtilities(unittest.TestCase):
     def test_round_up_to_multiple(self):
         self.assertEqual(round_up_to_multiple(x=12, base=5), 15)
         self.assertIsInstance(round_up_to_multiple(x=12, base=5), int)
+
+    def test_flip_lines(self):
+        self.assertEqual(
+            list(flip_lines(matrix=[(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2)], base=3)),
+            [(0, 0), (0, 1), (0, 2), (1, 2), (1, 1), (1, 0)],
+        )
+        self.assertEqual(
+            list(flip_lines(matrix=[], base=3)),
+            [],
+        )
+        self.assertEqual(
+            list(flip_lines(matrix=[(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2)], base=0)),
+            [],
+        )
 
     def test_division(self):
         self.assertEqual(division(x=2, y=3, method="float"), 2 / 3)

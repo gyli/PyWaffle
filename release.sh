@@ -1,3 +1,4 @@
+python3 -m unittest
 python3 -m examples.generate_plots
 rm -r dist build pywaffle.egg-info
 python3 setup.py clean

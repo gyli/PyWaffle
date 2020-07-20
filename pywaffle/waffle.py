@@ -5,7 +5,7 @@ import copy
 import math
 import warnings
 from itertools import islice, product
-from typing import List, Tuple, Union
+from typing import Iterable, Iterator, List, Tuple, Union
 
 import matplotlib.font_manager as fm
 from matplotlib.figure import Figure
@@ -13,6 +13,7 @@ from matplotlib.legend_handler import HandlerBase
 from matplotlib.patches import Patch, Rectangle
 from matplotlib.pyplot import cm
 from matplotlib.text import Text
+
 from pywaffle.fontawesome import FONTAWESOME_FILES
 
 METHOD_MAPPING = {
@@ -54,7 +55,7 @@ def array_resize(array: Union[Tuple, List], length: int, array_len: int = None) 
     return array * (length // array_len) + array[: length % array_len]
 
 
-def chunks(iterable, step: int) -> List:
+def chunked(iterable: Iterable, step: int) -> List:
     """
     Yield successive step-sized chunks from list
     """
@@ -62,10 +63,12 @@ def chunks(iterable, step: int) -> List:
     yield from iter(lambda: list(islice(iterable, step)), [])
 
 
-def flip_lines(matrix, base):
-    for line_number, line in enumerate(chunks(matrix, base)):
-        for item in line if line_number % 2 == 0 else line[::-1]:
-            yield item
+def flip_lines(matrix: Iterable[Tuple[int, int]], base: int) -> Tuple[int, int]:
+    """
+    Given a matrix in a linear array, flip the element order of every odd row
+    """
+    for line_number, line in enumerate(chunked(matrix, base)):
+        yield from line if line_number % 2 == 0 else line[::-1]
 
 
 class TextLegendBase:
@@ -322,7 +325,12 @@ class Waffle(Figure):
         self.set_tight_layout(self.fig_args["tight"])
 
     @staticmethod
-    def block_arranger(rows: int, columns: int, row_order: int, column_order: int, is_vertical: bool, is_snake: bool):
+    def block_arranger(
+        rows: int, columns: int, row_order: int, column_order: int, is_vertical: bool, is_snake: bool
+    ) -> Iterator[Tuple[int, int]]:
+        """
+        Given the size of a matrix and starting point, return how to go through every element in the matrix
+        """
         if is_vertical:
             x, x_order, y, y_order = rows, row_order, columns, column_order
             vertical_order = -1
