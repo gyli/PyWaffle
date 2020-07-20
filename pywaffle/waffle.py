@@ -132,10 +132,10 @@ class Waffle(Figure):
 
     A custom Figure class to make waffle charts.
 
-    :param values: Numerical value of each category. If it is a dict, the keys would be used as labels.
+    :param values: Numerical value of each category. If it is a dict, the keys would be used as labels. \
     :type values: list|dict|pandas.Series
 
-    :param rows: The number of lines of the waffle chart.
+    :param rows: The number of lines of the waffle chart. \
     :type rows: int
 
     :param columns: The number of columns of the waffle chart. \
@@ -147,25 +147,25 @@ class Waffle(Figure):
     :type columns: int
 
     :param colors: A list of colors for each category. Its length should be the same as values. \
-        Default values are from Set2 colormap.
+        Default values are from Set2 colormap. \
     :type colors: list[str]|tuple[str]
 
     :param labels: The name of each category. \
-        If the values is a dict, this parameter would be replaced by the keys of values.
+        If the values is a dict, this parameter would be replaced by the keys of values. \
     :type labels: list[str]|tuple[str]
 
-    :param legend: Parameters of matplotlib.pyplot.legend in a dict.
-        E.g. {'loc': '', 'bbox_to_anchor': (,), ...}
-        See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
+    :param legend: Parameters of matplotlib.pyplot.legend in a dict. \
+        E.g. {'loc': '', 'bbox_to_anchor': (,), ...} \
+        See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html \
     :type legend: dict
 
-    :param interval_ratio_x: Ratio of horizontal distance between blocks to block's width. [Default 0.2]
+    :param interval_ratio_x: Ratio of horizontal distance between blocks to block's width. [Default 0.2] \
     :type interval_ratio_x: float
 
-    :param interval_ratio_y: Ratio of vertical distance between blocks to block's height. [Default 0.2]
+    :param interval_ratio_y: Ratio of vertical distance between blocks to block's height. [Default 0.2] \
     :type interval_ratio_y: float
 
-    :param block_aspect_ratio: The ratio of block's width to height. [Default 1]
+    :param block_aspect_ratio: The ratio of block's width to height. [Default 1] \
     :type block_aspect_ratio: float
 
     :param cmap_name: Name of colormaps for default color, if colors is not assigned.

@@ -59,6 +59,24 @@ fig = plt.figure(
 
 ---
 
+## Plotting direction
+
+By default, PyWaffle draws plots column by column. As a result, categories are plotted horizontally. To make it vertical, set parameter `vertical` to `True`.
+
+```python
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[48, 46, 3],
+    vertical=True
+)
+```
+
+<img class="img_middle" alt="Change Direction" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/block_direction.svg?sanitize=true">
+
+---
+
 ## Where to start each category
 
 Use parameter `block_arranging_style` to set how to arrange blocks for each category. By default it is `'normal'`, which draws block of new category from where last category ends.
@@ -90,21 +108,3 @@ fig = plt.figure(
 ```
 
 <img class="img_middle" alt="Change Starting Location" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/new_line_pattern.svg?sanitize=true">
-
----
-
-## The direction of plotting next block
-
-By default, PyWaffle draws plots column by column. As a result, categories are plotted horizontally. To make the it vertical, just set parameter `vertical` to `True`.
-
-```python
-fig = plt.figure(
-    FigureClass=Waffle,
-    rows=5,
-    columns=10,
-    values=[48, 46, 3],
-    vertical=True
-)
-```
-
-<img class="img_middle" alt="Change Direction" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/block_direction.svg?sanitize=true">
