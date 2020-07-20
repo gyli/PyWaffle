@@ -193,7 +193,7 @@ class Waffle(Figure):
         | [Default None]
     :type icons: str|list[str]|tuple[str]
 
-    :param icon_set: Deprecated. {'brands', 'regular', 'solid'}
+    :param icon_set: **Deprecated**. {'brands', 'regular', 'solid'}
 
         | The style of icons to be used. This parameter will be replaced by icon_style.
         | [Default 'solid']
@@ -221,9 +221,8 @@ class Waffle(Figure):
     :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
     :type icon_legend: bool
 
-    :param plot_anchor: ``{'C', 'SW', 'S', 'SE', 'E', 'NE', 'N', 'NW', 'W'}``
+    :param plot_anchor: The alignment method of subplots. ``{'C', 'SW', 'S', 'SE', 'E', 'NE', 'N', 'NW', 'W'}``
 
-        | The alignment method of subplots.
         | See details in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
         | [Default 'W']
     :type plot_anchor: str
