@@ -45,7 +45,7 @@ fig = plt.figure(
     plots={
         '311': {
             'values': data['Virginia'] / 30000,
-            'labels': [f"{n} ({v})" for n, v in data['Virginia'].items()],
+            'labels': [f"{k} ({v})" for k, v in data['Virginia'].items()],
             'legend': {
                 'loc': 'upper left',
                 'bbox_to_anchor': (1.05, 1),
@@ -58,7 +58,7 @@ fig = plt.figure(
         },
         '312': {
             'values': data['Maryland'] / 30000,
-            'labels': [f"{n} ({v})" for n, v in data['Maryland'].items()],
+            'labels': [f"{k} ({v})" for k, v in data['Maryland'].items()],
             'legend': {
                 'loc': 'upper left',
                 'bbox_to_anchor': (1.2, 1),
@@ -71,7 +71,7 @@ fig = plt.figure(
         },
         '313': {
             'values': data['West Virginia'] / 30000,
-            'labels': [f"{n} ({v})" for n, v in data['West Virginia'].items()],
+            'labels': [f"{k} ({v})" for k, v in data['West Virginia'].items()],
             'legend': {
                 'loc': 'upper left',
                 'bbox_to_anchor': (1.3, 1),

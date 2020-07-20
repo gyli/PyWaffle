@@ -32,7 +32,7 @@ fig = plt.figure(
         'label': 'Vote Percentage in 2016 US Presidential Election',
         'loc': 'left'
     },
-    labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
+    labels=[f"{k} ({v}%)" for k, v in data.items()],
     legend={
         'loc': 'lower left',
         'bbox_to_anchor': (0, -0.4),
@@ -79,7 +79,7 @@ fig = plt.figure(
     plots={
         '311': {
             'values': data['Virginia'] / 30000,
-            'labels': [f"{n} ({v})" for n, v in data['Virginia'].items()],
+            'labels': [f"{k} ({v})" for k, v in data['Virginia'].items()],
             'legend': {
                 'loc': 'upper left',
                 'bbox_to_anchor': (1.05, 1),
@@ -93,7 +93,7 @@ fig = plt.figure(
         },
         '312': {
             'values': data['Maryland'] / 30000,
-            'labels': [f"{n} ({v})" for n, v in data['Maryland'].items()],
+            'labels': [f"{k} ({v})" for k, v in data['Maryland'].items()],
             'legend': {
                 'loc': 'upper left',
                 'bbox_to_anchor': (1.2, 1),
@@ -107,7 +107,7 @@ fig = plt.figure(
         },
         '313': {
             'values': data['West Virginia'] / 30000,
-            'labels': [f"{n} ({v})" for n, v in data['West Virginia'].items()],
+            'labels': [f"{k} ({v})" for k, v in data['West Virginia'].items()],
             'legend': {
                 'loc': 'upper left',
                 'bbox_to_anchor': (1.3, 1),
@@ -169,7 +169,7 @@ fig = plt.figure(
     columns=10,
     values=data,
     title={'label': 'Example plot', 'loc': 'left', 'fontdict': {'fontsize': 20}},
-    labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
+    labels=[f"{k} ({v}%)" for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.2), 'ncol': len(data), 'framealpha': 0, 'fontsize': 12}
 )
 fig.savefig(doc_examples_image_folder + 'title_label_ledend.svg', bbox_inches='tight')

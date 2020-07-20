@@ -78,7 +78,7 @@ fig = plt.figure(
     values=data, 
     colors=("#983D3D", "#232066", "#DCB732"),
     title={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
-    labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
+    labels=[f"{k} ({v}%)" for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0},
     starting_location='NW',
     block_arranging_style='snake'
@@ -137,19 +137,19 @@ fig = plt.figure(
     plots={
         '311': {
             'values': data['Virginia'] / 30000,
-            'labels': [f"{n} ({v})" for n, v in data['Virginia'].items()],
+            'labels': [f"{k} ({v})" for k, v in data['Virginia'].items()],
             'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.05, 1), 'fontsize': 8},
             'title': {'label': '2016 Virginia Presidential Election Results', 'loc': 'left'}
         },
         '312': {
             'values': data['Maryland'] / 30000,
-            'labels': [f"{n} ({v})" for n, v in data['Maryland'].items()],
+            'labels': [f"{k} ({v})" for k, v in data['Maryland'].items()],
             'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.2, 1), 'fontsize': 8},
             'title': {'label': '2016 Maryland Presidential Election Results', 'loc': 'left'}
         },
         '313': {
             'values': data['West Virginia'] / 30000,
-            'labels': [f"{n} ({v})" for n, v in data['West Virginia'].items()],
+            'labels': [f"{k} ({v})" for k, v in data['West Virginia'].items()],
             'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.3, 1), 'fontsize': 8},
             'title': {'label': '2016 West Virginia Presidential Election Results', 'loc': 'left'}
         },
