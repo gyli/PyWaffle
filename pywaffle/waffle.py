@@ -254,7 +254,8 @@ class Waffle(Figure):
 
     :param rounding_rule: {'nearest', 'floor', 'ceil'}
 
-        The rounding rule applied when shrinking values to fit the chart size.
+        | The rounding rule applied when shrinking values to fit the chart size.
+
         | 'nearest' means "round to nearest, ties to even" rounding mode;
         | 'floor' means round to less of the two endpoints of the interval;
         | 'ceil' means round to greater of the two endpoints of the interval.
@@ -275,6 +276,7 @@ class Waffle(Figure):
     :param block_arranging_style: {'normal', 'snake', 'new-line'}
 
         Set how to arrange blocks.
+
         | If it is 'normal', it draws blocks line by line with same direction.
         | If it is 'snake', it draws blocks with snake pattern.
         | If it is 'new-line', it starts with a new line when drawing each category. This only works when only one of `rows` and `columns` is assigned, and `vertical`=`False` when `rows` is assigned or `vertical`=`True` when `rows` is assigned.
