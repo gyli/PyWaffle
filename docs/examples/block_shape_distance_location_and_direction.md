@@ -41,9 +41,9 @@ fig = plt.figure(
 
 ## Where to start my first block
 
-Use parameter `starting_location` to set the location of starting block. It accepts locations in string like `NW`, `SW`, `NE` and `SE` representing four corners. By default, it is `SW`, meaning PyWaffle starts drawing blocks from bottom-left corner.
+Use parameter `starting_location` to set the location of starting block. It accepts locations in string like `NW`, `SW`, `NE` and `SE` representing four corners. By default, it is `SW`, meaning PyWaffle starts drawing blocks from lower-left corner.
 
-Here is an example that start plotting from bottom-right corner (`SE`).
+Here is an example that start plotting from lower-right corner (`SE`).
 
 ```python
 fig = plt.figure(
@@ -83,7 +83,7 @@ Use parameter `block_arranging_style` to set how to arrange blocks for each cate
 
 When it is `snake`, it draws with snake pattern, starting a new line from an opposite direction every time. This style is useful if you would like to keep blocks of each category together.
 
-In the below example, since the default starting location is bottom-left and default direction is not vertical, it draws blocks from bottom-left to top-left for the first line, and then from the top block of second column down to the bottom one of this column, and then go on with snake-like pattern.
+In the below example, since the default starting location is lower-left and default direction is not vertical, it draws blocks from lower-left to top-left for the first line, and then from the top block of second column down to the bottom one of this column, and then go on with snake-like pattern.
 
 ```python
 fig = plt.figure(

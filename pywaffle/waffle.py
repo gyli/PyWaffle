@@ -164,7 +164,8 @@ class Waffle(Figure):
 
     :param cmap_name: Name of colormaps for default color, if colors is not assigned.
 
-        | See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
+        | See full list in https://matplotlib.org/examples/color/colormaps_reference.html
+        | [Default 'Set2']
     :type cmap_name: str
 
     :param title: Parameters of matplotlib.axes.Axes.set_title in a dict.
@@ -179,7 +180,7 @@ class Waffle(Figure):
     :param font_size: Font size of Font Awesome icons.
 
         | The default size is not fixed and depends on the block size.
-        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size, e.g., 12
+        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size.
     :type icons: int|str
 
     :param font_file: Path to custom font file.
@@ -193,7 +194,7 @@ class Waffle(Figure):
         | [Default None]
     :type icons: str|list[str]|tuple[str]
 
-    :param icon_set: **Deprecated**. {'brands', 'regular', 'solid'}
+    :param icon_set: **Deprecated**. ``{'brands', 'regular', 'solid'}``
 
         | The style of icons to be used. This parameter will be replaced by icon_style.
         | [Default 'solid']
@@ -215,7 +216,7 @@ class Waffle(Figure):
     :param icon_size: Font size of Font Awesome icons.
 
         | The default size is not fixed and depends on the block size.
-        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size, e.g., 12
+        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size.
     :type icon_size: int|str
 
     :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
@@ -241,18 +242,15 @@ class Waffle(Figure):
 
     :param starting_location: Change the starting location plotting the blocks. ``{'NW', 'SW', 'NE', 'SE'}``
 
-        | 'NW' means plots start at upper left;
-        | For 'SW', plots start at lower left;
-        | For 'NE', plots start at upper right;
-        | For 'SE', plots start at lower right.
+        | When it's 'NW', it means plots start from upper-left; 'SW' means plots start from lower-left; 'NE' means plots start from upper-right; 'SE' means plots start from lower-right.
         | [Default 'SW']
     :type starting_location: str
 
     :param rounding_rule: The rounding rule applied when shrinking values to fit the chart size. ``{'nearest', 'floor', 'ceil'}``
 
-        | 'nearest' means "round to nearest, ties to even" rounding mode;
-        | 'floor' means round to less of the two endpoints of the interval;
-        | 'ceil' means round to greater of the two endpoints of the interval.
+        | When it's 'nearest', it is "round to nearest, ties to even" rounding mode;
+        | When it's 'floor', it rounds to less of the two endpoints of the interval;
+        | When it's 'ceil', it rounds to greater of the two endpoints of the interval.
         | [Default 'nearest']
     :type rounding_rule: str
 
@@ -351,7 +349,7 @@ class Waffle(Figure):
                 self._pa[arg] = v
 
         # Parameter Standardization
-        lower_string_par = ["rounding_rule", "block_arranging_style"]
+        lower_string_par = ["rounding_rule", "block_arranging_style", "icon_set"]
         for ls in lower_string_par:
             self._pa[ls] = self._pa[ls].lower().strip()
 
