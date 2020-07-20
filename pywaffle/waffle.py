@@ -222,7 +222,7 @@ class Waffle(Figure):
     :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
     :type icon_legend: bool
 
-    :param plot_anchor: {'C', 'SW', 'S', 'SE', 'E', 'NE', 'N', 'NW', 'W'}
+    :param plot_anchor: ``{'C', 'SW', 'S', 'SE', 'E', 'NE', 'N', 'NW', 'W'}``
 
         | The alignment method of subplots.
         | See details in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
@@ -232,14 +232,12 @@ class Waffle(Figure):
     :param plots: Position and parameters of Waffle class for subplots in a dict,
         with format like {pos: {subplot_args: values, }, }.
 
-        | Pos could be a tuple of three integer, where the first digit is the number of rows,
-        the second the number of columns, and the third the index of the subplot.
+        | Pos could be a tuple of three integer, where the first digit is the number of rows, the second the number of columns, and the third the index of the subplot.
 
-        | Pos could also be a 3-digit number in int or string type.
-        For example, it accept 235 or '235' standing for the Ith plot on a grid with J rows and K columns.
-        Note that all integers must be less than 10 for this form to work.
+        | Pos could also be a 3-digit number in int or string type. For example, it accept 235 or '235' standing for the Ith plot on a grid with J rows and K columns. Note that all integers must be less than 10 for this form to work.
 
         | The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
+
         | If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
 
@@ -248,7 +246,7 @@ class Waffle(Figure):
         | [Default False]
     :type vertical: bool
 
-    :param starting_location: Change the starting location plotting the blocks. {'NW', 'SW', 'NE', 'SE'}
+    :param starting_location: Change the starting location plotting the blocks. ``{'NW', 'SW', 'NE', 'SE'}``
 
         | 'NW' means plots start at upper left;
         | For 'SW', plots start at lower left;
@@ -274,7 +272,7 @@ class Waffle(Figure):
         | [Default True]
     :type tight: bool|dict
 
-    :param block_arranging_style: Set how to arrange blocks. {'normal', 'snake', 'new-line'}
+    :param block_arranging_style: Set how to arrange blocks. ``{'normal', 'snake', 'new-line'}``
 
         | If it is 'normal', it draws blocks line by line with same direction.
         | If it is 'snake', it draws blocks with snake pattern.
