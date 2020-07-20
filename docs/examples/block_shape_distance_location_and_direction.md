@@ -55,6 +55,8 @@ fig = plt.figure(
 )
 ```
 
+<img class="img_middle" alt="Change Starting Location" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/block_location.svg?sanitize=true">
+
 ---
 
 ## Where to start each category
