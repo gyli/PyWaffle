@@ -131,24 +131,28 @@ class Waffle(Figure):
     :type rows: int
 
     :param columns: The number of columns of the waffle chart.
-        At least one of rows and columns is required.
-        If either rows or columns is passed, the other parameter would be calculated automatically through the absolute
+
+        | At least one of rows and columns is required.
+        | If either rows or columns is passed, the other parameter would be calculated automatically through the absolute
         value of values.
-        If both of rows and columns are passed, the block number is fixed and block numbers are calculated from scaled
+        | If both of rows and columns are passed, the block number is fixed and block numbers are calculated from scaled
         values.
     :type columns: int
 
     :param colors: A list of colors for each category. Its length should be the same as values.
-        Default values are from Set2 colormap.
+
+        | Default values are from Set2 colormap.
     :type colors: list[str]|tuple[str]
 
     :param labels: The name of each category.
-        If the values is a dict, this parameter would be replaced by the keys of values.
+
+        | If the values is a dict, this parameter would be replaced by the keys of values.
     :type labels: list[str]|tuple[str]
 
     :param legend: Parameters of matplotlib.pyplot.legend in a dict.
-        E.g. {'loc': '', 'bbox_to_anchor': (,), ...}
-        See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
+
+        | E.g. {'loc': '', 'bbox_to_anchor': (,), ...}
+        | See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
     :type legend: dict
 
     :param interval_ratio_x: Ratio of horizontal distance between blocks to block's width. [Default 0.2]
@@ -161,7 +165,8 @@ class Waffle(Figure):
     :type block_aspect_ratio: float
 
     :param cmap_name: Name of colormaps for default color, if colors is not assigned.
-        See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
+
+        | See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
     :type cmap_name: str
 
     :param title: Parameters of matplotlib.axes.Axes.set_title in a dict.
@@ -176,8 +181,7 @@ class Waffle(Figure):
     :param font_size: Font size of Font Awesome icons.
 
         | The default size is not fixed and depends on the block size.
-        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'
-        or an absolute font size, e.g., 12
+        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size, e.g., 12
     :type icons: int|str
 
     :param font_file: Path to custom font file.
@@ -201,17 +205,18 @@ class Waffle(Figure):
         | Font Awesome Icons find an icon by style and icon name.
         The style could be 'brands', 'regular' and 'solid'.
         Visit https://fontawesome.com/cheatsheet for detail.
+
         | If it is a string, it would search icons within given style.
         If it is a list or a tuple, the length should be
         the same as values and it means the style for each icon.
+
         | [Default 'solid']
     :type icon_style: str|list[str]|tuple[str]
 
     :param icon_size: Font size of Font Awesome icons.
 
         | The default size is not fixed and depends on the block size.
-        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'
-        or an absolute font size, e.g., 12
+        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size, e.g., 12
     :type icon_size: int|str
 
     :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
@@ -229,22 +234,22 @@ class Waffle(Figure):
 
         | Pos could be a tuple of three integer, where the first digit is the number of rows,
         the second the number of columns, and the third the index of the subplot.
+
         | Pos could also be a 3-digit number in int or string type.
         For example, it accept 235 or '235' standing for the Ith plot on a grid with J rows and K columns.
         Note that all integers must be less than 10 for this form to work.
+
         | The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
         | If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
 
-    :param vertical:
+    :param vertical: Whether to draw the plot vertically or horizontally.
 
-        Decide whether to draw the plot vertically or horizontally.
         | [Default False]
     :type vertical: bool
 
-    :param starting_location: {'NW', 'SW', 'NE', 'SE'}
+    :param starting_location: Change the starting location plotting the blocks. {'NW', 'SW', 'NE', 'SE'}
 
-        Change the starting location plotting the blocks.
         | 'NW' means plots start at upper left;
         | For 'SW', plots start at lower left;
         | For 'NE', plots start at upper right;
@@ -252,9 +257,7 @@ class Waffle(Figure):
         | [Default 'SW']
     :type starting_location: str
 
-    :param rounding_rule: {'nearest', 'floor', 'ceil'}
-
-        | The rounding rule applied when shrinking values to fit the chart size.
+    :param rounding_rule: The rounding rule applied when shrinking values to fit the chart size. {'nearest', 'floor', 'ceil'}
 
         | 'nearest' means "round to nearest, ties to even" rounding mode;
         | 'floor' means round to less of the two endpoints of the interval;
@@ -262,9 +265,7 @@ class Waffle(Figure):
         | [Default 'nearest']
     :type rounding_rule: str
 
-    :param tight:
-
-        Set whether and how `.tight_layout` is called when drawing.
+    :param tight: Set whether and how `.tight_layout` is called when drawing.
 
         | It could be bool or dict with keys "pad", "w_pad", "h_pad", "rect" or None
         | If a bool, sets whether to call `.tight_layout` upon drawing.
@@ -273,9 +274,7 @@ class Waffle(Figure):
         | [Default True]
     :type tight: bool|dict
 
-    :param block_arranging_style: {'normal', 'snake', 'new-line'}
-
-        Set how to arrange blocks.
+    :param block_arranging_style: Set how to arrange blocks. {'normal', 'snake', 'new-line'}
 
         | If it is 'normal', it draws blocks line by line with same direction.
         | If it is 'snake', it draws blocks with snake pattern.
