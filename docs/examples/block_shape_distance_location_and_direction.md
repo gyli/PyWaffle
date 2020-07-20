@@ -64,6 +64,7 @@ fig = plt.figure(
 Use parameter `block_arranging_style` to set how to arrange blocks for each category. By default it is `'normal'`, which draws block of new category from where last category ends.
 
 When it is `snake`, it draws with snake pattern, starting a new line from an opposite direction every time. This style is useful if you would like to keep blocks of each category together.
+In the below example, since the default starting location is bottom left and default direction is not vertical, it draws blocks from bottom left to top left for the first line, and then from the top block of second column down to the bottom one of this column.
 
 ```python
 fig = plt.figure(

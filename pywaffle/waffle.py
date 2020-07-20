@@ -138,19 +138,19 @@ class Waffle(Figure):
     :param rows: The number of lines of the waffle chart.
     :type rows: int
 
-    :param columns: The number of columns of the waffle chart.
-        At least one of rows and columns is required.
-        If either rows or columns is passed, the other parameter would be calculated automatically through the absolute
-        value of values.
-        If both of rows and columns are passed, the block number is fixed and block numbers are calculated from scaled
+    :param columns: The number of columns of the waffle chart. \
+        At least one of rows and columns is required. \
+        If either rows or columns is passed, the other parameter would be calculated automatically through the absolute \
+        value of values. \
+        If both of rows and columns are passed, the block number is fixed and block numbers are calculated from scaled \
         values.
     :type columns: int
 
-    :param colors: A list of colors for each category. Its length should be the same as values.
+    :param colors: A list of colors for each category. Its length should be the same as values. \
         Default values are from Set2 colormap.
     :type colors: list[str]|tuple[str]
 
-    :param labels: The name of each category.
+    :param labels: The name of each category. \
         If the values is a dict, this parameter would be replaced by the keys of values.
     :type labels: list[str]|tuple[str]
 
