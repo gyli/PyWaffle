@@ -165,16 +165,18 @@ class Waffle(Figure):
     :type cmap_name: str
 
     :param title: Parameters of matplotlib.axes.Axes.set_title in a dict.
-        E.g. {'label': '', 'fontdict': {}, 'loc': ''}
-        See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
+
+        | E.g. {'label': '', 'fontdict': {}, 'loc': ''}
+        | See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
     :type title: dict
 
     :param characters: A character in string or a list of characters for each category. [Default None]
     :type icons: str|list[str]|tuple[str]
 
     :param font_size: Font size of Font Awesome icons.
-        The default size is not fixed and depends on the block size.
-        Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'
+
+        | The default size is not fixed and depends on the block size.
+        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'
         or an absolute font size, e.g., 12
     :type icons: int|str
 
@@ -182,28 +184,33 @@ class Waffle(Figure):
     :type icons: str
 
     :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
-        If it's a list or tuple of icons, the length should be the same as values.
-        See the full list of Font Awesome on https://fontawesome.com/icons?d=gallery&m=free [Default None]
+
+        | If it's a list or tuple of icons, the length should be the same as values.
+        | See the full list of Font Awesome on https://fontawesome.com/icons?d=gallery&m=free
+        | [Default None]
     :type icons: str|list[str]|tuple[str]
 
     :param icon_set: Deprecated. {'brands', 'regular', 'solid'}
-        The style of icons to be used. This parameter will be replaced by icon_style.
-        [Default 'solid']
+
+        | The style of icons to be used. This parameter will be replaced by icon_style.
+        | [Default 'solid']
     :type icon_set: str|list[str]|tuple[str]
 
     :param icon_style: The style of icons to be used.
-        Font Awesome Icons find an icon by style and icon name.
+
+        | Font Awesome Icons find an icon by style and icon name.
         The style could be 'brands', 'regular' and 'solid'.
         Visit https://fontawesome.com/cheatsheet for detail.
-        If it is a string, it would search icons within given style.
+        | If it is a string, it would search icons within given style.
         If it is a list or a tuple, the length should be
         the same as values and it means the style for each icon.
-        [Default 'solid']
+        | [Default 'solid']
     :type icon_style: str|list[str]|tuple[str]
 
     :param icon_size: Font size of Font Awesome icons.
-        The default size is not fixed and depends on the block size.
-        Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'
+
+        | The default size is not fixed and depends on the block size.
+        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'
         or an absolute font size, e.g., 12
     :type icon_size: int|str
 
@@ -220,20 +227,24 @@ class Waffle(Figure):
     :param plots: Position and parameters of Waffle class for subplots in a dict,
         with format like {pos: {subplot_args: values, }, }.
 
-        | pos could be a tuple of three integer, where the first digit is the number of rows, the second the number of columns, and the third the index of the subplot.
-        | pos could also be a 3-digit number in int or string type. For example, it accept 235 or '235' standing for the Ith plot on a grid with J rows and K columns. Note that all integers must be less than 10 for this form to work.
+        | Pos could be a tuple of three integer, where the first digit is the number of rows,
+        the second the number of columns, and the third the index of the subplot.
+        | Pos could also be a 3-digit number in int or string type.
+        For example, it accept 235 or '235' standing for the Ith plot on a grid with J rows and K columns.
+        Note that all integers must be less than 10 for this form to work.
         | The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
         | If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
 
-    :param vertical: decide whether to draw the plot vertically or horizontally.
+    :param vertical:
 
+        Decide whether to draw the plot vertically or horizontally.
         | [Default False]
     :type vertical: bool
 
-    :param starting_location: Change the starting location plotting the blocks.
+    :param starting_location: {'NW', 'SW', 'NE', 'SE'}
 
-        | {'NW', 'SW', 'NE', 'SE'}
+        Change the starting location plotting the blocks.
         | 'NW' means plots start at upper left;
         | For 'SW', plots start at lower left;
         | For 'NE', plots start at upper right;
