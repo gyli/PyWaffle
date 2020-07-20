@@ -261,7 +261,6 @@ class Waffle(Figure):
     :type rounding_rule: str
 
     :param tight: Set whether and how `.tight_layout` is called when drawing.
-
         | It could be bool or dict with keys "pad", "w_pad", "h_pad", "rect" or None
         | If a bool, sets whether to call `.tight_layout` upon drawing.
         | If ``None``, use the ``figure.autolayout`` rcparam instead.
@@ -269,8 +268,8 @@ class Waffle(Figure):
         | [Default True]
     :type tight: bool|dict
 
-    :param block_arranging_style: Set how to arrange blocks: {'normal', 'snake', 'new-line'}
-
+    :param block_arranging_style: {'normal', 'snake', 'new-line'}
+        | Set how to arrange blocks
         | If it is 'normal', it draws blocks line by line with same direction.
         | If it is 'snake', it draws blocks with snake pattern.
         | If it is 'new-line', it starts with a new line when drawing each category. This only works when only one of
@@ -356,20 +355,29 @@ class Waffle(Figure):
             if arg not in self._pa:
                 self._pa[arg] = v
 
+        # Parameter Standardization
+        lower_string_par = ["rounding_rule", "block_arranging_style"]
+        for ls in lower_string_par:
+            self._pa[ls] = self._pa[ls].lower().strip()
+
+        upper_string_par = ["starting_location"]
+        for us in lower_string_par:
+            self._pa[us] = self._pa[us].upper().strip()
+
         # Parameter Validation
-        self._pa["rounding_rule"] = self._pa["rounding_rule"].lower()
         if self._pa["rounding_rule"] not in ("nearest", "ceil", "floor"):
             raise ValueError("Argument rounding_rule should be one of nearest, ceil or floor.")
 
+        # - values
         if len(self._pa["values"]) == 0:
             raise ValueError("Argument values is required.")
-
         self.values_len = len(self._pa["values"])
 
+        # - color
         if self._pa["colors"] and len(self._pa["colors"]) != self.values_len:
             raise ValueError("Length of colors doesn't match the values.")
 
-        # labels and values
+        # - labels and values
         if isinstance(self._pa["values"], dict):
             if not self._pa["labels"]:
                 self._pa["labels"] = self._pa["values"].keys()
@@ -378,12 +386,17 @@ class Waffle(Figure):
         if self._pa["labels"] and len(self._pa["labels"]) != self.values_len:
             raise ValueError("Length of labels doesn't match the values.")
 
+        # - plots
         if isinstance(loc, tuple):
             self.ax = self.add_subplot(*loc, aspect="equal")
         elif isinstance(loc, str) or isinstance(loc, int):
             self.ax = self.add_subplot(loc, aspect="equal")
         else:
             raise TypeError("Subplot position should be tuple, int, or string.")
+
+        # - starting_location
+        if self._pa["starting_location"] not in {"NW", "SW", "NE", "SE"}:
+            raise KeyError("starting_location should be one of 'NW', 'SW', 'NE', 'SE'")
 
         # Alignment of subplots
         self.ax.set_anchor(self._pa["plot_anchor"])
@@ -393,7 +406,7 @@ class Waffle(Figure):
             raise ValueError("At least one of rows and columns is required.")
         # if columns is given, rows is not
         elif self._pa["rows"] is None:
-            if self._pa["block_arranging_style"] == 'new-line' and self._pa["vertical"]:
+            if self._pa["block_arranging_style"] == "new-line" and self._pa["vertical"]:
                 block_number_per_cat = [round_up_to_multiple(i, base=self._pa["columns"]) for i in self._pa["values"]]
                 colored_block_number_per_cat = self._pa["values"]
             else:
@@ -401,7 +414,7 @@ class Waffle(Figure):
             self._pa["rows"] = division(sum(block_number_per_cat), self._pa["columns"], method="ceil")
         # if rows is given, columns is not
         elif self._pa["columns"] is None:
-            if self._pa["block_arranging_style"] == 'new-line' and not self._pa["vertical"]:
+            if self._pa["block_arranging_style"] == "new-line" and not self._pa["vertical"]:
                 block_number_per_cat = [round_up_to_multiple(i, base=self._pa["rows"]) for i in self._pa["values"]]
                 colored_block_number_per_cat = self._pa["values"]
             else:
@@ -497,20 +510,14 @@ class Waffle(Figure):
                 size=self._pa["font_size"] or int((ty[1] - tx[1]) / 16 * 12), fname=self._pa["font_file"]
             )
 
-        starting_location = self._pa["starting_location"].upper()
-
-        try:
-            column_order = self._direction_values[starting_location]["column_order"]
-            row_order = self._direction_values[starting_location]["row_order"]
-        except KeyError:
-            raise KeyError("starting_location should be one of 'NW', 'SW', 'NE', 'SE'")
-
         # Plot blocks
         class_index = 0
         block_index = 0
         this_cat_block_count = 0
         x_full = (1 + self._pa["interval_ratio_x"]) * block_x_length
         y_full = (1 + self._pa["interval_ratio_y"]) * block_y_length
+        column_order = self._direction_values[self._pa["starting_location"]]["column_order"]
+        row_order = self._direction_values[self._pa["starting_location"]]["row_order"]
 
         for col, row in self.block_arranger(
             rows=self._pa["rows"],
@@ -518,7 +525,7 @@ class Waffle(Figure):
             row_order=row_order,
             column_order=column_order,
             is_vertical=self._pa["vertical"],
-            is_snake=self._pa["block_arranging_style"] == 'snake'
+            is_snake=self._pa["block_arranging_style"] == "snake",
         ):
             # Value could be 0. If so, skip it
             if block_number_per_cat[class_index] == 0:

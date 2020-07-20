@@ -282,7 +282,7 @@ plt.close(fig)
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    values=[48, 46, 3],
+    values=[23, 45, 25, 6],
     block_arranging_style='snake'
 )
 fig.savefig(doc_examples_image_folder + 'snake_pattern.svg', bbox_inches='tight')
