@@ -20,7 +20,7 @@ fig = plt.figure(FigureClass=Waffle, rows=5, values=data, legend={'loc': 'upper 
 fig.savefig(readme_image_folder + 'absolute_block_numbers.svg', bbox_inches='tight')
 plt.close(fig)
 
-# Add title, legend, background color, block color and direction
+# Add title, legend, background color, block color, direction and style
 # Data source https://en.wikipedia.org/wiki/United_States_presidential_election,_2016
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
 fig = plt.figure(
@@ -39,7 +39,8 @@ fig = plt.figure(
         'ncol': len(data),
         'framealpha': 0
     },
-    starting_location='NW'
+    starting_location='NW',
+    block_arranging_style='snake'
 )
 fig.savefig(readme_image_folder + 'title_and_legend.svg', bbox_inches='tight', facecolor='#EEEEEE')
 plt.close(fig)

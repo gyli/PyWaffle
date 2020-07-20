@@ -47,9 +47,9 @@ plt.show()
 
 ![basic](examples/readme/basic.svg)
 
-Note that the values are scaled to 24, 23 and 3 to fit 5 * 10 chart size.
+The values are automatically scaled to 24, 23 and 3 to fit 5 * 10 chart size.
 
-### 2. Values in dict & Auto-size
+### 2. Auto-sizing & Values in dict
 
 ```python
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
@@ -68,7 +68,7 @@ In this example, we set `columns` to empty, then PyWaffle would use the absolute
 
 If `values` is a dict, its keys are used as labels.
 
-### 3. Title, Legend, Colors, Background Color, Block Color and Direction
+### 3. Title, Legend, Colors, Background Color, Block Color, Direction and Style
 
 ```python
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
@@ -80,7 +80,8 @@ fig = plt.figure(
     title={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
     labels=["{0} ({1}%)".format(k, v) for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0},
-    starting_location='NW'
+    starting_location='NW',
+    block_arranging_style='snake'
 )
 fig.set_facecolor('#EEEEEE')
 plt.show()
