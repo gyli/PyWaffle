@@ -82,6 +82,7 @@ fig = plt.figure(
 Use parameter `block_arranging_style` to set how to arrange blocks for each category. By default it is `'normal'`, which draws block of new category from where last category ends.
 
 When it is `snake`, it draws with snake pattern, starting a new line from an opposite direction every time. This style is useful if you would like to keep blocks of each category together.
+
 In the below example, since the default starting location is bottom-left and default direction is not vertical, it draws blocks from bottom-left to top-left for the first line, and then from the top block of second column down to the bottom one of this column, and then go on with snake-like pattern.
 
 ```python
@@ -95,7 +96,7 @@ fig = plt.figure(
 
 <img class="img_middle" alt="Change Starting Location" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/snake_pattern.svg?sanitize=true">
 
-When it is `new-line`, it starts every category from a new line. Note that it only works when only `columns` is passed and `vertical`=`True`, or `rows` is passes and `vertical`=`False`. It will be ignored if both of `columns` and `rows` are passed. 
+When it is `new-line`, it forces every category starting from a new line. Note that it only works when only `columns` is passed and `vertical`=`True`, or `rows` is passes and `vertical`=`False`. It will be ignored if both of `columns` and `rows` are passed. 
 
 ```python
 fig = plt.figure(

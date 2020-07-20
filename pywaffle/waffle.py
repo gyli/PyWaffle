@@ -219,45 +219,43 @@ class Waffle(Figure):
     :type icon_legend: bool
 
     :param plot_anchor: {'C', 'SW', 'S', 'SE', 'E', 'NE', 'N', 'NW', 'W'}
-        The alignment method of subplots.
-        See details in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
-        [Default 'W']
+
+        | The alignment method of subplots.
+        | See details in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
+        | [Default 'W']
     :type plot_anchor: str
 
     :param plots: Position and parameters of Waffle class for subplots in a dict,
         with format like {pos: {subplot_args: values, }, }.
-        pos could be a tuple of three integer, where the first digit is the number
-        of rows, the second the number of columns, and the third the index of the
-        subplot.
-        pos could also be a 3-digit number in int or string type. For example, it
-        accept 235 or '235' standing for the Ith plot on a grid with J rows and
-        K columns. Note that all integers must be less than 10 for this form to
-        work.
-        The parameters of subplots are the same as Waffle class parameters,
-        excluding plots itself.
-        If any parameter of subplots is not assigned, it use the same parameter
-        in Waffle class as default value.
+
+        | pos could be a tuple of three integer, where the first digit is the number of rows, the second the number of columns, and the third the index of the subplot.
+        | pos could also be a 3-digit number in int or string type. For example, it accept 235 or '235' standing for the Ith plot on a grid with J rows and K columns. Note that all integers must be less than 10 for this form to work.
+        | The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
+        | If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
 
     :param vertical: decide whether to draw the plot vertically or horizontally.
-        [Default False]
+
+        | [Default False]
     :type vertical: bool
 
-    :param starting_location: {'NW', 'SW', 'NE', 'SE'}.
-        Change the starting location plotting the blocks
-        'NW' means plots start at upper left;
-        For 'SW', plots start at lower left;
-        For 'NE', plots start at upper right;
-        For 'SE', plots start at lower right.
-        [Default 'SW']
+    :param starting_location: Change the starting location plotting the blocks.
+
+        | {'NW', 'SW', 'NE', 'SE'}
+        | 'NW' means plots start at upper left;
+        | For 'SW', plots start at lower left;
+        | For 'NE', plots start at upper right;
+        | For 'SE', plots start at lower right.
+        | [Default 'SW']
     :type starting_location: str
 
-    :param rounding_rule: {'nearest', 'floor', 'ceil'}.
-        The rounding rule applied when shrinking values to fit the chart size.
-        'nearest' means "round to nearest, ties to even" rounding mode;
-        'floor' means round to less of the two endpoints of the interval;
-        'ceil' means round to greater of the two endpoints of the interval.
-        [Default 'nearest']
+    :param rounding_rule: The rounding rule applied when shrinking values to fit the chart size.
+
+        | {'nearest', 'floor', 'ceil'}
+        | 'nearest' means "round to nearest, ties to even" rounding mode;
+        | 'floor' means round to less of the two endpoints of the interval;
+        | 'ceil' means round to greater of the two endpoints of the interval.
+        | [Default 'nearest']
     :type rounding_rule: str
 
     :param tight: Set whether and how `.tight_layout` is called when drawing.
@@ -269,9 +267,9 @@ class Waffle(Figure):
         | [Default True]
     :type tight: bool|dict
 
-    :param block_arranging_style: {'normal', 'snake', 'new-line'}
+    :param block_arranging_style: Set how to arrange blocks.
 
-        | Set how to arrange blocks
+        | {'normal', 'snake', 'new-line'}
         | If it is 'normal', it draws blocks line by line with same direction.
         | If it is 'snake', it draws blocks with snake pattern.
         | If it is 'new-line', it starts with a new line when drawing each category. This only works when only one of
