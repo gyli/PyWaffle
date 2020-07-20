@@ -59,15 +59,7 @@ def chunks(iterable, step: int) -> List:
     Yield successive step-sized chunks from list
     """
     iterable = iter(iterable)
-
-    # Another approach
-    # yield from iter(lambda: list(islice(iterable, step)), [])
-
-    while True:
-        lines = list(islice(iterable, step))
-        if not lines:
-            return
-        yield lines
+    yield from iter(lambda: list(islice(iterable, step)), [])
 
 
 def flip_lines(matrix, base):
@@ -249,16 +241,18 @@ class Waffle(Figure):
         | [Default 'SW']
     :type starting_location: str
 
-    :param rounding_rule: The rounding rule applied when shrinking values to fit the chart size.
+    :param rounding_rule: {'nearest', 'floor', 'ceil'}
 
-        | {'nearest', 'floor', 'ceil'}
+        The rounding rule applied when shrinking values to fit the chart size.
         | 'nearest' means "round to nearest, ties to even" rounding mode;
         | 'floor' means round to less of the two endpoints of the interval;
         | 'ceil' means round to greater of the two endpoints of the interval.
         | [Default 'nearest']
     :type rounding_rule: str
 
-    :param tight: Set whether and how `.tight_layout` is called when drawing.
+    :param tight:
+
+        Set whether and how `.tight_layout` is called when drawing.
 
         | It could be bool or dict with keys "pad", "w_pad", "h_pad", "rect" or None
         | If a bool, sets whether to call `.tight_layout` upon drawing.
@@ -267,14 +261,12 @@ class Waffle(Figure):
         | [Default True]
     :type tight: bool|dict
 
-    :param block_arranging_style: Set how to arrange blocks.
+    :param block_arranging_style: {'normal', 'snake', 'new-line'}
 
-        | {'normal', 'snake', 'new-line'}
+        Set how to arrange blocks.
         | If it is 'normal', it draws blocks line by line with same direction.
         | If it is 'snake', it draws blocks with snake pattern.
-        | If it is 'new-line', it starts with a new line when drawing each category. This only works when only one of
-        `rows` and `columns` is assigned, and `vertical`=`False` when `rows` is assigned or `vertical`=`True`
-        when `rows` is assigned.
+        | If it is 'new-line', it starts with a new line when drawing each category. This only works when only one of `rows` and `columns` is assigned, and `vertical`=`False` when `rows` is assigned or `vertical`=`True` when `rows` is assigned.
         | [Default 'normal']
     :type block_arranging_style: string
     """
