@@ -139,24 +139,26 @@ class Waffle(Figure):
     :type rows: int
 
     :param columns: The number of columns of the waffle chart.
-        At least one of rows and columns is required.
-        If either rows or columns is passed, the other parameter would be calculated automatically through the absolute
-        value of values.
-        If both of rows and columns are passed, the block number is fixed and block numbers are calculated from scaled
-        values.
+
+    | At least one of rows and columns is required.
+    | If either rows or columns is passed, the other parameter would be calculated automatically through the absolute value of values.
+    | If both of rows and columns are passed, the block number is fixed and block numbers are calculated from scaled values.
     :type columns: int
 
     :param colors: A list of colors for each category. Its length should be the same as values.
-        Default values are from Set2 colormap.
+
+    | Default values are from Set2 colormap.
     :type colors: list[str]|tuple[str]
 
     :param labels: The name of each category.
-        If the values is a dict, this parameter would be replaced by the keys of values.
+
+    | If the values is a dict, this parameter would be replaced by the keys of values.
     :type labels: list[str]|tuple[str]
 
     :param legend: Parameters of matplotlib.pyplot.legend in a dict.
-        E.g. {'loc': '', 'bbox_to_anchor': (,), ...}
-        See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
+
+    | E.g. {'loc': '', 'bbox_to_anchor': (,), ...}
+    | See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html
     :type legend: dict
 
     :param interval_ratio_x: Ratio of horizontal distance between blocks to block's width. [Default 0.2]
@@ -169,113 +171,116 @@ class Waffle(Figure):
     :type block_aspect_ratio: float
 
     :param cmap_name: Name of colormaps for default color, if colors is not assigned.
-        See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
+
+    | See full list in https://matplotlib.org/examples/color/colormaps_reference.html [Default 'Set2']
     :type cmap_name: str
 
     :param title: Parameters of matplotlib.axes.Axes.set_title in a dict.
-        E.g. {'label': '', 'fontdict': {}, 'loc': ''}
-        See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
+
+    | E.g. {'label': '', 'fontdict': {}, 'loc': ''}
+    | See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
     :type title: dict
 
     :param characters: A character in string or a list of characters for each category. [Default None]
     :type icons: str|list[str]|tuple[str]
 
     :param font_size: Font size of Font Awesome icons.
-        The default size is not fixed and depends on the block size.
-        Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'
-        or an absolute font size, e.g., 12
+    | The default size is not fixed and depends on the block size.
+    | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'
+    | or an absolute font size, e.g., 12
     :type icons: int|str
 
     :param font_file: Path to custom font file.
     :type icons: str
 
-    :param icons: Icon name of Font Awesome. If it is a string, all categories use the same icon;
-        If it's a list or tuple of icons, the length should be the same as values.
-        See the full list of Font Awesome on https://fontawesome.com/icons?d=gallery&m=free [Default None]
+    :param icons: Icon name of Font Awesome.
+    | If it is a string, all categories use the same icon;
+    | If it's a list or tuple of icons, the length should be the same as values.
+    | See the full list of Font Awesome on https://fontawesome.com/icons?d=gallery&m=free [Default None]
     :type icons: str|list[str]|tuple[str]
 
     :param icon_set: Deprecated. {'brands', 'regular', 'solid'}
-        The style of icons to be used. This parameter will be replaced by icon_style.
-        [Default 'solid']
+
+    | The style of icons to be used. This parameter will be replaced by icon_style.
+    | [Default 'solid']
     :type icon_set: str|list[str]|tuple[str]
 
     :param icon_style: The style of icons to be used.
-        Font Awesome Icons find an icon by style and icon name.
-        The style could be 'brands', 'regular' and 'solid'.
-        Visit https://fontawesome.com/cheatsheet for detail.
-        If it is a string, it would search icons within given style.
-        If it is a list or a tuple, the length should be
-        the same as values and it means the style for each icon.
-        [Default 'solid']
+
+    | Font Awesome Icons find an icon by style and icon name.
+    | The style could be 'brands', 'regular' and 'solid'.
+    | Visit https://fontawesome.com/cheatsheet for detail.
+    | If it is a string, it would search icons within given style.
+    | If it is a list or a tuple, the length should be
+    | the same as values and it means the style for each icon.
+    | [Default 'solid']
     :type icon_style: str|list[str]|tuple[str]
 
     :param icon_size: Font size of Font Awesome icons.
-        The default size is not fixed and depends on the block size.
-        Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'
-        or an absolute font size, e.g., 12
+
+    | The default size is not fixed and depends on the block size.
+    | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size, e.g., 12
     :type icon_size: int|str
 
     :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
     :type icon_legend: bool
 
     :param plot_anchor: {'C', 'SW', 'S', 'SE', 'E', 'NE', 'N', 'NW', 'W'}
-        The alignment method of subplots.
-        See details in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
-        [Default 'W']
+
+    | The alignment method of subplots.
+    | See details in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
+    | [Default 'W']
     :type plot_anchor: str
 
-    :param plots: Position and parameters of Waffle class for subplots in a dict,
-        with format like {pos: {subplot_args: values, }, }.
-        pos could be a tuple of three integer, where the first digit is the number
-        of rows, the second the number of columns, and the third the index of the
-        subplot.
-        pos could also be a 3-digit number in int or string type. For example, it
-        accept 235 or '235' standing for the Ith plot on a grid with J rows and
-        K columns. Note that all integers must be less than 10 for this form to
-        work.
-        The parameters of subplots are the same as Waffle class parameters,
-        excluding plots itself.
-        If any parameter of subplots is not assigned, it use the same parameter
-        in Waffle class as default value.
+    :param plots:
+
+    | Position and parameters of Waffle class for subplots in a dict, with format like {pos: {subplot_args: values, }, }.
+    | pos could be a tuple of three integer, where the first digit is the number of rows, the second the number of columns, and the third the index of the subplot.
+    | pos could also be a 3-digit number in int or string type. For example, it accept 235 or '235' standing for the Ith plot on a grid with J rows and K columns. Note that all integers must be less than 10 for this form to work.
+    | The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
+    | If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict
 
     :param vertical: decide whether to draw the plot vertically or horizontally.
-        [Default False]
+
+    | [Default False]
     :type vertical: bool
 
     :param starting_location: {'NW', 'SW', 'NE', 'SE'}.
-        Change the starting location plotting the blocks
-        'NW' means plots start at upper left;
-        For 'SW', plots start at lower left;
-        For 'NE', plots start at upper right;
-        For 'SE', plots start at lower right.
-        [Default 'SW']
+
+    | Change the starting location plotting the blocks
+    | 'NW' means plots start at upper left;
+    | For 'SW', plots start at lower left;
+    | For 'NE', plots start at upper right;
+    | For 'SE', plots start at lower right.
+    | [Default 'SW']
     :type starting_location: str
 
     :param rounding_rule: {'nearest', 'floor', 'ceil'}.
-        The rounding rule applied when shrinking values to fit the chart size.
-        'nearest' means "round to nearest, ties to even" rounding mode;
-        'floor' means round to less of the two endpoints of the interval;
-        'ceil' means round to greater of the two endpoints of the interval.
-        [Default 'nearest']
+
+    | The rounding rule applied when shrinking values to fit the chart size.
+    | 'nearest' means "round to nearest, ties to even" rounding mode;
+    | 'floor' means round to less of the two endpoints of the interval;
+    | 'ceil' means round to greater of the two endpoints of the interval.
+    | [Default 'nearest']
     :type rounding_rule: str
 
     :param tight: Set whether and how `.tight_layout` is called when drawing.
-        | It could be bool or dict with keys "pad", "w_pad", "h_pad", "rect" or None
-        | If a bool, sets whether to call `.tight_layout` upon drawing.
-        | If ``None``, use the ``figure.autolayout`` rcparam instead.
-        | If a dict, pass it as kwargs to `.tight_layout`, overriding the default paddings.
-        | [Default True]
+
+    | It could be bool, or dict with keys "pad", "w_pad", "h_pad", "rect" or None
+    | If a bool, sets whether to call `.tight_layout` upon drawing.
+    | If ``None``, use the ``figure.autolayout`` rcparam instead.
+    | If a dict, pass it as kwargs to `.tight_layout`, overriding the default paddings.
+    | [Default True]
     :type tight: bool|dict
 
     :param block_arranging_style: {'normal', 'snake', 'new-line'}
-        | Set how to arrange blocks
-        | If it is 'normal', it draws blocks line by line with same direction.
-        | If it is 'snake', it draws blocks with snake pattern.
-        | If it is 'new-line', it starts with a new line when drawing each category. This only works when only one of
-        `rows` and `columns` is assigned, and `vertical`=`False` when `rows` is assigned or `vertical`=`True`
-        when `rows` is assigned.
-        | [Default 'normal']
+
+    | Set how to arrange blocks.
+    | If it is 'normal', it draws blocks line by line with same direction.
+    | If it is 'snake', it draws blocks with snake pattern.
+    | If it is 'new-line', it starts with a new line when drawing each category. This only works when only one of `rows` and `columns` is assigned, and `vertical`=`False` when `rows` is assigned or `vertical`=`True` when `rows` is assigned.
+    | [Default 'normal']
     :type block_arranging_style: string
     """
 
