@@ -249,7 +249,7 @@ class Waffle(Figure):
         | [Default 'SW']
     :type starting_location: str
 
-    :param rounding_rule: The rounding rule applied when shrinking values to fit the chart size. ``{'nearest', 'floor', 'ceil'}``
+    :param rounding_rule: The rounding rule applied when adjusting values to fit the chart size. ``{'nearest', 'floor', 'ceil'}``
 
         | When it's 'nearest', it is "round to nearest, ties to even" rounding mode;
         | When it's 'floor', it rounds to less of the two endpoints of the interval;
