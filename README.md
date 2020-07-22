@@ -103,6 +103,7 @@ fig = plt.figure(
     font_size=12, 
     icon_legend=True
 )
+plt.show()
 ```
     
 ![Use Font Awesome icons](examples/readme/fontawesome.svg)
@@ -156,6 +157,7 @@ fig = plt.figure(
     colors=("#2196f3", "#ff5252", "#999999"),  # shared parameter among subplots
     figsize=(9, 5)  # figsize is a parameter of plt.figure
 )
+plt.show()
 ```
     
 ![Multiple plots](examples/readme/multiple_plots.svg)
