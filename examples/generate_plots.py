@@ -315,9 +315,9 @@ fig = plt.figure(
     rows=5,
     columns=10,
     values=[48, 46, 3],
-    colors=["#983D3D", "#232066", "#DCB732"]
+    colors=["#983D3D", "#232066", "#DCB732"],
+    facecolor='#DDDDDD'
 )
-fig.set_facecolor('#DDDDDD')
 fig.savefig(doc_examples_image_folder + 'adjust_figure_change_background.svg', bbox_inches='tight', facecolor='#DDDDDD')
 plt.close(fig)
 
@@ -326,8 +326,8 @@ fig = plt.figure(
     rows=5,
     columns=10,
     values=[48, 46, 3],
-    plot_anchor='S'
+    plot_anchor='S',
+    facecolor='#DDDDDD'
 )
-fig.set_facecolor('#DDDDDD')
 fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg', facecolor='#DDDDDD')
 plt.close(fig)

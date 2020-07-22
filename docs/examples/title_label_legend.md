@@ -1,6 +1,6 @@
 # Title, Label and Legend
 
-Parameter `title` accepts parameters of [matplotlib.axes.Axes.set_title](https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html) in a dict.
+Parameter `title` accepts parameters of [matplotlib.pyplot.title](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.title.html) in a dict.
 
 Parameter `labels` accepts labels in a list. If it is not specified, key of `values` would be used as labels.
 

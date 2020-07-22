@@ -6,9 +6,7 @@
 
 PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts.
 
-It provides a [Figure constructor class](https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html) `Waffle`, which could be passed to [matplotlib.pyplot.figure](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.figure.html) and generate a matplotlib Figure object.
-
-For more information, please visit:
+It provides a [Figure constructor class](https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html) `Waffle`, which could be passed to [matplotlib.pyplot.figure](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.figure.html) and generates a matplotlib Figure object.
 
 PyPI Page: [https://pypi.org/project/pywaffle/](https://pypi.org/project/pywaffle/)
 
@@ -40,7 +38,7 @@ fig = plt.figure(
     rows=5, 
     columns=10, 
     values=[48, 46, 6],
-    figsize=(5, 3)  # figsize is a parameter of matplotlib.pyplot.figure
+    figsize=(5, 3)
 )
 plt.show()
 ```

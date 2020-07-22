@@ -1,7 +1,9 @@
 # Adjust Figures
 
-## Background Color
-Parameter `colors` accepts colors in a list or tuple. The length must be the same as `values`.
+## Figure Size, Background Color, DPI, etc.
+Built-in parameters of matplotlib.pyplot.figure could be passed alone with `Waffle` as `FigureClass` and PyWaffle parameters. Some of them are commonly used to adjust figure, like `figsize`, `dpi`, `facecolor`, `tight_layout`, etc. Check [matplotlib.pyplot.figure](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.figure.html) for the details.
+
+In the following example, we change the background color of figure by passing color value to `facecolor`.
 
 ```python
 fig = plt.figure(
@@ -9,9 +11,9 @@ fig = plt.figure(
     rows=5,
     columns=10,
     values=[48, 46, 3],
-    colors=["#983D3D", "#232066", "#DCB732"]
+    colors=["#983D3D", "#232066", "#DCB732"],
+    facecolor='#DDDDDD'  # facecolor is a parameter of matplotlib.pyplot.figure
 )
-fig.set_facecolor('#DDDDDD')
 ```
 
 <img class="img_middle" alt="Adjust Figures - Change Background Color" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/adjust_figure_change_background.svg?sanitize=true">
