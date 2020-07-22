@@ -1,8 +1,8 @@
-# Block Size, Distance, Location and Direction
+# Block Shape, Spacing, Location, Direction and Arranging Style
 
 PyWaffle provides several parameters to control how and where to plot blocks.
 
-## Adjust Block Shape
+## Block Shape
 
 Parameter `block_aspect_ratio` controls the shape of blocks by change the ratio of block's width to block's height. By default it is 1, so that the blocks are squares.
 
@@ -20,7 +20,7 @@ fig = plt.figure(
 
 ---
 
-## Adjust Block Distance
+## Block Spacing
 
 Parameter `interval_ratio_x` and `interval_ratio_y` control the horizontal and vertical distance between blocks. `interval_ratio_x` is the ratio of horizontal distance between blocks to block's width and `interval_ratio_y` is the ratio of vertical distance between blocks to block's height.
 
@@ -39,7 +39,7 @@ fig = plt.figure(
 
 ---
 
-## Where to start my first block
+## Where to Start First Block
 
 Use parameter `starting_location` to set the location of starting block. It accepts locations in string like `NW`, `SW`, `NE` and `SE` representing four corners. By default, it is `SW`, meaning PyWaffle starts drawing blocks from lower-left corner.
 
@@ -59,9 +59,11 @@ fig = plt.figure(
 
 ---
 
-## Plotting direction
+## Plotting Direction
 
-By default, PyWaffle draws plots column by column. As a result, categories are plotted horizontally. To make it vertical, set parameter `vertical` to `True`.
+By default, PyWaffle draws blocks column by column, thus categories are plotted horizontally. To make it vertical, set parameter `vertical` to `True`.
+
+In the following example, it draws blocks from lower-left corner to lower-right corner row by row up to the top.
 
 ```python
 fig = plt.figure(
@@ -77,7 +79,7 @@ fig = plt.figure(
 
 ---
 
-## Where to start each category
+## Where to Start Each Category
 
 Use parameter `block_arranging_style` to set how to arrange blocks for each category. By default it is `'normal'`, which draws block of new category from where last category ends.
 

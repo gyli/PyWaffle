@@ -2,9 +2,9 @@
 
 ## Characters
 
-Blocks could be characters instead of squares by passing the desired character to `characters`. 
+Blocks could be Unicode characters instead of rectangles by passing the desired character to `characters`. 
 
-Categories could have different characters by passing parameter `characters` a list or tuple of characters. The length must be the same as `values`.
+Categories could have different character for each category, by passing a list or tuple of characters to parameter `characters` . The length must be the same as `values`.
 
 ```python
 fig = plt.figure(
@@ -12,7 +12,7 @@ fig = plt.figure(
     rows=5,
     columns=10,
     values=[48, 46, 3],
-    colors=["#4c8cb5", "#b7cbd7", "#C0C0C0"],
+    colors=["#4C8CB5", "#B7CBD7", "#C0C0C0"],
     characters='⬤',
     font_size=14,
 )
@@ -20,7 +20,7 @@ fig = plt.figure(
 
 <img class="img_middle" alt="Icons" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/characters.svg?sanitize=true">
 
-A font may be specified by passing the absolute path to a .ttf or .otf file to parameter `font_file`.
+To specify the font, pass the absolute path to a .ttf or .otf file to parameter `font_file`.
 
 ---
 
@@ -44,7 +44,7 @@ fig = plt.figure(
     
 <img class="img_middle" alt="Icons" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/icons.svg?sanitize=true">
 
-Categories could have different icon settings by passing parameter `icons` a list or tuple of icon names. The length must be the same as `values`.
+Each categories could have a different icon, by passing a list or tuple of icon names to parameter `icons`. The length must be the same as `values`.
 
 In Font Awesome Icons, there are different icon sets in different styles, including Solid, Regular and Brands. It can be specified through parameter `icon_style`. By default it searches icon from `solid` style.
 

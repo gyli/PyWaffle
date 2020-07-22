@@ -49,7 +49,7 @@ plt.show()
 
 The values are automatically scaled to 24, 23 and 3 to fit 5 * 10 chart size.
 
-### 2. Auto-sizing & Values in dict
+### 2. Values in dict & Scaling
 
 ```python
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
@@ -64,7 +64,7 @@ plt.show()
 
 ![Use values in dictionary; use absolute value as block number, without defining columns](examples/readme/absolute_block_numbers.svg)
 
-In this example, we set `columns` to empty, then PyWaffle would use the absolute value in `values` as block number and calculate rows automatically. Similarly, `rows` could also be optional if `columns` is passed.
+In this example, since only `rows` is specified and `columns` is empty, absolute values in `values` are used as block numbers. Similarly, `rows` could also be optional if `columns` is specified.
 
 If `values` is a dict, its keys are used as labels.
 
@@ -89,7 +89,7 @@ plt.show()
 
 ![Add title, legend and background color; customize the block color](examples/readme/title_and_legend.svg)
 
-It is now clear to see that there are 3% votes to other parties/candidates.
+Many parameters, like `title` and `legend`, accept the same parameters as in Matplotlib.
 
 ### 4. Icons
 
