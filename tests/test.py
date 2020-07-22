@@ -33,25 +33,29 @@ class TestWaffle(unittest.TestCase):
     def test_block_arranger(self):
         self.assertEqual(
             list(
-                Waffle.block_arranger(rows=2, columns=3, row_order=1, column_order=1, is_vertical=False, is_snake=False)
+                Waffle._block_arranger(
+                    rows=2, columns=3, row_order=1, column_order=1, is_vertical=False, is_snake=False
+                )
             ),
             [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1)],
         )
         self.assertEqual(
             list(
-                Waffle.block_arranger(rows=2, columns=3, row_order=-1, column_order=1, is_vertical=True, is_snake=False)
+                Waffle._block_arranger(
+                    rows=2, columns=3, row_order=-1, column_order=1, is_vertical=True, is_snake=False
+                )
             ),
             [(0, 1), (1, 1), (2, 1), (0, 0), (1, 0), (2, 0)],
         )
         self.assertEqual(
             list(
-                Waffle.block_arranger(rows=2, columns=3, row_order=-1, column_order=1, is_vertical=True, is_snake=True)
+                Waffle._block_arranger(rows=2, columns=3, row_order=-1, column_order=1, is_vertical=True, is_snake=True)
             ),
             [(0, 1), (1, 1), (2, 1), (2, 0), (1, 0), (0, 0)],
         )
         self.assertEqual(
             list(
-                Waffle.block_arranger(rows=0, columns=0, row_order=1, column_order=1, is_vertical=True, is_snake=False)
+                Waffle._block_arranger(rows=0, columns=0, row_order=1, column_order=1, is_vertical=True, is_snake=False)
             ),
             [],
         )

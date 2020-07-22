@@ -174,7 +174,7 @@ class Waffle(Figure):
     :param title: Parameters of matplotlib.axes.Axes.set_title in a dict.
 
         | E.g. {'label': '', 'fontdict': {}, 'loc': ''}
-        | See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_title.html
+        | See full parameter list in https://matplotlib.org/api/_as_gen/matplotlib.pyplot.title.html
     :type title: dict
 
     :param characters: A character in string or a list of characters for each category. [Default None]
@@ -219,7 +219,7 @@ class Waffle(Figure):
     :param icon_size: Font size of Font Awesome icons.
 
         | The default size is not fixed and depends on the block size.
-        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size.
+        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute value of font size.
     :type icon_size: int|str
 
     :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
@@ -227,7 +227,7 @@ class Waffle(Figure):
 
     :param plot_anchor: The alignment method of subplots. ``{'C', 'SW', 'S', 'SE', 'E', 'NE', 'N', 'NW', 'W'}``
 
-        | See details in https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
+        | See details in https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_anchor.html
         | [Default 'W']
     :type plot_anchor: str
 
@@ -325,7 +325,7 @@ class Waffle(Figure):
         self.set_tight_layout(self.fig_args["tight"])
 
     @staticmethod
-    def block_arranger(
+    def _block_arranger(
         rows: int, columns: int, row_order: int, column_order: int, is_vertical: bool, is_snake: bool
     ) -> Iterator[Tuple[int, int]]:
         """
@@ -520,7 +520,7 @@ class Waffle(Figure):
         column_order = self._direction_values[self._pa["starting_location"]]["column_order"]
         row_order = self._direction_values[self._pa["starting_location"]]["row_order"]
 
-        for col, row in self.block_arranger(
+        for col, row in self._block_arranger(
             rows=self._pa["rows"],
             columns=self._pa["columns"],
             row_order=row_order,
