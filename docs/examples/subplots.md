@@ -26,9 +26,9 @@ data = pd.DataFrame(
 
 To convert the vote numbers into reasonable block numbers, we can simply pass values like `data['Virginia'] / 30000`. 
 Note that parameter `values` also accepts column data in pandas.Series type. 
-For now, unlike values in dict, pandas.Series value does not support auto labeling yet.
+However, unlike values in dict, pandas.Series value does not support auto labeling yet.
 
-To make multiple subplots in one figure, merge the parameters for each plot to parameter `plots` as dict values. 
+To plot multiple subplots in one figure, merge the parameters for each plot to parameter `plots` as dict values. 
 The keys are integers describing the position of the subplot. 
 It accepts tuple, int and string. 
 If position is tuple, the format should be like `(nrows, ncols, index)`; 
@@ -36,8 +36,8 @@ if it is int or string, it should be a 3-digit integer like `312` or `"213"`, st
 Note that all integers must be less than 10 for the later form to work. 
 See arguments of [matplotlib.pyplot.subplot](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplot.html) for more detail.
 
-> **_NOTE:_** Parameters passed outside of `plots` would be shared among all subplots.
-While note that those parameters passed in `plots` with same name have higher priority.
+> **_NOTE:_** Parameters which are passed outside of `plots` would be applied to all subplots, if they are not specified in `plots`.
+Otherwise, settings in `plots` have higher priority.
 
 ```python
 fig = plt.figure(
