@@ -25,7 +25,7 @@ pip install pywaffle
 
 ## Examples
 
-### 1. Basic Example
+### 1. Value Scaling
 
 ```python
 import matplotlib.pyplot as plt
@@ -47,7 +47,7 @@ plt.show()
 
 The values are automatically scaled to 24, 23 and 3 to fit 5 * 10 chart size.
 
-### 2. Values in dict & Scaling
+### 2. Values in dict & Auto-sizing
 
 ```python
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
@@ -110,7 +110,7 @@ plt.show()
 
 PyWaffle supports [Font Awesome](https://fontawesome.com/) icons in the chart.
 
-### 5. Multiple Plots
+### 5. Multiple Plots in One Chart
 
 ```python
 import pandas as pd
@@ -153,9 +153,9 @@ fig = plt.figure(
             'title': {'label': '2016 West Virginia Presidential Election Results', 'loc': 'left'}
         },
     },
-    rows=5,  # shared parameter among subplots
-    colors=("#2196f3", "#ff5252", "#999999"),  # shared parameter among subplots
-    figsize=(9, 5)  # figsize is a parameter of plt.figure
+    rows=5,  # outside parameter applied to all subplots
+    colors=("#2196f3", "#ff5252", "#999999"),  # outside parameter applied to all subplots
+    figsize=(9, 5)
 )
 plt.show()
 ```
