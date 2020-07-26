@@ -13,6 +13,6 @@ Several examples are shown below by topics, which would go through every paramet
    examples/block_colors
    examples/plot_with_characters_or_icons
    examples/block_shape_spacing_location_direction_and_style
-   examples/adjust_figures
    examples/subplots
+   examples/adjust_figures
    examples/add_other_elements
