@@ -22,7 +22,7 @@ fig = plt.figure(
             'fontsize': 20
         }
     },
-    labels=[f"{k} ({v}%)" for k, v in data.items()],
+    labels=[f"{k} ({int(v / sum(data.values()) * 100)}%)" for k, v in data.items()],
     legend={
         # 'labels': [f"{k} ({v}%)" for k, v in data.items()],  # lebels could also be under legend instead
         'loc': 'lower left',

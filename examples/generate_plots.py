@@ -171,7 +171,7 @@ fig = plt.figure(
     columns=10,
     values=data,
     title={'label': 'Example plot', 'loc': 'left', 'fontdict': {'fontsize': 20}},
-    labels=[f"{k} ({v}%)" for k, v in data.items()],
+    labels=[f"{k} ({int(v / sum(data.values()) * 100)}%)" for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.2), 'ncol': len(data), 'framealpha': 0, 'fontsize': 12}
 )
 fig.savefig(doc_examples_image_folder + 'title_label_ledend.svg', bbox_inches='tight')
