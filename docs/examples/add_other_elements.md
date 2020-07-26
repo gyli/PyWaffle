@@ -18,9 +18,15 @@ fig.text(
     va="center",
     rotation=30,
     fontsize=40,
-    color="gray",
+    color='gray',
     alpha=0.3,
-    bbox=dict(boxstyle="square", lw=3, ec="gray", fc=(0.9, 0.9, 0.9, 0.5), alpha=0.3)
+    bbox={
+        'boxstyle': 'square', 
+        'lw': 3, 
+        'ec': 'gray', 
+        'fc': (0.9, 0.9, 0.9, 0.5), 
+        'alpha': 0.3
+    }
 )
 ```
 

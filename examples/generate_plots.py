@@ -4,6 +4,7 @@
 # Run `python3 -m README_images.generate_plots` on root folder to generate plots for README
 
 import matplotlib.pyplot as plt
+
 from pywaffle.waffle import Waffle
 
 # For README
@@ -65,6 +66,7 @@ plt.close(fig)
 
 # Multiple Plots
 import pandas as pd
+
 data = pd.DataFrame(
     {
         'labels': ['Hillary Clinton', 'Donald Trump', 'Others'],
@@ -338,9 +340,15 @@ fig.text(
     va="center",
     rotation=30,
     fontsize=40,
-    color="gray",
+    color='gray',
     alpha=0.3,
-    bbox=dict(boxstyle="square", lw=3, ec="gray", fc=(0.9, 0.9, 0.9, 0.5), alpha=0.3)
+    bbox={
+        'boxstyle': 'square',
+        'lw': 3,
+        'ec': 'gray',
+        'fc': (0.9, 0.9, 0.9, 0.5),
+        'alpha': 0.3
+    }
 )
 fig.savefig(doc_examples_image_folder + 'add_other_elements.svg')
 plt.close(fig)
