@@ -24,6 +24,6 @@ fig.text(
 )
 ```
 
-<img class="img_middle" alt="Add Watermark" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/add_other_elements.svg?sanitize=true">
+<img class="img_middle" alt="Add Watermark" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/add_other_elements.svg">
 
 Use method `add_artist` to add custom objects. See [matplotlib.figure.Figure](https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html) for all methods.
