@@ -1,30 +1,34 @@
 # Basic Examples
 
+This is a simplest example to plot a 5-row, 10-column waffle chart. The three values are plotted as blocks directly.
+
+> **_NOTE:_** One of the parameter rows and columns is redundant in this case, since both of the chart size and value sum are 50. So, either one of rows and columns could be omitted, and it can still be calculated through value sum automatically. See [Auto columns](value_scaling_and_auto_columns.md) for more details. 
+
 ```python
 import matplotlib.pyplot as plt
 from pywaffle import Waffle
 ```
 
-Plot a 5-row, 10-column chart with a list of values. The three values here, 48, 46 and 6 are represented by 24, 23 and 3 blocks.
 ```python
-plt.figure(
+fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
-    values=[48, 46, 6]
+    columns=10,  # Either rows or columns could be omitted
+    values=[30, 16, 4]
 )
+fig.show()
 ```
 
 <img class="img_middle" alt="With list values" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/basic_list_values.svg?sanitize=true">
 
-Parameter `values` also accept dict data. The key of the dict would be used as labels and legends.
+Parameter `values` also accepts data in dict. The key of the dict would be used as labels and shown in legends.
 
 ```python
 plt.figure(
     FigureClass=Waffle,
     rows=5,
     columns=10,
-    values={'Cat1': 20, 'Cat2': 12, 'Cat3': 8},
+    values={'Cat1': 30, 'Cat2': 16, 'Cat3': 4},
     legend={'loc': 'upper left', 'bbox_to_anchor': (1, 1)}
 )
 ```

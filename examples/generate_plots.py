@@ -131,7 +131,7 @@ plt.close(fig)
 doc_examples_image_folder = 'examples/docs/'
 
 # Basic
-fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 6])
+fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[30, 16, 4])
 fig.savefig(doc_examples_image_folder + 'basic_list_values.svg', bbox_inches='tight')
 plt.close(fig)
 
@@ -140,9 +140,9 @@ fig = plt.figure(
     rows=5,
     columns=10,
     values={
-        'Cat1': 20,
-        'Cat2': 12,
-        'Cat3': 8
+        'Cat1': 30,
+        'Cat2': 16,
+        'Cat3': 4
     },
     legend={
         'loc': 'upper left',
