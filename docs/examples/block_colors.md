@@ -8,7 +8,7 @@ fig = plt.figure(
     rows=5,
     columns=10,
     values=[30, 16, 4],
-    colors=["#983D3D", "#232066", "#DCB732"]
+    colors=["#232066", "#983D3D", "#DCB732"]
 )
 ```
 

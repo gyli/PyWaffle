@@ -28,7 +28,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=data,
-    colors=("#983D3D", "#232066", "#DCB732"),
+    colors=("#232066", "#983D3D", "#DCB732"),
     title={
         'label': 'Vote Percentage in 2016 US Presidential Election',
         'loc': 'left'
@@ -183,7 +183,7 @@ fig = plt.figure(
     rows=5,
     columns=10,
     values=[30, 16, 4],
-    colors=["#983D3D", "#232066", "#DCB732"]
+    colors=["#232066", "#983D3D", "#DCB732"]
 )
 fig.savefig(doc_examples_image_folder + 'block_colors.svg', bbox_inches='tight')
 plt.close(fig)
@@ -312,7 +312,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=[30, 16, 4],
-    colors=["#983D3D", "#232066", "#DCB732"],
+    colors=["#232066", "#983D3D", "#DCB732"],
     facecolor='#DDDDDD'
 )
 fig.savefig(doc_examples_image_folder + 'adjust_figure_change_background.svg', bbox_inches='tight', facecolor='#DDDDDD')
