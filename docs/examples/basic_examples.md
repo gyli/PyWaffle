@@ -2,7 +2,7 @@
 
 This is a simplest example to plot a 5-row, 10-column waffle chart. The three values are plotted as blocks directly.
 
-> **_NOTE:_** One of the parameter rows and columns is redundant in this case, since both of the chart size and value sum are 50. So, either one of rows and columns could be omitted, and it can still be calculated through value sum automatically. See [Auto columns](value_scaling_and_auto_columns.md) for more details. 
+> **_NOTE:_** One of the parameter rows and columns is redundant in this case, since both of the chart size and value sum are 50. So, either one of rows and columns could be omitted, and it can still be calculated through value sum automatically. See [Auto-sizing](value_scaling_and_auto_sizing.md#Auto-sizing) for more details. 
 
 ```python
 import matplotlib.pyplot as plt
