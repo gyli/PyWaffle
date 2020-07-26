@@ -594,6 +594,3 @@ class Waffle(Figure):
 
         # Remove borders, ticks, etc.
         self.ax.axis("off")
-
-    def remove(self):
-        pass
