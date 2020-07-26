@@ -7,7 +7,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     columns=10,
-    values=[48, 46, 3],
+    values=[30, 16, 4],
     colors=["#983D3D", "#232066", "#DCB732"]
 )
 ```
@@ -23,7 +23,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     columns=10,
-    values=[48, 46, 3],
+    values=[30, 16, 4],
     cmap_name="tab10"
 )
 ```

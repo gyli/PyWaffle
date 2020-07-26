@@ -11,7 +11,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     columns=10,
-    values=[48, 46, 3],
+    values=[30, 16, 4],
     block_aspect_ratio=1.618,
 )
 ```
@@ -29,7 +29,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     columns=10,
-    values=[48, 46, 3],
+    values=[30, 16, 4],
     interval_ratio_x=1,
     interval_ratio_y=0.5
 )
@@ -50,7 +50,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     columns=10,
-    values=[48, 46, 3],
+    values=[30, 16, 4],
     starting_location='SE'
 )
 ```
@@ -70,7 +70,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     columns=10,
-    values=[48, 46, 3],
+    values=[30, 16, 4],
     vertical=True
 )
 ```
@@ -91,7 +91,7 @@ In the below example, since the default starting location is lower-left and defa
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    values=[23, 45, 25, 6],
+    values=[12, 22, 20, 4],
     block_arranging_style='snake'
 )
 ```
@@ -103,8 +103,8 @@ When it is `new-line`, it forces every category starting from a new line. Note t
 ```python
 fig = plt.figure(
     FigureClass=Waffle,
-    columns=20,
-    values=[48, 46, 3],
+    columns=10,
+    values=[30, 16, 4],
     block_arranging_style='new-line',
     vertical=True
 )

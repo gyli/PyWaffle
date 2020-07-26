@@ -10,7 +10,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     columns=10,
-    values=[48, 46, 3],
+    values=[30, 16, 4],
     colors=["#983D3D", "#232066", "#DCB732"],
     facecolor='#DDDDDD'  # facecolor is a parameter of matplotlib.pyplot.figure
 )
@@ -29,7 +29,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     columns=10,
-    values=[48, 46, 3],
+    values=[30, 16, 4],
     plot_anchor='S'
 )
 fig.set_facecolor('#DDDDDD')

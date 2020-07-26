@@ -2,7 +2,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Created with matplotlib (https://matplotlib.org/) -->
-<svg height="104.140953pt" version="1.1" viewBox="0 0 453.6 104.140953" width="453.6pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg height="193.877516pt" version="1.1" viewBox="0 0 453.6 193.877516" width="453.6pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
  <defs>
   <style type="text/css">
 *{stroke-linecap:butt;stroke-linejoin:round;}
@@ -10,10 +10,10 @@
  </defs>
  <g id="figure_1">
   <g id="patch_1">
-   <path d="M 0 104.140953 
-L 453.6 104.140953 
-L 453.6 0 
-L 0 0 
+   <path d="M 0 193.877516 
+L 453.6 193.877516 
+L 453.6 -0 
+L 0 -0 
 z
 " style="fill:#ffffff;"/>
   </g>
@@ -85,293 +85,185 @@ C 60.9375 31.453125 55.859375 26.5625 50 26.5625
 z
 " id="FontAwesome5Free-Regular-61829"/>
     </defs>
-    <g style="fill:#ffa500;" transform="translate(7.2 95.440953)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(7.2 185.177516)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_2">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(7.2 77.184204)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(7.2 148.354582)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_3">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(7.2 58.927455)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(7.2 111.531647)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_4">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(7.2 40.670706)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(7.2 74.708713)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_5">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(7.2 22.413957)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(7.2 37.885779)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_6">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(25.456749 95.440953)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(44.022934 185.177516)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_7">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(25.456749 77.184204)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(44.022934 148.354582)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_8">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(25.456749 58.927455)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(44.022934 111.531647)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_9">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(25.456749 40.670706)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(44.022934 74.708713)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_10">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(25.456749 22.413957)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(44.022934 37.885779)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_11">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(43.713498 95.440953)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(80.845869 185.177516)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_12">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(43.713498 77.184204)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(80.845869 148.354582)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_13">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(43.713498 58.927455)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(80.845869 111.531647)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_14">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(43.713498 40.670706)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(80.845869 74.708713)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_15">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(43.713498 22.413957)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(80.845869 37.885779)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_16">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(61.970247 95.440953)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(117.668803 185.177516)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_17">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(61.970247 77.184204)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(117.668803 148.354582)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_18">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(61.970247 58.927455)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(117.668803 111.531647)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_19">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(61.970247 40.670706)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(117.668803 74.708713)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_20">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(61.970247 22.413957)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(117.668803 37.885779)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_21">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(80.226996 95.440953)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(154.491737 185.177516)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_22">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(80.226996 77.184204)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(154.491737 148.354582)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_23">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(80.226996 58.927455)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(154.491737 111.531647)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_24">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(80.226996 40.670706)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(154.491737 74.708713)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_25">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(80.226996 22.413957)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(154.491737 37.885779)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_26">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(98.483745 95.440953)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(191.314672 185.177516)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_27">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(98.483745 77.184204)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(191.314672 148.354582)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_28">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(98.483745 58.927455)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(191.314672 111.531647)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_29">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(98.483745 40.670706)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(191.314672 74.708713)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_30">
     <!--  -->
-    <g style="fill:#ffa500;" transform="translate(98.483745 22.413957)scale(0.12 -0.12)">
+    <g style="fill:#ffa500;" transform="translate(191.314672 37.885779)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Regular-61829"/>
     </g>
    </g>
    <g id="text_31">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(116.740494 95.440953)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_32">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(116.740494 77.184204)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_33">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(116.740494 58.927455)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_34">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(116.740494 40.670706)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_35">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(116.740494 22.413957)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_36">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(134.997243 95.440953)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_37">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(134.997243 77.184204)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_38">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(134.997243 58.927455)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_39">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(134.997243 40.670706)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_40">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(134.997243 22.413957)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_41">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(153.253992 95.440953)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_42">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(153.253992 77.184204)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_43">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(153.253992 58.927455)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_44">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(153.253992 40.670706)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_45">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(153.253992 22.413957)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_46">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(171.510741 95.440953)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_47">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(171.510741 77.184204)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_48">
-    <!--  -->
-    <g style="fill:#ffa500;" transform="translate(171.510741 58.927455)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Regular-61829"/>
-    </g>
-   </g>
-   <g id="text_49">
     <!--  -->
     <defs>
      <path d="M 35.75 15.046875 
@@ -435,281 +327,101 @@ C 100 54.109375 91.609375 62.5 81.25 62.5
 z
 " id="FontAwesome5Free-Solid-63296"/>
     </defs>
-    <g style="fill:#4384ff;" transform="translate(171.510741 40.670706)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(228.137606 185.177516)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_50">
+   <g id="text_32">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(171.510741 22.413957)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(228.137606 148.354582)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_51">
+   <g id="text_33">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(189.767489 95.440953)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(228.137606 111.531647)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_52">
+   <g id="text_34">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(189.767489 77.184204)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(228.137606 74.708713)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_53">
+   <g id="text_35">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(189.767489 58.927455)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(228.137606 37.885779)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_54">
+   <g id="text_36">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(189.767489 40.670706)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(264.96054 185.177516)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_55">
+   <g id="text_37">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(189.767489 22.413957)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(264.96054 148.354582)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_56">
+   <g id="text_38">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(208.024238 95.440953)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(264.96054 111.531647)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_57">
+   <g id="text_39">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(208.024238 77.184204)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(264.96054 74.708713)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_58">
+   <g id="text_40">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(208.024238 58.927455)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(264.96054 37.885779)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_59">
+   <g id="text_41">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(208.024238 40.670706)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(301.783475 185.177516)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_60">
+   <g id="text_42">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(208.024238 22.413957)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(301.783475 148.354582)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_61">
+   <g id="text_43">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(226.280987 95.440953)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(301.783475 111.531647)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_62">
+   <g id="text_44">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(226.280987 77.184204)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(301.783475 74.708713)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_63">
+   <g id="text_45">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(226.280987 58.927455)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(301.783475 37.885779)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_64">
+   <g id="text_46">
     <!--  -->
-    <g style="fill:#4384ff;" transform="translate(226.280987 40.670706)scale(0.12 -0.12)">
+    <g style="fill:#4384ff;" transform="translate(338.606409 185.177516)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Free-Solid-63296"/>
     </g>
    </g>
-   <g id="text_65">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(226.280987 22.413957)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_66">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(244.537736 95.440953)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_67">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(244.537736 77.184204)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_68">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(244.537736 58.927455)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_69">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(244.537736 40.670706)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_70">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(244.537736 22.413957)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_71">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(262.794485 95.440953)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_72">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(262.794485 77.184204)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_73">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(262.794485 58.927455)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_74">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(262.794485 40.670706)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_75">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(262.794485 22.413957)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_76">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(281.051234 95.440953)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_77">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(281.051234 77.184204)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_78">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(281.051234 58.927455)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_79">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(281.051234 40.670706)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_80">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(281.051234 22.413957)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_81">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(299.307983 95.440953)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_82">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(299.307983 77.184204)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_83">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(299.307983 58.927455)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_84">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(299.307983 40.670706)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_85">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(299.307983 22.413957)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_86">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(317.564732 95.440953)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_87">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(317.564732 77.184204)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_88">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(317.564732 58.927455)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_89">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(317.564732 40.670706)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_90">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(317.564732 22.413957)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_91">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(335.821481 95.440953)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_92">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(335.821481 77.184204)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_93">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(335.821481 58.927455)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_94">
-    <!--  -->
-    <g style="fill:#4384ff;" transform="translate(335.821481 40.670706)scale(0.12 -0.12)">
-     <use xlink:href="#FontAwesome5Free-Solid-63296"/>
-    </g>
-   </g>
-   <g id="text_95">
+   <g id="text_47">
     <!--  -->
     <defs>
      <path d="M 86.71875 17.1875 
@@ -735,19 +447,25 @@ C 85.546875 15.234375 86.71875 15.828125 86.71875 17.1875
 z
 " id="FontAwesome5Brands-Regular-62501"/>
     </defs>
-    <g style="fill:#c0c0c0;" transform="translate(335.821481 22.413957)scale(0.12 -0.12)">
+    <g style="fill:#c0c0c0;" transform="translate(338.606409 148.354582)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Brands-Regular-62501"/>
     </g>
    </g>
-   <g id="text_96">
+   <g id="text_48">
     <!--  -->
-    <g style="fill:#c0c0c0;" transform="translate(354.07823 95.440953)scale(0.12 -0.12)">
+    <g style="fill:#c0c0c0;" transform="translate(338.606409 111.531647)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Brands-Regular-62501"/>
     </g>
    </g>
-   <g id="text_97">
+   <g id="text_49">
     <!--  -->
-    <g style="fill:#c0c0c0;" transform="translate(354.07823 77.184204)scale(0.12 -0.12)">
+    <g style="fill:#c0c0c0;" transform="translate(338.606409 74.708713)scale(0.12 -0.12)">
+     <use xlink:href="#FontAwesome5Brands-Regular-62501"/>
+    </g>
+   </g>
+   <g id="text_50">
+    <!--  -->
+    <g style="fill:#c0c0c0;" transform="translate(338.606409 37.885779)scale(0.12 -0.12)">
      <use xlink:href="#FontAwesome5Brands-Regular-62501"/>
     </g>
    </g>
@@ -765,13 +483,13 @@ Q 374.292187 59.234375 376.292187 59.234375
 z
 " style="fill:#ffffff;opacity:0.8;stroke:#cccccc;stroke-linejoin:miter;"/>
     </g>
-    <g id="text_98">
+    <g id="text_51">
      <!--  -->
      <g style="fill:#ffa500;" transform="translate(383.292187 24.097656)scale(0.1 -0.1)">
       <use xlink:href="#FontAwesome5Free-Regular-61829"/>
      </g>
     </g>
-    <g id="text_99">
+    <g id="text_52">
      <!-- sun -->
      <defs>
       <path d="M 44.28125 53.078125 
@@ -846,19 +564,19 @@ Q 54.890625 44.34375 54.890625 33.015625
 z
 " id="DejaVuSans-110"/>
      </defs>
-     <g transform="translate(406.292187 23.798437)scale(0.1 -0.1)">
+     <g transform="translate(406.292187 23.798438)scale(0.1 -0.1)">
       <use xlink:href="#DejaVuSans-115"/>
       <use x="52.099609" xlink:href="#DejaVuSans-117"/>
       <use x="115.478516" xlink:href="#DejaVuSans-110"/>
      </g>
     </g>
-    <g id="text_100">
+    <g id="text_53">
      <!--  -->
      <g style="fill:#4384ff;" transform="translate(383.292187 38.726562)scale(0.1 -0.1)">
       <use xlink:href="#FontAwesome5Free-Solid-63296"/>
      </g>
     </g>
-    <g id="text_101">
+    <g id="text_54">
      <!-- shower -->
      <defs>
       <path d="M 54.890625 33.015625 
@@ -966,13 +684,13 @@ z
       <use x="319.970703" xlink:href="#DejaVuSans-114"/>
      </g>
     </g>
-    <g id="text_102">
+    <g id="text_55">
      <!--  -->
-     <g style="fill:#c0c0c0;" transform="translate(383.917187 53.404687)scale(0.1 -0.1)">
+     <g style="fill:#c0c0c0;" transform="translate(383.917187 53.404688)scale(0.1 -0.1)">
       <use xlink:href="#FontAwesome5Brands-Regular-62501"/>
      </g>
     </g>
-    <g id="text_103">
+    <g id="text_56">
      <!-- flag -->
      <defs>
       <path d="M 37.109375 75.984375 
@@ -1067,7 +785,7 @@ L 54.390625 54.6875
 z
 " id="DejaVuSans-103"/>
      </defs>
-     <g transform="translate(406.292187 53.154687)scale(0.1 -0.1)">
+     <g transform="translate(406.292187 53.154688)scale(0.1 -0.1)">
       <use xlink:href="#DejaVuSans-102"/>
       <use x="35.205078" xlink:href="#DejaVuSans-108"/>
       <use x="62.988281" xlink:href="#DejaVuSans-97"/>

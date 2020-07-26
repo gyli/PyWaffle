@@ -9,10 +9,11 @@ Parameter `legend` accepts parameters of [matplotlib.pyplot.legend](https://matp
 > **_NOTE:_** Labels could also be specified in parameter `legend` under key `labels` instead.
 
 ```python
-data = {'Cat1': 48, 'Cat2': 46, 'Cat3': 3}
+data = {'Cat1': 30, 'Cat2': 16, 'Cat3': 4}
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
+    columns=10,
     values=data,
     title={
         'label': 'Example plot',
