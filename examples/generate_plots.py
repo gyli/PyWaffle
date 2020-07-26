@@ -327,6 +327,7 @@ fig = plt.figure(
 )
 fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg', facecolor='#DDDDDD')
 plt.close(fig)
+
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
@@ -350,5 +351,5 @@ fig.text(
         'alpha': 0.3
     }
 )
-fig.savefig(doc_examples_image_folder + 'add_other_elements.svg')
+fig.savefig(doc_examples_image_folder + 'add_other_elements.svg', bbox_inches='tight')
 plt.close(fig)
