@@ -316,7 +316,7 @@ class Waffle(Figure):
         if self.plots is None:
             self.plots = {111: self.fig_args}
 
-        Figure.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         for loc, setting in self.plots.items():
             self._waffle(loc, **copy.deepcopy(setting))

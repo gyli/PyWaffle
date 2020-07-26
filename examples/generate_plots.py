@@ -325,3 +325,22 @@ fig = plt.figure(
 )
 fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg')
 plt.close(fig)
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    values=[30, 16, 4]
+)
+fig.text(
+    x=0.5,
+    y=0.5,
+    s="Sample",
+    ha="center",
+    va="center",
+    rotation=30,
+    fontsize=40,
+    color="gray",
+    alpha=0.3,
+    bbox=dict(boxstyle="square", lw=3, ec="gray", fc=(0.9, 0.9, 0.9, 0.5), alpha=0.3)
+)
+fig.savefig(doc_examples_image_folder + 'add_other_elements.svg')
+plt.close(fig)

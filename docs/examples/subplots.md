@@ -89,6 +89,6 @@ fig = plt.figure(
 )
 ```
 
-<img class="img_middle" alt="With dict values" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/readme/multiple_plots.svg?sanitize=true">
+<img class="img_middle" alt="Multiple subplots" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/readme/multiple_plots.svg?sanitize=true">
 
 <sub>Data source: [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).</sub>
