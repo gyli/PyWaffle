@@ -28,7 +28,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=data,
-    colors=("#232066", "#983D3D", "#DCB732"),
+    colors=["#232066", "#983D3D", "#DCB732"],
     title={
         'label': 'Vote Percentage in 2016 US Presidential Election',
         'loc': 'left'
@@ -52,7 +52,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=data,
-    colors=("#232066", "#983D3D", "#DCB732"),
+    colors=["#232066", "#983D3D", "#DCB732"],
     legend={
         'loc': 'upper left',
         'bbox_to_anchor': (1, 1)
@@ -123,7 +123,7 @@ fig = plt.figure(
         },
     },
     rows=5,
-    colors=("#2196f3", "#ff5252", "#999999"),  # Default argument values for subplots
+    colors=["#2196f3", "#ff5252", "#999999"],  # Default argument values for subplots
     figsize=(9, 5)  # figsize is a parameter of plt.figure
 )
 fig.savefig(readme_image_folder + 'multiple_plots.svg', bbox_inches='tight')

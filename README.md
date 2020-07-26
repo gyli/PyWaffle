@@ -74,7 +74,7 @@ fig = plt.figure(
     FigureClass=Waffle, 
     rows=5, 
     values=data, 
-    colors=("#232066", "#983D3D", "#DCB732"),
+    colors=["#232066", "#983D3D", "#DCB732"],
     title={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
     labels=[f"{k} ({v}%)" for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0},
@@ -97,7 +97,7 @@ fig = plt.figure(
     FigureClass=Waffle, 
     rows=5, 
     values=data, 
-    colors=("#232066", "#983D3D", "#DCB732"),
+    colors=["#232066", "#983D3D", "#DCB732"],
     legend={'loc': 'upper left', 'bbox_to_anchor': (1, 1)},
     icons='child', 
     font_size=12, 
@@ -154,7 +154,7 @@ fig = plt.figure(
         },
     },
     rows=5,  # outside parameter applied to all subplots
-    colors=("#2196f3", "#ff5252", "#999999"),  # outside parameter applied to all subplots
+    colors=["#2196f3", "#ff5252", "#999999"],  # outside parameter applied to all subplots
     figsize=(9, 5)
 )
 plt.show()
