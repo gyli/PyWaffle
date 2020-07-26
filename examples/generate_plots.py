@@ -200,11 +200,10 @@ plt.close(fig)
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     colors=["#4c8cb5", "#b7cbd7", "#C0C0C0"],
     characters='⬤',
-    font_size=12,
+    font_size=24
 )
 fig.savefig(doc_examples_image_folder + 'characters.svg', bbox_inches='tight')
 plt.close(fig)
@@ -213,11 +212,10 @@ plt.close(fig)
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     colors=["#232066", "#983D3D", "#DCB732"],
     icons='star',
-    font_size=12,
+    font_size=24
 )
 fig.savefig(doc_examples_image_folder + 'icons.svg', bbox_inches='tight')
 plt.close(fig)
@@ -225,11 +223,10 @@ plt.close(fig)
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     colors=["#FFA500", "#4384FF", "#C0C0C0"],
     icons=['sun', 'cloud-showers-heavy', 'snowflake'],
-    font_size=12,
+    font_size=24,
     icon_style='solid',
     icon_legend=True,
     legend={'labels': ['sun', 'shower', 'snow'], 'loc': 'upper left', 'bbox_to_anchor': (1, 1)}
@@ -240,11 +237,10 @@ plt.close(fig)
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     colors=["#FFA500", "#4384FF", "#C0C0C0"],
     icons=['sun', 'cloud-showers-heavy', 'font-awesome-flag'],
-    font_size=12,
+    font_size=24,
     icon_style=['regular', 'solid', 'brands'],
     icon_legend=True,
     legend={'labels': ['sun', 'shower', 'flag'], 'loc': 'upper left', 'bbox_to_anchor': (1, 1)}
@@ -256,7 +252,6 @@ plt.close(fig)
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     block_aspect_ratio=1.618,
 )
@@ -266,7 +261,6 @@ plt.close(fig)
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     interval_ratio_x=1,
     interval_ratio_y=0.5
@@ -277,7 +271,6 @@ plt.close(fig)
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     starting_location='SE'
 )
@@ -306,7 +299,6 @@ plt.close(fig)
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     vertical=True
 )
@@ -317,21 +309,19 @@ plt.close(fig)
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     colors=["#983D3D", "#232066", "#DCB732"],
     facecolor='#DDDDDD'
 )
-fig.savefig(doc_examples_image_folder + 'adjust_figure_change_background.svg', bbox_inches='tight', facecolor='#DDDDDD')
+fig.savefig(doc_examples_image_folder + 'adjust_figure_change_background.svg', bbox_inches='tight')
 plt.close(fig)
 
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     plot_anchor='S',
     facecolor='#DDDDDD'
 )
-fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg', facecolor='#DDDDDD')
+fig.savefig(doc_examples_image_folder + 'adjust_figure_location.svg')
 plt.close(fig)

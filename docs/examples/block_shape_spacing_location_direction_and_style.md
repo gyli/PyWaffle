@@ -10,9 +10,8 @@ Parameter `block_aspect_ratio` controls the shape of blocks by change the ratio 
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
-    block_aspect_ratio=1.618,
+    block_aspect_ratio=1.618
 )
 ```
 
@@ -28,7 +27,6 @@ Parameter `interval_ratio_x` and `interval_ratio_y` control the horizontal and v
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     interval_ratio_x=1,
     interval_ratio_y=0.5
@@ -49,7 +47,6 @@ Here is an example that start plotting from lower-right corner (`SE`).
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     starting_location='SE'
 )
@@ -69,7 +66,6 @@ In the following example, it draws blocks from lower-left corner to lower-right 
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     vertical=True
 )

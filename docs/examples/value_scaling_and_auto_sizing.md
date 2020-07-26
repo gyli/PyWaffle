@@ -6,7 +6,7 @@ It is a common case that the chart size does not equal to the total number of va
 
 Change argument `rounding_rule` to set a preferred rounding rule when scaling. It accepts `floor` or `ceil` or `nearest`.
 
-> **_NOTE:_** When `rounding_rule` is `ceil` or `nearest`, the total number of scaled value might be greater than chart size. In this case, the blocks of last category would not be shown completely in the chart. Therefore, although `nearest` is the default rounding rule, `floor` is actually the most consistent rule as it avoids the block overflowing. 
+> **_NOTE:_** When `rounding_rule` is `ceil` or `nearest`, sum of scaled values might be greater than chart size. If so, the blocks of last category would not be shown completely in the chart. Therefore, although `nearest` is the default rounding rule, `floor` is actually the most consistent rule as it avoids the block overflowing. 
 
 In the following example, values are scaled to 24, 23, 1 as block numbers with `rounding_rule`=`floor`.
 

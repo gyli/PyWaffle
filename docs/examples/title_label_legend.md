@@ -2,7 +2,7 @@
 
 Parameter `title` accepts parameters of [matplotlib.pyplot.title](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.title.html) in a dict.
 
-Parameter `labels` accepts labels in a list. If it is not specified, key of `values` would be used as labels.
+Parameter `labels` accepts string labels in a list. If it is not specified, key of `values` would be used as labels.
 
 Parameter `legend` accepts parameters of [matplotlib.pyplot.legend](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html) in a dict.
 

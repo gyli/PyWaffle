@@ -10,11 +10,10 @@ Categories could have different character for each category, by passing a list o
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     colors=["#4C8CB5", "#B7CBD7", "#C0C0C0"],
     characters='⬤',
-    font_size=12,
+    font_size=24
 )
 ```
 
@@ -34,11 +33,10 @@ When using icons, the parameters for setting block size would be ignored, includ
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     colors=["#232066", "#983D3D", "#DCB732"],
     icons='star',
-    font_size=12,
+    font_size=24
 )
 ```
     
@@ -54,11 +52,10 @@ With `icon_legend`=`True`, the symbol in legend would be the icon. Otherwise, it
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     colors=["#FFA500", "#4384FF", "#C0C0C0"],
     icons=['sun', 'cloud-showers-heavy', 'snowflake'],
-    font_size=12,
+    font_size=24,
     icon_style='solid',
     icon_legend=True,
     legend={
@@ -77,11 +74,10 @@ Font Awesome Icons locates icons by style and icon name. Different styles contai
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     colors=["#FFA500", "#4384FF", "#C0C0C0"],
     icons=['sun', 'cloud-showers-heavy', 'font-awesome-flag'],
-    icon_size=12,
+    icon_size=24,
     icon_style=['regular', 'solid', 'brands'],
     icon_legend=False,
     legend={

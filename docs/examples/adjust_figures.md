@@ -9,7 +9,6 @@ In the following example, we change the background color of figure by passing co
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     colors=["#983D3D", "#232066", "#DCB732"],
     facecolor='#DDDDDD'  # facecolor is a parameter of matplotlib.pyplot.figure
@@ -28,7 +27,6 @@ Use parameter `plot_anchor` to change the location of plot in the figure.
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
-    columns=10,
     values=[30, 16, 4],
     plot_anchor='S'
 )
