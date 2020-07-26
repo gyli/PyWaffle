@@ -89,7 +89,7 @@ plt.show()
 
 Many parameters, like `title` and `legend`, accept the same parameters as in Matplotlib.
 
-### 4. Icons
+### 4. Plot with Icons - Pictogram Chart
 
 ```python
 data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
