@@ -538,7 +538,7 @@ class Waffle(Figure):
             elif block_number_per_cat[class_index] < 0:
                 raise ValueError("Negative value is not acceptable")
 
-            if this_cat_block_count > colored_block_number_per_cat[class_index]:
+            if this_cat_block_count > colored_block_number_per_cat[class_index] - 1:
                 color = (0, 0, 0, 0)  # transparent
             else:
                 color = self._pa["colors"][class_index]

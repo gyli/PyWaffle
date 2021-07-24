@@ -1,3 +1,9 @@
+v0.6.1 (2021-07-23)
+
+* Fix wrong block number when block_arranging_style is `new-line`
+
+---
+
 v0.6.0 (2020-07-18)
 
 * Add parameter `block_arranging_style`
