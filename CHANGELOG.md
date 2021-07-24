@@ -1,4 +1,4 @@
-v0.6.1 (2021-07-23)
+v0.6.2 (2021-07-23)
 
 * Fix wrong block number when block_arranging_style is `new-line`
 
