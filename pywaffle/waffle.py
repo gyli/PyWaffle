@@ -199,6 +199,7 @@ class Waffle(Figure):
 
     :param icon_set: **Deprecated**. ``{'brands', 'regular', 'solid'}``
 
+        | Deprecated! This argument will be removed in v0.7.0.
         | The style of icons to be used. This parameter will be replaced by icon_style.
         | [Default 'solid']
     :type icon_set: str|list[str]|tuple[str]
@@ -346,26 +347,17 @@ class Waffle(Figure):
 
         return (c[::vertical_order] for c in block_matrix)
 
-    def _waffle(self, loc, **kwargs):
-        # _pa is the arguments for this single plot
-        self._pa = kwargs
-
-        # Append figure args to plot args
-        plot_fig_args = copy.deepcopy(self.fig_args)
-        for arg, v in plot_fig_args.items():
-            if arg not in self._pa:
-                self._pa[arg] = v
-
-        # Parameter Standardization
-        lower_string_par = ["rounding_rule", "block_arranging_style", "icon_set"]
+    def _parameter_validation(self):
+        # Standardization
+        lower_string_par = ("rounding_rule", "block_arranging_style", "icon_set")
         for ls in lower_string_par:
             self._pa[ls] = self._pa[ls].lower().strip()
 
-        upper_string_par = ["starting_location"]
+        upper_string_par = ("starting_location",)
         for us in upper_string_par:
             self._pa[us] = self._pa[us].upper().strip()
 
-        # Parameter Validation
+        # - rounding_rule
         if self._pa["rounding_rule"] not in ("nearest", "ceil", "floor"):
             raise ValueError("Argument rounding_rule should be one of nearest, ceil or floor.")
 
@@ -387,17 +379,29 @@ class Waffle(Figure):
         if self._pa["labels"] and len(self._pa["labels"]) != self.values_len:
             raise ValueError("Length of labels doesn't match the values.")
 
-        # - plots
+        # - starting_location
+        if self._pa["starting_location"] not in ("NW", "SW", "NE", "SE"):
+            raise KeyError("starting_location should be one of 'NW', 'SW', 'NE', 'SE'")
+
+    def _waffle(self, loc, **kwargs):
+        # _pa is the arguments for this single plot
+        self._pa = kwargs
+
+        # Append figure args to plot args
+        plot_fig_args = copy.deepcopy(self.fig_args)
+        for arg, v in plot_fig_args.items():
+            if arg not in self._pa:
+                self._pa[arg] = v
+
+        self._parameter_validation()
+
+        # Add subplots
         if isinstance(loc, tuple):
             self.ax = self.add_subplot(*loc, aspect="equal")
-        elif isinstance(loc, str) or isinstance(loc, int):
+        elif isinstance(loc, (int, str)):
             self.ax = self.add_subplot(loc, aspect="equal")
         else:
             raise TypeError("Subplot position should be tuple, int, or string.")
-
-        # - starting_location
-        if self._pa["starting_location"] not in {"NW", "SW", "NE", "SE"}:
-            raise KeyError("starting_location should be one of 'NW', 'SW', 'NE', 'SE'")
 
         # Alignment of subplots
         self.ax.set_anchor(self._pa["plot_anchor"])
@@ -408,30 +412,26 @@ class Waffle(Figure):
         # if columns is given, rows is not
         elif self._pa["rows"] is None:
             if self._pa["block_arranging_style"] == "new-line" and self._pa["vertical"]:
-                block_number_per_cat = [round_up_to_multiple(i, base=self._pa["columns"]) for i in self._pa["values"]]
-                colored_block_number_per_cat = [
-                    division(v, 1, method=self._pa["rounding_rule"]) for v in self._pa["values"]
-                ]
+                block_per_cat = [round_up_to_multiple(i, base=self._pa["columns"]) for i in self._pa["values"]]
+                colored_block_per_cat = [division(v, 1, method=self._pa["rounding_rule"]) for v in self._pa["values"]]
             else:
-                block_number_per_cat = colored_block_number_per_cat = [
+                block_per_cat = colored_block_per_cat = [
                     division(v, 1, method=self._pa["rounding_rule"]) for v in self._pa["values"]
                 ]
-            self._pa["rows"] = division(sum(block_number_per_cat), self._pa["columns"], method="ceil")
+            self._pa["rows"] = division(sum(block_per_cat), self._pa["columns"], method="ceil")
         # if rows is given, columns is not
         elif self._pa["columns"] is None:
             if self._pa["block_arranging_style"] == "new-line" and not self._pa["vertical"]:
-                block_number_per_cat = [round_up_to_multiple(i, base=self._pa["rows"]) for i in self._pa["values"]]
-                colored_block_number_per_cat = [
-                    division(v, 1, method=self._pa["rounding_rule"]) for v in self._pa["values"]
-                ]
+                block_per_cat = [round_up_to_multiple(i, base=self._pa["rows"]) for i in self._pa["values"]]
+                colored_block_per_cat = [division(v, 1, method=self._pa["rounding_rule"]) for v in self._pa["values"]]
             else:
-                block_number_per_cat = colored_block_number_per_cat = [
+                block_per_cat = colored_block_per_cat = [
                     division(v, 1, method=self._pa["rounding_rule"]) for v in self._pa["values"]
                 ]
-            self._pa["columns"] = division(sum(block_number_per_cat), self._pa["rows"], method="ceil")
+            self._pa["columns"] = division(sum(block_per_cat), self._pa["rows"], method="ceil")
         # if both of rows and columns are given
         else:
-            block_number_per_cat = colored_block_number_per_cat = [
+            block_per_cat = colored_block_per_cat = [
                 division(
                     v * self._pa["columns"] * self._pa["rows"],
                     sum(self._pa["values"]),
@@ -477,7 +477,7 @@ class Waffle(Figure):
             if self._pa["icon_set"] != "solid" and self._pa["icon_style"] == "solid":
                 self._pa["icon_style"] = self._pa["icon_set"]
                 warnings.warn(
-                    "Parameter icon_set is deprecated and will be removed in future version. Use icon_style instead.",
+                    "Parameter icon_set is deprecated and will be removed in v0.7.0. Use icon_style instead.",
                     DeprecationWarning,
                 )
 
@@ -537,16 +537,16 @@ class Waffle(Figure):
             is_snake=self._pa["block_arranging_style"] == "snake",
         ):
             # Value could be 0. If so, skip it
-            if block_number_per_cat[class_index] == 0:
+            if block_per_cat[class_index] == 0:
                 class_index += 1
                 if class_index > self.values_len - 1:
                     break
 
                 this_cat_block_count = 0
-            elif block_number_per_cat[class_index] < 0:
+            elif block_per_cat[class_index] < 0:
                 raise ValueError("Negative value is not acceptable")
 
-            if this_cat_block_count > colored_block_number_per_cat[class_index] - 1:
+            if this_cat_block_count > colored_block_per_cat[class_index] - 1:
                 color = (0, 0, 0, 0)  # transparent
             else:
                 color = self._pa["colors"][class_index]
@@ -576,7 +576,7 @@ class Waffle(Figure):
 
             block_index += 1
             this_cat_block_count += 1
-            if block_index >= sum(block_number_per_cat[: class_index + 1]):
+            if block_index >= sum(block_per_cat[: class_index + 1]):
                 class_index += 1
                 if class_index > self.values_len - 1:
                     break
