@@ -1,3 +1,9 @@
+v0.6.3 (2021-07-27)
+
+* Fix extra block with default rounding method
+
+---
+
 v0.6.2 (2021-07-23)
 
 * Fix wrong block number when block_arranging_style is `new-line`

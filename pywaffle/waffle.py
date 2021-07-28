@@ -409,17 +409,25 @@ class Waffle(Figure):
         elif self._pa["rows"] is None:
             if self._pa["block_arranging_style"] == "new-line" and self._pa["vertical"]:
                 block_number_per_cat = [round_up_to_multiple(i, base=self._pa["columns"]) for i in self._pa["values"]]
-                colored_block_number_per_cat = self._pa["values"]
+                colored_block_number_per_cat = [
+                    division(v, 1, method=self._pa["rounding_rule"]) for v in self._pa["values"]
+                ]
             else:
-                block_number_per_cat = colored_block_number_per_cat = self._pa["values"]
+                block_number_per_cat = colored_block_number_per_cat = [
+                    division(v, 1, method=self._pa["rounding_rule"]) for v in self._pa["values"]
+                ]
             self._pa["rows"] = division(sum(block_number_per_cat), self._pa["columns"], method="ceil")
         # if rows is given, columns is not
         elif self._pa["columns"] is None:
             if self._pa["block_arranging_style"] == "new-line" and not self._pa["vertical"]:
                 block_number_per_cat = [round_up_to_multiple(i, base=self._pa["rows"]) for i in self._pa["values"]]
-                colored_block_number_per_cat = self._pa["values"]
+                colored_block_number_per_cat = [
+                    division(v, 1, method=self._pa["rounding_rule"]) for v in self._pa["values"]
+                ]
             else:
-                block_number_per_cat = colored_block_number_per_cat = self._pa["values"]
+                block_number_per_cat = colored_block_number_per_cat = [
+                    division(v, 1, method=self._pa["rounding_rule"]) for v in self._pa["values"]
+                ]
             self._pa["columns"] = division(sum(block_number_per_cat), self._pa["rows"], method="ceil")
         # if both of rows and columns are given
         else:
@@ -549,11 +557,19 @@ class Waffle(Figure):
             if self._pa["icons"]:
                 prop.set_file(FONTAWESOME_FILES[self._pa["icon_style"][class_index]])
                 self.ax.text(
-                    x=x, y=y, s=self._pa["icons"][class_index], color=color, fontproperties=prop,
+                    x=x,
+                    y=y,
+                    s=self._pa["icons"][class_index],
+                    color=color,
+                    fontproperties=prop,
                 )
             elif self._pa["characters"]:
                 self.ax.text(
-                    x=x, y=y, s=self._pa["characters"][class_index], color=color, fontproperties=prop,
+                    x=x,
+                    y=y,
+                    s=self._pa["characters"][class_index],
+                    color=color,
+                    fontproperties=prop,
                 )
             else:
                 self.ax.add_artist(Rectangle(xy=(x, y), width=block_x_length, height=block_y_length, color=color))
