@@ -537,12 +537,13 @@ class Waffle(Figure):
             is_snake=self._pa["block_arranging_style"] == "snake",
         ):
             # Value could be 0. If so, skip it
-            if block_per_cat[class_index] == 0:
+            while block_per_cat[class_index] == 0:
                 class_index += 1
-                if class_index > self.values_len - 1:
-                    break
-
                 this_cat_block_count = 0
+            if class_index > self.values_len - 1:
+                break
+
+                
             elif block_per_cat[class_index] < 0:
                 raise ValueError("Negative value is not acceptable")
 
