@@ -25,8 +25,7 @@ def main():
             mapping[style_name][k] = chr(int(v["unicode"], 16))
 
     with open("pywaffle/fontawesome_mapping.py", "w") as file:
-        file.write("# This file belongs to Font Awesome, see license https://fontawesome.com/license/\n")
-        file.write("# Font Awesome version: {0}\n".format(VERSION))
+        file.write("# For Font Awesome version: {0}\n".format(VERSION))
         file.write("\n")
         file.write("icons = ")
         file.write(json.dumps(mapping, indent=4))
