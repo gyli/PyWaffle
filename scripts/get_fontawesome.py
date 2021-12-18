@@ -18,8 +18,7 @@ def main():
     # Group icons by style
     mapping = {}
     for k, v in icons.items():
-        for style in v["styles"]:
-            style_name = style.lower()
+        for style_name in v["styles"]:
             if style_name not in mapping.keys():
                 mapping[style_name] = {}
             mapping[style_name][k] = chr(int(v["unicode"], 16))
