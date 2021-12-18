@@ -1,6 +1,6 @@
 # This script generates Font Awesome icon mapping file pywaffle/fontawesome_mapping.py
 # To run it:
-# python3 scripts/get_fontawesome.py
+# python3 pywaffle/scripts/get_fontawesome.py
 
 # The font files in folder font need to be updated manually when updating FontAwesome
 
@@ -8,8 +8,8 @@ import json
 import requests
 
 INDENT = " " * 4
-VERSION = "5.5.0"
-URI = "https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/advanced-options/metadata/icons.json"
+VERSION = "5.15.4"
+URI = "https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/metadata/icons.json"
 
 
 def main():
@@ -19,7 +19,7 @@ def main():
     mapping = {}
     for k, v in icons.items():
         for style in v["styles"]:
-            style_name = style.upper()
+            style_name = style.lower()
             if style_name not in mapping.keys():
                 mapping[style_name] = {}
             mapping[style_name][k] = chr(int(v["unicode"], 16))
