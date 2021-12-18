@@ -1,6 +1,6 @@
 # This script generates Font Awesome icon mapping file pywaffle/fontawesome_mapping.py
 # To run it:
-# python3 pywaffle/scripts/get_fontawesome.py
+# python3 scripts/get_fontawesome.py
 
 # The font files in folder font need to be updated manually when updating FontAwesome
 
