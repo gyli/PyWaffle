@@ -1,3 +1,10 @@
+v0.6.4 (2021-12-21)
+
+* Fix wrong license in icon mapping file
+* Fix extra block caused by two or more consecutive zeros in values
+
+---
+
 v0.6.3 (2021-07-27)
 
 * Fix extra block with default rounding method
