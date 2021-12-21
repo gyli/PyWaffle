@@ -79,7 +79,7 @@ data = pd.DataFrame(
 fig = plt.figure(
     FigureClass=Waffle,
     plots={
-        '311': {
+        311: {
             'values': data['Virginia'] / 30000,
             'labels': [f"{k} ({v})" for k, v in data['Virginia'].items()],
             'legend': {
@@ -93,7 +93,7 @@ fig = plt.figure(
                 'loc': 'left'
             }
         },
-        '312': {
+        312: {
             'values': data['Maryland'] / 30000,
             'labels': [f"{k} ({v})" for k, v in data['Maryland'].items()],
             'legend': {
@@ -107,7 +107,7 @@ fig = plt.figure(
                 'loc': 'left'
             }
         },
-        '313': {
+        313: {
             'values': data['West Virginia'] / 30000,
             'labels': [f"{k} ({v})" for k, v in data['West Virginia'].items()],
             'legend': {

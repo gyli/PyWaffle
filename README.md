@@ -134,19 +134,19 @@ data = pd.DataFrame(
 fig = plt.figure(
     FigureClass=Waffle,
     plots={
-        '311': {
+        311: {
             'values': data['Virginia'] / 30000,
             'labels': [f"{k} ({v})" for k, v in data['Virginia'].items()],
             'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.05, 1), 'fontsize': 8},
             'title': {'label': '2016 Virginia Presidential Election Results', 'loc': 'left'}
         },
-        '312': {
+        312: {
             'values': data['Maryland'] / 30000,
             'labels': [f"{k} ({v})" for k, v in data['Maryland'].items()],
             'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.2, 1), 'fontsize': 8},
             'title': {'label': '2016 Maryland Presidential Election Results', 'loc': 'left'}
         },
-        '313': {
+        313: {
             'values': data['West Virginia'] / 30000,
             'labels': [f"{k} ({v})" for k, v in data['West Virginia'].items()],
             'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.3, 1), 'fontsize': 8},

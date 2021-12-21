@@ -85,7 +85,7 @@ class TestWaffle(unittest.TestCase):
         fig = plt.figure(
             FigureClass=Waffle,
             plots={
-                "311": {"values": [10, 10, 10],},
+                311: {"values": [10, 10, 10],},
                 312: {"values": [10, 10, 10],},
                 (3, 1, 3): {"values": [10, 10, 10],},
             },
