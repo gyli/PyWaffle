@@ -32,7 +32,7 @@ To plot multiple subplots in one figure, merge the parameters for each plot to p
 The keys are integers describing the position of the subplot. 
 It accepts tuple, int and string. 
 If position is tuple, the format should be like `(nrows, ncols, index)`; 
-if it is int or string, it should be a 3-digit integer like `312` or `"213"`, standing for nrows, ncols, and index in order. 
+if it is int or string, it should be a 3-digit integer like `312`, standing for nrows, ncols, and index in order. 
 Note that all integers must be less than 10 for the later form to work. 
 See arguments of [matplotlib.pyplot.subplot](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplot.html) for more detail.
 
