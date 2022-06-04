@@ -8,8 +8,8 @@ import json
 import requests
 
 INDENT = " " * 4
-VERSION = "5.15.4"
-URI = "https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/metadata/icons.json"
+VERSION = "6.1.1"
+URI = "https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/metadata/icons.json"
 
 
 def main():
