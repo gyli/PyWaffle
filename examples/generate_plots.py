@@ -154,6 +154,22 @@ fig = plt.figure(
 fig.savefig(doc_examples_image_folder + 'basic_dict_values.svg', bbox_inches='tight')
 plt.close(fig)
 
+# Plot on Existed Axis
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+ax.set_title("Axis Title")
+ax.set_aspect(aspect="equal")
+
+Waffle.make_waffle(
+    ax=ax,
+    rows=5,
+    columns=10,
+    values=[30, 16, 4],
+    title={"label": "Waffle Title", "loc": "left"}
+)
+fig.savefig(doc_examples_image_folder + 'plot_on_existed_axis.svg', bbox_inches='tight')
+
 # Value Scaling and Auto-sizing
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3], rounding_rule='floor')
 fig.savefig(doc_examples_image_folder + 'value_scaling_and_auto_sizing_rounding_rule.svg', bbox_inches='tight')
