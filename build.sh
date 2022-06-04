@@ -6,9 +6,12 @@ pip3 install -r requirements_dev.txt
 
 python3 -m examples.generate_plots
 
-#build docs
+# build docs
 #cd docs
-#python -m sphinx -T -E -b html -d _build/doctrees -D language=en . _build/html
+#python3 -m sphinx -T -E -b html -d _build/doctrees -D language=en . _build/html
+
+# Upgrade Font Awesome
+#python3 scripts/get_fontawesome.py
 
 deactivate
 
