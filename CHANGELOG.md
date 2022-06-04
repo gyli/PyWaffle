@@ -1,3 +1,13 @@
+v1.0.1 (2022-06-03)
+
+* Add support to plot chart on existed axis
+* Remove deprecated parameter `icon_set`
+* Refactor `Waffle` class
+* Remove unnecessary variable copying
+* Remove `Waffle._pa` as it only contains arguments of last subplot
+
+---
+
 v0.6.4 (2021-12-21)
 
 * Fix wrong license in icon mapping file

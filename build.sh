@@ -6,5 +6,9 @@ pip3 install -r requirements_dev.txt
 
 python3 -m examples.generate_plots
 
+#build docs
+#cd docs
+#python -m sphinx -T -E -b html -d _build/doctrees -D language=en . _build/html
+
 deactivate
 
