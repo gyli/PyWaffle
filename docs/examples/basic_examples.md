@@ -1,6 +1,7 @@
 # Basic Examples
 
-This is a simplest example to plot a 5-row, 10-column waffle chart. The three values are plotted as blocks directly.
+This is a simple example to plot a 5-row, 10-column waffle chart. The three values are plotted as blocks directly, 
+and the blocks number matches the numbers in `values`, because the sum of `values` equals to total block number (`rows * columns`).
 
 > **_NOTE:_** One of the parameter `rows` and `columns` is redundant in this case, since both of the chart size and value sum are 50. So, either one of `rows` and `columns` could be omitted, and it can still be calculated through value sum automatically. See [Auto-sizing](value_scaling_and_auto_sizing.md) for more details. 
 
