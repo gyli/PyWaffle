@@ -47,38 +47,44 @@ plt.show()
 
 The values are automatically scaled to 24, 23 and 3 to fit 5 * 10 chart size.
 
+`FigureClass` and `figsize` are parameters of `matplotlib.pyplot.figure`, you may find the full parameter list on [matplotlib.pyplot.figure](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html) function reference.  
+
+Other parameters, including `rows`, `columns`, and `values` in this example, are from `Waffle`, and see PyWaffle's [API Reference](https://pywaffle.readthedocs.io/en/latest/class.html) for details.
+
 ### 2. Values in dict & Auto-sizing
 
 ```python
-data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
+data = {'Cat1': 10, 'Cat2': 7, 'Cat3': 9}
 fig = plt.figure(
-    FigureClass=Waffle, 
-    rows=5, 
-    values=data, 
-    legend={'loc': 'upper left', 'bbox_to_anchor': (1.1, 1)}
+    FigureClass=Waffle,
+    rows=5,
+    values=data,
 )
 plt.show()
 ```
 
 ![Use values in dictionary; use absolute value as block number, without defining columns](examples/readme/absolute_block_numbers.svg)
 
-In this example, since only `rows` is specified and `columns` is empty, absolute values in `values` are used as block numbers. Similarly, `rows` could also be optional if `columns` is specified.
+In this example, only `rows` is specified and `columns` is empty, absolute values in `values` are used as block numbers. Similarly, `rows` could also be optional if `columns` is specified.
 
-If `values` is a dict, its keys are used as labels.
+If `values` is a dict, the keys will be used as labels.
 
-### 3. Title, Legend, Colors, Background Color, Block Color, Direction and Style
+### 3. More style settings including Legend, Title, Colors, Direction, Arranging Style, etc.
+
+While the default position of legend in above example is not that ideal, let's 
 
 ```python
-data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
+data = {'Car': 58, 'Pickup': 21, 'Truck': 11, 'Motorcycle': 7}
 fig = plt.figure(
-    FigureClass=Waffle, 
-    rows=5, 
-    values=data, 
-    colors=["#232066", "#983D3D", "#DCB732"],
-    title={'label': 'Vote Percentage in 2016 US Presidential Election', 'loc': 'left'},
+    FigureClass=Waffle,
+    rows=5,
+    values=data,
+    colors=["#c1d82f", "#00a4e4", "#fbb034", '#6a737b'],
+    title={'label': 'Vehicle Sales by Vehicle Type', 'loc': 'left'},
     labels=[f"{k} ({v}%)" for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0},
     starting_location='NW',
+    vertical=True,
     block_arranging_style='snake'
 )
 fig.set_facecolor('#EEEEEE')
@@ -87,20 +93,26 @@ plt.show()
 
 ![Add title, legend and background color; customize the block color](examples/readme/title_and_legend.svg)
 
-Many parameters, like `title` and `legend`, accept the same parameters as in Matplotlib.
+Parameter `colors` allows you to change the block color, and it accepts a list of colors that matplotlib can recognize, including hex, RGB in tuple, single character notation, etc. See Matplotlib [Colors](https://matplotlib.org/stable/tutorials/colors/colors.html#specifying-colors) for details. 
+
+Parameter `title` and `legend` accept the same parameters as in Matplotlib, [matplotlib.pyplot.title](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html) and [matplotlib.pyplot.legend](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html).
+
+Parameter `starting_location`, `vertical`, and `block_arranging_style` controls [Where to Start First Block](https://pywaffle.readthedocs.io/en/latest/examples/block_shape_spacing_location_direction_and_style.html#where-to-start-first-block), [Plotting Direction](https://pywaffle.readthedocs.io/en/latest/examples/block_shape_spacing_location_direction_and_style.html#plotting-direction), and [Where to Start Each Category](https://pywaffle.readthedocs.io/en/latest/examples/block_shape_spacing_location_direction_and_style.html#where-to-start-each-category). 
+
+You may find more details under [Examples](https://pywaffle.readthedocs.io/en/latest/examples.html) section in PyWaffle Documentation. 
 
 ### 4. Plot with Icons - Pictogram Chart
 
 ```python
-data = {'Democratic': 48, 'Republican': 46, 'Libertarian': 3}
+data = {'Car': 58, 'Pickup': 21, 'Truck': 11, 'Motorcycle': 7}
 fig = plt.figure(
-    FigureClass=Waffle, 
-    rows=5, 
-    values=data, 
-    colors=["#232066", "#983D3D", "#DCB732"],
+    FigureClass=Waffle,
+    rows=5,
+    values=data,
+    colors=["#c1d82f", "#00a4e4", "#fbb034", '#6a737b'],
     legend={'loc': 'upper left', 'bbox_to_anchor': (1, 1)},
-    icons='child', 
-    font_size=12, 
+    icons=['car-side', 'truck-pickup', 'truck', 'motorcycle'],
+    font_size=12,
     icon_legend=True
 )
 plt.show()
@@ -108,63 +120,84 @@ plt.show()
     
 ![Use Font Awesome icons](examples/readme/fontawesome.svg)
 
-PyWaffle supports [Font Awesome](https://fontawesome.com/) icons in the chart.
+PyWaffle supports [Font Awesome](https://fontawesome.com/) icons in the chart. See [Plot with Characters or Icons](https://pywaffle.readthedocs.io/en/latest/examples/plot_with_characters_or_icons.html) for details.
 
-### 5. Multiple Plots in One Chart
+### 5. Plotting on Existed Figure and Axis
+
+```python
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+# Modify existed axis
+ax.set_title("Axis Title")
+ax.set_aspect(aspect="equal")
+
+Waffle.make_waffle(
+    ax=ax,  # pass axis to make_waffle
+    rows=5, 
+    columns=10, 
+    values=[30, 16, 4], 
+    title={"label": "Waffle Title", "loc": "left"}
+)
+```
+
+![Plotting on Existed Figure and Axis](examples/readme/existed_axis.svg)
+
+### 6. Multiple Plots in One Chart
 
 ```python
 import pandas as pd
 data = pd.DataFrame(
     {
-        'labels': ['Hillary Clinton', 'Donald Trump', 'Others'],
-        'Virginia': [1981473, 1769443, 233715],
-        'Maryland': [1677928, 943169, 160349],
-        'West Virginia': [188794, 489371, 36258],
+        'labels': ['Car', 'Truck', 'Motorcycle'],
+        'Factory A': [32384, 13354, 5245],
+        'Factory B': [22147, 6678, 2156],
+        'Factory C': [8932, 3879, 896],
     },
 ).set_index('labels')
 
 # A glance of the data:
-#                  Maryland  Virginia  West Virginia
-# labels                                            
-# Hillary Clinton   1677928   1981473         188794
-# Donald Trump       943169   1769443         489371
-# Others             160349    233715          36258
-
+#             Factory A  Factory B  Factory C
+# labels
+# Car             27384      22147       8932
+# Truck            7354       6678       3879
+# Motorcycle       3245       2156       1196
 
 fig = plt.figure(
     FigureClass=Waffle,
     plots={
         311: {
-            'values': data['Virginia'] / 30000,
-            'labels': [f"{k} ({v})" for k, v in data['Virginia'].items()],
+            'values': data['Factory A'] / 1000,  # Convert actual number to a reasonable block number
+            'labels': [f"{k} ({v})" for k, v in data['Factory A'].items()],
             'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.05, 1), 'fontsize': 8},
-            'title': {'label': '2016 Virginia Presidential Election Results', 'loc': 'left'}
+            'title': {'label': 'Vehicle Production of Factory A', 'loc': 'left', 'fontsize': 12}
         },
         312: {
-            'values': data['Maryland'] / 30000,
-            'labels': [f"{k} ({v})" for k, v in data['Maryland'].items()],
+            'values': data['Factory B'] / 1000,
+            'labels': [f"{k} ({v})" for k, v in data['Factory B'].items()],
             'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.2, 1), 'fontsize': 8},
-            'title': {'label': '2016 Maryland Presidential Election Results', 'loc': 'left'}
+            'title': {'label': 'Vehicle Production of Factory B', 'loc': 'left', 'fontsize': 12}
         },
         313: {
-            'values': data['West Virginia'] / 30000,
-            'labels': [f"{k} ({v})" for k, v in data['West Virginia'].items()],
+            'values': data['Factory C'] / 1000,
+            'labels': [f"{k} ({v})" for k, v in data['Factory C'].items()],
             'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.3, 1), 'fontsize': 8},
-            'title': {'label': '2016 West Virginia Presidential Election Results', 'loc': 'left'}
+            'title': {'label': 'Vehicle Production of Factory C', 'loc': 'left', 'fontsize': 12}
         },
     },
-    rows=5,  # outside parameter applied to all subplots
-    colors=["#2196f3", "#ff5252", "#999999"],  # outside parameter applied to all subplots
-    figsize=(9, 5)
+    rows=5,  # Outside parameter applied to all subplots, same as below
+    cmap_name="Accent",  # Change color with cmap
+    rounding_rule='ceil',  # Change rounding rule, so value less than 1000 will still have at least 1 block
+    figsize=(5, 5)
 )
+
+fig.suptitle('Vehicle Production by Vehicle Type', fontsize=14, fontweight='bold')
+fig.supxlabel('1 block = 1000 vehicles', fontsize=8, ha='right')
+
 plt.show()
 ```
     
 ![Multiple plots](examples/readme/multiple_plots.svg)
-
-In this chart, 1 block = 30000 votes.
-
-<sub>Data source [https://en.wikipedia.org/wiki/United_States_presidential_election,_2016](https://en.wikipedia.org/wiki/United_States_presidential_election,_2016).</sub>
 
 ## Demo
 
