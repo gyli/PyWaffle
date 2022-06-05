@@ -1,5 +1,5 @@
-Constructor Class
-=================
+API Reference
+=============
 
 .. module:: pywaffle.waffle
 .. autoclass:: Waffle

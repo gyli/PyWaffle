@@ -1,8 +1,7 @@
 Examples
 ========
 
-Several examples are shown below by topics, which would go through every parameter. Please check out `Constructor Class
-<class.html>`_ for the detail of parameter.
+Several examples are shown below by topics, which would go through every parameter. Please check out `API Reference <class.html>`_ for the detail of parameter.
 
 .. toctree::
    :maxdepth: 2
