@@ -59,6 +59,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=data,
+    legend={'loc': 'upper left', 'bbox_to_anchor': (1.05, 1)},
 )
 plt.show()
 ```
@@ -67,11 +68,9 @@ plt.show()
 
 In this example, only `rows` is specified and `columns` is empty, absolute values in `values` are used as block numbers. Similarly, `rows` could also be optional if `columns` is specified.
 
-If `values` is a dict, the keys will be used as labels.
+If `values` is a dict, the keys will be used as labels in the legend.
 
 ### 3. More style settings including Legend, Title, Colors, Direction, Arranging Style, etc.
-
-While the default position of legend in above example is not that ideal, let's 
 
 ```python
 data = {'Car': 58, 'Pickup': 21, 'Truck': 11, 'Motorcycle': 7}
@@ -79,7 +78,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=data,
-    colors=["#c1d82f", "#00a4e4", "#fbb034", '#6a737b'],
+    colors=["#C1D82F", "#00A4E4", "#FBB034", '#6A737B'],
     title={'label': 'Vehicle Sales by Vehicle Type', 'loc': 'left'},
     labels=[f"{k} ({v}%)" for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0},

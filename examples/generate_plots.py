@@ -21,6 +21,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=data,
+    legend={'loc': 'upper left', 'bbox_to_anchor': (1.05, 1)}
 )
 fig.savefig(readme_image_folder + "absolute_block_numbers.svg", bbox_inches="tight")
 plt.close(fig)
@@ -31,7 +32,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=data,
-    colors=["#c1d82f", "#00a4e4", "#fbb034", '#6a737b'],
+    colors=["#C1D82F", "#00A4E4", "#FBB034", '#6A737B'],
     title={'label': 'Vehicle Sales by Vehicle Type', 'loc': 'left'},
     labels=[f"{k} ({v}%)" for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0},
