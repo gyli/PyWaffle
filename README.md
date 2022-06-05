@@ -193,6 +193,7 @@ fig = plt.figure(
 
 fig.suptitle('Vehicle Production by Vehicle Type', fontsize=14, fontweight='bold')
 fig.supxlabel('1 block = 1000 vehicles', fontsize=8, ha='right')
+fig.set_facecolor('#EEEDE7')
 
 plt.show()
 ```
