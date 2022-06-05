@@ -188,7 +188,7 @@ fig = plt.figure(
     rows=5,  # Outside parameter applied to all subplots, same as below
     cmap_name="Accent",  # Change color with cmap
     rounding_rule='ceil',  # Change rounding rule, so value less than 1000 will still have at least 1 block
-    figsize=(5, 5)
+    figsize=(6, 5)
 )
 
 fig.suptitle('Vehicle Production by Vehicle Type', fontsize=14, fontweight='bold')
