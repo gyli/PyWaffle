@@ -16,7 +16,7 @@ fig.savefig(readme_image_folder + "basic.svg", bbox_inches="tight")
 plt.close(fig)
 
 # Use values in dictionary; use absolute value as block number, without defining columns
-data = {"Cat1": 10, "Cat2": 7, "Cat3": 9}
+data = {'Cat1': 40, 'Cat2': 27, 'Cat3': 9}
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
