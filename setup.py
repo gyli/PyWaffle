@@ -20,7 +20,7 @@ setup(
     author_email="mail@guangyangli.com",
     url="https://github.com/gyli/PyWaffle",
     packages=['pywaffle'],
-    install_requires=['matplotlib'],
+    install_requires=['matplotlib', 'fontawesomefree==6.1.1'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
@@ -33,10 +33,4 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
     ],
-    package_data={
-        'pywaffle': [
-            'fontawesome/*',
-        ]
-    },
-    include_package_data=True
 )
