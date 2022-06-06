@@ -1,4 +1,4 @@
-fontawesomefree==6.1.1
+fontawesomefree
 matplotlib
 myst-parser
 pandas

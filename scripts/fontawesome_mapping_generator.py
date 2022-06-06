@@ -1,25 +1,23 @@
 # This script generates Font Awesome icon mapping file pywaffle/fontawesome_mapping.py
-# To run it:
-# python3 scripts/fontawesome_mapping_generator.py
-
-# The font files in folder font need to be updated manually when updating FontAwesome
+# It's called in setup.py, and it runs as post-install command
 
 import inspect
 import json
-import pathlib
 import subprocess
 import sys
 from collections import defaultdict
+from pathlib import Path
 
 import fontawesomefree
 
 INDENT = " " * 4
+FONTAWESOME_PACKAGE_NAME = "fontawesomefree"
 
 
 def main():
     # Check installed Font Awesome version with pip
     result = subprocess.run(
-        [sys.executable, "-m", "pip", "show", "fontawesomefree"],
+        [sys.executable, "-m", "pip", "show", FONTAWESOME_PACKAGE_NAME],
         stdout=subprocess.PIPE,
         text=True,
     )
@@ -28,10 +26,10 @@ def main():
 
     # Check Font Awesome version in requirements.txt
     # When upgrading FA, change the version number in requirements.txt, requirements_dev.txt, and setup.py
-    with open("requirements.txt", "r") as f:
+    with open(Path(__file__).parent.parent.absolute() / "requirements.txt", "r") as f:
         lines = f.readlines()
         for line in lines:
-            if line.startswith("fontawesomefree"):
+            if line.startswith(FONTAWESOME_PACKAGE_NAME):
                 break
     fa_req_version = line.strip("\n").split("==")[1]
 
@@ -42,7 +40,7 @@ def main():
         )
 
     # Get font meta data from the package
-    package_path = pathlib.Path(inspect.getsourcefile(fontawesomefree))
+    package_path = Path(inspect.getsourcefile(fontawesomefree))
     icons_json_path = (
         package_path.parent / "static/fontawesomefree/metadata" / "icons.json"
     )
@@ -60,7 +58,9 @@ def main():
                     print(f"Font {alias} existed. This mapping might contain issues!")
                 mapping[style][alias] = chr(int(font_meta["unicode"], 16))
 
-    with open("pywaffle/fontawesome_mapping.py", "w") as file:
+    with open(
+        Path(__file__).parent.parent.absolute() / "pywaffle/fontawesome_mapping.py", "w"
+    ) as file:
         file.write("# For Font Awesome version: {0}\n".format(fa_req_version))
         file.write("\n")
         file.write("icons = ")

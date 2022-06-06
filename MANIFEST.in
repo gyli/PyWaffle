@@ -3,4 +3,4 @@ include *.md
 include *.rst
 include requirements.txt
 
-recursive-include pywaffle *.py *.otf
+recursive-include pywaffle *.py
