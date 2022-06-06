@@ -1,6 +1,0 @@
-fontawesomefree==6.1.1
-matplotlib
-myst-parser
-pandas
-requests
-sphinx
