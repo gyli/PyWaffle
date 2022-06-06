@@ -1,2 +1,2 @@
 matplotlib
-fontawesomefree==6.1.1
+fontawesomefree
