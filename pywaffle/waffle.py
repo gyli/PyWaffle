@@ -5,6 +5,7 @@ import copy
 import math
 from itertools import islice, product
 from typing import Dict, Iterable, Iterator, List, Optional, Tuple, Union
+import warnings
 
 import matplotlib.font_manager as fm
 from matplotlib.axes import Axes
@@ -159,6 +160,7 @@ class Waffle(Figure):
 
     :param icon_size: Font size of Font Awesome icons.
 
+        | Deprecated! Use font_size instead.
         | The default size is not fixed and depends on the block size.
         | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute value of font size.
     :type icon_size: int|str, optional
@@ -489,9 +491,8 @@ class Waffle(Figure):
             from pywaffle.fontawesome_mapping import icons
             from pywaffle.fontawesome_handler import fontawesome_files
 
-            # icon_size should be replaced with font_size in the future
             if _pa["icon_size"]:
-                # warnings.warn("Parameter icon_size is deprecated. Use font_size instead.", DeprecationWarning)
+                warnings.warn("Parameter icon_size is deprecated. Use font_size instead.", DeprecationWarning)
                 _pa["font_size"] = _pa["icon_size"]
 
             # If icon_style is a string, convert it into a list of same icons. The length is the value's length
