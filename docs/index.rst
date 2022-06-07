@@ -21,4 +21,5 @@ Visit PyWaffle on `Github
 
    installation
    examples
+   font_awesome_integration
    class
