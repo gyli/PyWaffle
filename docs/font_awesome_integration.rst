@@ -16,4 +16,4 @@ If you would like to upgrade :code:`fontawesomefree` and use the newer version w
 By running the above commands, PyWaffle will generate a new icon mapping for the newer version :code:`fontawesomefree` under the package directory, and takes care of everything. You will be free to start using new icons!
 
 For how to use Font Awesome with PyWaffle, please see `Plot with Characters or Icons
-<examples/plot_with_characters_or_icons.md>`_.
+<https://pywaffle.readthedocs.io/en/latest/examples/plot_with_characters_or_icons.html#icons>`_.
