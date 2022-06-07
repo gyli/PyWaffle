@@ -30,25 +30,16 @@ class TextLegendBase:
         self.kwargs = kwargs
 
 
-class SolidTextLegend(TextLegendBase):
+def LegendClassFactory(name, BaseClass=TextLegendBase):
     def __init__(self, text, color, **kwargs):
-        super().__init__(text, color, **kwargs)
+        BaseClass.__init__(self, text=text, color=color, **kwargs)
 
-
-class RegularTextLegend(TextLegendBase):
-    def __init__(self, text, color, **kwargs):
-        super().__init__(text, color, **kwargs)
-
-
-class BrandsTextLegend(TextLegendBase):
-    def __init__(self, text, color, **kwargs):
-        super().__init__(text, color, **kwargs)
+    new_legend_class = type(name, (BaseClass,), {"__init__": __init__})
+    return new_legend_class
 
 
 legend_style_class_mapping = {
-    "solid": SolidTextLegend,
-    "regular": RegularTextLegend,
-    "brands": BrandsTextLegend,
+    style: LegendClassFactory(name=f"{style.capitalize()}TextLegend") for style in FA_STYLES
 }
 
 
@@ -74,7 +65,6 @@ class TextLegendHandler(HandlerBase):
 
 
 legend_handler_style_mapping = {
-    SolidTextLegend: TextLegendHandler(fontawesome_files["solid"]),
-    RegularTextLegend: TextLegendHandler(fontawesome_files["regular"]),
-    BrandsTextLegend: TextLegendHandler(fontawesome_files["brands"]),
+    v: TextLegendHandler(font_file=fontawesome_files[k])
+    for k, v in legend_style_class_mapping.items()
 }
