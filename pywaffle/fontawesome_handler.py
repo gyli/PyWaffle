@@ -9,18 +9,23 @@ import matplotlib.font_manager as fm
 from matplotlib.legend_handler import HandlerBase
 from matplotlib.text import Text
 
-FA_STYLES = (
-    "brands",
-    "solid",
-    "regular",
-)
-
-package_path = pathlib.Path(inspect.getsourcefile(fontawesomefree))
-font_otf_path = (package_path.parent / "static/fontawesomefree/otfs").glob("*.otf")
-
-fontawesome_files = {
-    style: f for f in font_otf_path for style in FA_STYLES if style in f.name.lower()
+FA_STYLES = {
+    "brands": "Brands-Regular-400",
+    "solid": "Free-Solid-900",
+    "regular": "Free-Regular-400",
 }
+
+
+def font_file_finder():
+    package_path = pathlib.Path(inspect.getsourcefile(fontawesomefree))
+    font_otf_path = (package_path.parent / "static/fontawesomefree/otfs").glob("*.otf")
+    font_file_mapping = {
+        style: path
+        for path in font_otf_path
+        for style, font_suffix in FA_STYLES.items()
+        if font_suffix.lower() in path.name.lower()
+    }
+    return font_file_mapping
 
 
 class TextLegendBase:
@@ -39,7 +44,8 @@ def LegendClassFactory(name, BaseClass=TextLegendBase):
 
 
 legend_style_class_mapping = {
-    style: LegendClassFactory(name=f"{style.capitalize()}TextLegend") for style in FA_STYLES
+    style: LegendClassFactory(name=f"{style.capitalize()}TextLegend")
+    for style in FA_STYLES.keys()
 }
 
 
@@ -64,6 +70,7 @@ class TextLegendHandler(HandlerBase):
         return [annotation]
 
 
+fontawesome_files = font_file_finder()
 legend_handler_style_mapping = {
     v: TextLegendHandler(font_file=fontawesome_files[k])
     for k, v in legend_style_class_mapping.items()
