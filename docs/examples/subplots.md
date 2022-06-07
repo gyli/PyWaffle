@@ -34,7 +34,7 @@ It accepts tuple, int and string.
 If position is tuple, the format should be like `(nrows, ncols, index)`; 
 if it is int or string, it should be a 3-digit integer like `312`, standing for nrows, ncols, and index in order. 
 Note that all integers must be less than 10 for the later form to work. 
-See arguments of [matplotlib.pyplot.subplot](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplot.html) for more detail.
+See arguments of [matplotlib.pyplot.subplot](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplot.html) for more detail.
 
 > **_NOTE:_** Parameters which are passed outside of `plots` would be applied to all subplots, if they are not specified in `plots`.
 Otherwise, settings in `plots` have higher priority.

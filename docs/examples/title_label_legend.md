@@ -1,10 +1,10 @@
 # Title, Label and Legend
 
-Parameter `title` accepts parameters of [matplotlib.pyplot.title](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib-pyplot-title) in a dict.
+Parameter `title` accepts parameters of [matplotlib.pyplot.title](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html) in a dict.
 
 Parameter `labels` accepts string labels in a list. If it is not specified, key of `values` would be used as labels.
 
-Parameter `legend` accepts parameters of [matplotlib.pyplot.legend](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib-pyplot-legend) in a dict.
+Parameter `legend` accepts parameters of [matplotlib.pyplot.legend](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html) in a dict.
 
 > **_NOTE:_** Labels could also be specified in parameter `legend` under key `labels` instead.
 
