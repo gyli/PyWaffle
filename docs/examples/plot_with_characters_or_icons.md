@@ -42,7 +42,9 @@ fig = plt.figure(
     
 <img class="img_middle" alt="Icons" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/icons.svg?sanitize=true">
 
-Each categories could have a different icon, by passing a list or tuple of icon names to parameter `icons`. The length must be the same as `values`.
+---
+
+Each category could have a different icon, by passing a list or tuple of icon names to parameter `icons`. The length must be the same as `values`.
 
 In Font Awesome Icons, there are different icon sets in different styles, including Solid, Regular and Brands. It can be specified through parameter `icon_style`. By default it searches icon from `solid` style.
 
@@ -68,7 +70,9 @@ fig = plt.figure(
 
 <img class="img_middle" alt="Icons per category" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/icons_different_per_category.svg?sanitize=true">
 
-Font Awesome Icons locates icons by style and icon name. Different styles contain different sets of icons. Thus icon_style might not be the same for all icons. In this case, `icon_style` could be a list or a tuple of styles. 
+---
+
+Font Awesome locates icons by both of icon name and style. Thus, icon style might not be the same for all icons, and you have to specify icon style for all icons separately. Therefore, `icon_style` also accepts a list or a tuple of styles in string. 
 
 ```python
 fig = plt.figure(
