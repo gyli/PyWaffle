@@ -24,21 +24,6 @@ def main():
     pip_show = result.stdout
     fa_pip_version = pip_show.split("\n")[1].lstrip("Version: ")
 
-    # Check Font Awesome version in requirements.txt
-    # When upgrading FA, change the version number in requirements.txt, requirements_dev.txt, and setup.py
-    with open(Path(__file__).parent.parent.absolute() / "requirements.txt", "r") as f:
-        lines = f.readlines()
-        for line in lines:
-            if line.startswith(FONTAWESOME_PACKAGE_NAME):
-                break
-    fa_req_version = line.strip("\n").split("==")[1]
-
-    # Upgrade FA in pip first before generating the mapping
-    if fa_req_version != fa_pip_version:
-        raise ValueError(
-            f"Font Awesome version conflict. In pip: v{fa_pip_version}, in requirements: v{fa_req_version}."
-        )
-
     # Get font meta data from the package
     package_path = Path(inspect.getsourcefile(fontawesomefree))
     icons_json_path = (
@@ -61,7 +46,7 @@ def main():
     with open(
         Path(__file__).parent.parent.absolute() / "pywaffle/fontawesome_mapping.py", "w"
     ) as file:
-        file.write("# For Font Awesome version: {0}\n".format(fa_req_version))
+        file.write(f"# For Font Awesome version: {fa_pip_version}\n")
         file.write("\n")
         file.write("icons = ")
         file.write(json.dumps(mapping, indent=4))
