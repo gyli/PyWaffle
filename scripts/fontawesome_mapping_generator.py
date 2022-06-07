@@ -3,6 +3,8 @@
 
 import inspect
 import json
+import subprocess
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -13,6 +15,30 @@ FONTAWESOME_PACKAGE_NAME = "fontawesomefree"
 
 
 def main():
+    # Check installed Font Awesome version with pip
+    result = subprocess.run(
+        [sys.executable, "-m", "pip", "show", FONTAWESOME_PACKAGE_NAME],
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    pip_show = result.stdout
+    fa_pip_version = pip_show.split("\n")[1].lstrip("Version: ")
+
+    # Check Font Awesome version in requirements.txt
+    # When upgrading FA, change the version number in requirements.txt, requirements_dev.txt, and setup.py
+    with open(Path(__file__).parent.parent.absolute() / "requirements.txt", "r") as f:
+        lines = f.readlines()
+        for line in lines:
+            if line.startswith(FONTAWESOME_PACKAGE_NAME):
+                break
+    fa_req_version = line.strip("\n").split("==")[1]
+
+    # Upgrade FA in pip first before generating the mapping
+    if fa_req_version != fa_pip_version:
+        raise ValueError(
+            f"Font Awesome version conflict. In pip: v{fa_pip_version}, in requirements: v{fa_req_version}."
+        )
+
     # Get font meta data from the package
     package_path = Path(inspect.getsourcefile(fontawesomefree))
     icons_json_path = (
