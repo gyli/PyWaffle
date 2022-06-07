@@ -1,6 +1,6 @@
 # Block Colors
 
-Parameter `colors` accepts colors in a list or tuple. Its length must be same to `values`.
+Parameter `colors` accepts colors in a list or tuple. The length must be same to `values`, and the acceptable color format includes case-insensitive hex RGB or RGBA, RGB or RGBA tuple, single character notation, case-insensitive X11/CSS4 color name, and more, as long as Matplotlib can recognize. See Matplotlib [Colors](https://matplotlib.org/stable/tutorials/colors/colors.html#specifying-colors) for the full list.
 
 ```python
 fig = plt.figure(

@@ -1,7 +1,7 @@
 Examples
 ========
 
-Several examples are shown below by topics, which would go through every parameter. Please check out `API Reference <class.html>`_ for the detail of parameter.
+Several examples are shown below by topics, which covers all parameters that PyWaffle has, and their most common use cases. If you are looking for the detailed definition and description of parameters, please check out `API Reference <class.html>`_.
 
 .. toctree::
    :maxdepth: 2
