@@ -1,5 +1,0 @@
-matplotlib
-myst-parser
-pandas
-requests
-sphinx

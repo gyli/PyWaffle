@@ -1,1 +1,3 @@
+fontawesomefree
 matplotlib
+pandas
