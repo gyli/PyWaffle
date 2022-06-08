@@ -1,3 +1,10 @@
+v1.1.0 (2022-06-07)
+
+* Replace embedded Font Awesome files with dependent Python package `fintawesomefree`
+* Generate Font Awesome mapping file automatically during installation, so it can allow manual Font Awesome version upgrade
+
+---
+
 v1.0.1 (2022-06-03)
 
 * Add support to plot chart on existed axis

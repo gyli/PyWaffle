@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="453.6pt" height="233.371716pt" viewBox="0 0 453.6 233.371716" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="453.6pt" height="233.701716pt" viewBox="0 0 453.6 233.701716" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2022-06-07T22:19:58.631611</dc:date>
+    <dc:date>2022-06-07T23:10:16.554758</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -21,8 +21,8 @@
  </defs>
  <g id="figure_1">
   <g id="patch_1">
-   <path d="M 0 233.371716 
-L 453.6 233.371716 
+   <path d="M 0 233.701716 
+L 453.6 233.701716 
 L 453.6 0 
 L 0 0 
 z
@@ -33,27 +33,22 @@ z
     <!--  -->
     <g style="fill: #232066" transform="translate(7.2 223.077966)scale(0.24 -0.24)">
      <defs>
-      <path id="FontAwesome6Free-Solid-f005" d="M 4763 3713 
-L 6550 3450 
-C 6700 3425 6825 3325 6875 3175 
-C 6925 3038 6888 2875 6775 2775 
-L 5475 1488 
-L 5788 -338 
-C 5813 -488 5750 -638 5625 -725 
-C 5500 -825 5338 -825 5200 -763 
+      <path id="FontAwesome6Free-Solid-f005" d="M 3950 5375 
+L 4775 3713 
+L 6600 3450 
+C 6925 3400 7063 3000 6825 2763 
+L 5500 1488 
+L 5813 -325 
+C 5863 -650 5525 -900 5225 -750 
 L 3600 100 
-L 1988 -763 
-C 1863 -825 1688 -825 1575 -725 
-C 1450 -638 1388 -488 1413 -338 
-L 1713 1488 
-L 413 2775 
-C 300 2875 263 3038 313 3175 
-C 363 3325 488 3425 638 3450 
-L 2438 3713 
+L 1963 -763 
+C 1663 -913 1325 -663 1375 -338 
+L 1688 1475 
+L 363 2763 
+C 125 3000 263 3400 588 3450 
+L 2413 3713 
 L 3238 5375 
-C 3300 5513 3438 5600 3600 5600 
-C 3750 5600 3888 5513 3950 5375 
-L 4763 3713 
+C 3388 5675 3813 5663 3950 5375 
 z
 " transform="scale(0.015625)"/>
      </defs>
