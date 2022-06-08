@@ -6,14 +6,22 @@ PyWaffle installs `Font Awesome
 The package it is trying to install is the latest version of `fontawesomefree
 <https://pypi.org/project/fontawesomefree/>`_.
 
-If you would like to upgrade :code:`fontawesomefree` and use the newer version with PyWaffle, you can simply upgrade :code:`fontawesomefree` and reinstall :code:`pywaffle`. In commands, that is:
+If you would like to upgrade or downgrade :code:`fontawesomefree`, and use the specific version within PyWaffle, you can upgrade :code:`fontawesomefree` and then reinstall :code:`pywaffle`. In commands, that is:
 
 ::
 
-   $ pip install --upgrade fontawesomefree
-   $ pip install pywaffle
 
-By running the above commands, PyWaffle will generate a new icon mapping for the newer version :code:`fontawesomefree` under the package directory, and takes care of everything. You will be free to start using new icons!
+   # Either upgrade to the latest, or specify a version number
+   pip install --upgrade fontawesomefree
+   # OR
+   pip install fontawesomefree==6.1.1
 
-For how to use Font Awesome with PyWaffle, please see `Plot with Characters or Icons
+   # Then reinstall pywaffle
+   pip install --force-reinstall --no-deps pywaffle
+
+Option :code:`--force-reinstal` ensures icon mapping file in the package would be regenerated, and option :code:`--no-deps` avoid package :code:`fontawesomefree` being upgraded to unexpected version.
+
+To validate the upgrade, you may check the version number at the first line of the icon mapping file. The file path is :code:`<PYTHON_LIB>/pywaffle/fontawesome_mapping.py`
+
+For how to use Font Awesome with PyWaffle, please visit `Plot with Characters or Icons
 <examples/plot_with_characters_or_icons.html#icons>`_.
