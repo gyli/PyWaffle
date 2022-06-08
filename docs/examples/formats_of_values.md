@@ -1,7 +1,9 @@
-# Formats of Values
+# Basic Examples and Formats of Values
 
 This is a simple example to plot a 5-row, 10-column waffle chart. The three values are plotted as blocks directly, 
 and the blocks number matches the numbers in `values`, because the sum of `values` equals to total block number (`rows * columns`).
+
+Parameter `values` accept numbers in multiple format, including list, dict, and pandas.DataFrame. 
 
 ```python
 import matplotlib.pyplot as plt
@@ -13,7 +15,7 @@ fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     columns=10,  # Either rows or columns could be omitted
-    values=[30, 16, 4]
+    values=[30, 16, 4]  # Pass a list of integers to values
 )
 fig.savefig("plot.png", bbox_inches="tight")
 ```
@@ -24,9 +26,7 @@ fig.savefig("plot.png", bbox_inches="tight")
 
 ---
 
-### Values in Dictionary
-
-Parameter `values` also accepts data in a dictionary. The dictionary key will be used as labels and shown in legends.
+When a dictionary is passed to `values`, the key will be used as labels and shown in legends.
 
 ```python
 plt.figure(
@@ -42,11 +42,7 @@ plt.figure(
 
 ---
 
-### Values in pandas.DataFrame
-
-Other than list and dictionary, Parameter `values` also accepts a column of pandas `DataFrame`.
-
-However, unlike values in a dictionary that can generate labels and legend automatically, `Waffle` does not use `DataFrame` as label by default. So you have to pass the index to parameter `labels` manually, if you would like to use column index as label.
+However, unlike values in a dictionary that can generate labels and legend automatically, when the `values` is a DataFrame, `Waffle` does not use the row index of the DataFrame as label by default. So you have to pass the index to parameter `labels` manually, if you would like to use column index as label.
 
 ```python
 import pandas as pd
