@@ -124,7 +124,7 @@ plt.close(fig)
 # For documents
 doc_examples_image_folder = "examples/docs/"
 
-# Basic
+# Formats of values
 fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[30, 16, 4])
 fig.savefig(doc_examples_image_folder + "basic_list_values.svg", bbox_inches="tight")
 plt.close(fig)
@@ -139,7 +139,7 @@ fig = plt.figure(
 fig.savefig(doc_examples_image_folder + "basic_dict_values.svg", bbox_inches="tight")
 plt.close(fig)
 
-# Plot on Existed Axis
+# Figure and Axis manipulation
 fig = plt.figure()
 ax = fig.add_subplot(111)
 

@@ -25,9 +25,13 @@ To specify the font, pass the absolute path to a .ttf or .otf file to parameter 
 
 ## Icons
 
-### Icon Size
+Waffle Chart with icons is also known as Pictogram Chart. 
 
-Waffle Chart with icons is also known as Pictogram Chart. PyWaffle supports plotting with [Font Awesome icons](https://fontawesome.com/).
+PyWaffle supports plotting with icons through [Font Awesome](https://fontawesome.com/). See page [Font Awesome Integration](font_awesome_integration.html) for how Font Awesome is integrated into PyWaffle.
+
+For searching available icon name in Font Awesome, please visit [https://fontawesome.com/search](https://fontawesome.com/search).
+
+### Icon Size
 
 When using icons, the parameters for setting block size would be ignored, including `interval_ratio_x`, `interval_ratio_y` and `block_aspect_ratio`. Instead, use `font_size` to set the size of icons. For allowed sizes, see [FontProperties.set_size](https://matplotlib.org/stable/api/font_manager_api.html#matplotlib.font_manager.FontProperties.set_size).
 
