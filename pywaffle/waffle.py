@@ -11,7 +11,7 @@ import matplotlib.font_manager as fm
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.patches import Patch, Rectangle
-from matplotlib.pyplot import cm
+import matplotlib.pyplot as plt
 
 METHOD_MAPPING = {
     "float": lambda a, b: a / b,
@@ -478,8 +478,8 @@ class Waffle(Figure):
 
         # Build a color sequence if colors is empty
         if not _pa["colors"]:
-            default_colors = cm.get_cmap(_pa["cmap_name"]).colors
-            default_color_num = cm.get_cmap(_pa["cmap_name"]).N
+            default_colors = plt.get_cmap(_pa["cmap_name"]).colors
+            default_color_num = plt.get_cmap(_pa["cmap_name"]).N
             _pa["colors"] = array_resize(
                 array=default_colors,
                 length=self.values_len,
