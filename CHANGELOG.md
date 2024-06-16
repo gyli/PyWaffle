@@ -1,3 +1,9 @@
+v1.1.1 (2024-06-16)
+
+* Support matplotlib>=3.9.0 by fixing get_cmap calling
+
+---
+
 v1.1.0 (2022-06-07)
 
 * Replace embedded Font Awesome files with dependent Python package `fintawesomefree`
