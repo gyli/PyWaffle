@@ -4,7 +4,7 @@
 import copy
 import math
 from itertools import islice, product
-from typing import Dict, Iterable, Iterator, List, Optional, Tuple, Union
+from typing import ClassVar, Dict, Iterable, Iterator, List, Optional, Tuple, Union
 import warnings
 
 import matplotlib as mpl
@@ -39,7 +39,7 @@ def round_up_to_multiple(x: int, base: int) -> int:
     return base * math.ceil(x / base)
 
 
-def array_resize(array: Union[Tuple, List], length: int, array_len: int = None) -> Union[Tuple, List]:
+def array_resize(array: Union[Tuple, List], length: int, array_len: Optional[int] = None) -> Union[Tuple, List]:
     """
     Resize array to given length. If the array is shorter than given length, repeat the array; If the array is longer
     than the length, trim the array.
@@ -247,14 +247,14 @@ class Waffle(Figure):
     :type block_arranging_style: string, optional
     """
 
-    _direction_values = {
+    _direction_values: ClassVar[Dict] = {
         "NW": {"column_order": 1, "row_order": -1},
         "SW": {"column_order": 1, "row_order": 1},
         "NE": {"column_order": -1, "row_order": -1},
         "SE": {"column_order": -1, "row_order": 1},
     }
 
-    _default_parameters = {
+    _default_parameters: ClassVar[Dict] = {
         "values": [],
         "rows": None,
         "columns": None,
@@ -296,7 +296,7 @@ class Waffle(Figure):
         #:The length of values
         self.values_len: Optional[int] = None
 
-        plots = self.fig_args["plots"] or {} or {111: self.fig_args}
+        plots = self.fig_args["plots"] or {111: self.fig_args}
 
         for loc, plot_args in plots.items():
             # Add subplots
@@ -553,6 +553,9 @@ class Waffle(Figure):
         """
         value = par[name]
         if not isinstance(value, str):
+            # ValueError rather than TypeError, deliberately: every argument check in this class
+            # raises ValueError, so that one `except ValueError` around chart construction catches
+            # all of them. Splitting the type case out would defeat that.
             raise ValueError(f"Argument {name} should be a string, one of {', '.join(choices)}.")
 
         value = value.strip()
@@ -664,7 +667,7 @@ class Waffle(Figure):
             plot_args=cls._kwarg_processor(kwargs=kwargs, default_values=cls._default_parameters),
         )
 
-    def _make_single_waffle(self, ax: Axes, plot_args: Dict, fig_args: Dict = {}):
+    def _make_single_waffle(self, ax: Axes, plot_args: Dict, fig_args: Optional[Dict] = None):
         """
         Plot single waffle chart.
         It's for internal use only and do not call this function for plotting directly.
@@ -680,7 +683,7 @@ class Waffle(Figure):
         """
         # _pa is the arguments for this single plot
         # Arguments from "plots" have higher priority than figure arguments
-        _pa = {**fig_args, **plot_args}
+        _pa = {**(fig_args or {}), **plot_args}
 
         self._parameter_validation(par=_pa)
 
@@ -690,8 +693,9 @@ class Waffle(Figure):
         # if only one of rows/columns given, use the values as number of blocks
         if not _pa["rows"] and not _pa["columns"]:
             raise ValueError("At least one of rows and columns is required.")
+
         # if columns is given, rows is not
-        elif _pa["rows"] is None:
+        if _pa["rows"] is None:
             if _pa["block_arranging_style"] == "new-line" and _pa["vertical"]:
                 block_per_cat = [round_up_to_multiple(i, base=_pa["columns"]) for i in _pa["values"]]
                 colored_block_per_cat = [division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]]
@@ -854,6 +858,9 @@ class Waffle(Figure):
                     )
                 )
 
+            # Counted explicitly rather than with enumerate(): this reads as "blocks drawn so
+            # far, including this one", which is what the comparison below needs. enumerate would
+            # give one less and require a +1 at the point of use.
             block_index += 1
             this_cat_block_count += 1
             if block_index >= sum(block_per_cat[: class_index + 1]):
@@ -896,9 +903,7 @@ class Waffle(Figure):
                 legend_args["handles"] = [Patch(color=c, label=str(l)) for c, l in zip(_pa["colors"], labels)]
 
             # labels is an alias of legend['labels']
-            if "labels" not in legend_args and _pa["labels"]:
-                legend_args["labels"] = labels
-            elif _pa["show_values"]:
+            if ("labels" not in legend_args and _pa["labels"]) or _pa["show_values"]:
                 legend_args["labels"] = labels
 
             _pa["legend"] = legend_args
