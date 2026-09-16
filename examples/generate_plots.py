@@ -154,6 +154,17 @@ fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 3], rou
 fig.savefig(doc_examples_image_folder + "value_scaling_and_auto_sizing_rounding_rule.svg", bbox_inches="tight")
 plt.close(fig)
 
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    values={"Net income": 18.46, "Income tax": 1.64, "MG&A": 7.52, "R&D": 15.3, "Cost of sales": 44.54},
+    rounding_rule="float",
+    block_arranging_style="snake",
+    legend={"loc": "lower left", "bbox_to_anchor": (0, -0.6), "ncol": 2, "framealpha": 0},
+)
+fig.savefig(doc_examples_image_folder + "value_scaling_and_auto_sizing_fractional.svg", bbox_inches="tight")
+plt.close(fig)
+
 fig = plt.figure(FigureClass=Waffle, rows=5, values=[48, 46, 3])
 fig.savefig(doc_examples_image_folder + "value_scaling_and_auto_sizing_ignore_columns.svg", bbox_inches="tight")
 plt.close(fig)

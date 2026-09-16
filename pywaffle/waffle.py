@@ -191,11 +191,17 @@ class Waffle(Figure):
         | [Default 'SW']
     :type starting_location: str, optional
 
-    :param rounding_rule: The rounding rule applied when adjusting values to fit the chart size. ``{'nearest', 'floor', 'ceil'}``
+    :param rounding_rule: The rounding rule applied when adjusting values to fit the chart size. ``{'nearest', 'floor', 'ceil', 'float'}``
 
         | When it's 'nearest', it is "round to nearest, ties to even" rounding mode;
         | When it's 'floor', it rounds to less of the two endpoints of the interval;
-        | When it's 'ceil', it rounds to greater of the two endpoints of the interval.
+        | When it's 'ceil', it rounds to greater of the two endpoints of the interval;
+        | When it's 'float', values are not rounded at all. Blocks are partially filled where a
+          category ends part way through one, and a block containing a boundary between two
+          categories is split between their colors. The number of blocks then depends only on the
+          total of the values, so charts of equal total are the same size.
+        | 'float' draws partially filled rectangles and cannot be combined with ``icons`` or
+          ``characters``, which cannot be partially filled.
         | [Default 'nearest']
     :type rounding_rule: str, optional
 
@@ -278,6 +284,115 @@ class Waffle(Figure):
 
         # Adjust the layout
         self._apply_layout_engine(self.fig_args["tight"])
+
+    @staticmethod
+    def _fill_steps(cells: List[Tuple[int, int]], default_axis: int) -> List[Tuple[int, int]]:
+        """
+        The axis and direction the block sequence travels through each cell.
+
+        A partially filled block fills from the side the sequence arrives at, so this is read off
+        the cell order itself rather than derived from ``starting_location``. Reading it per cell
+        keeps it correct for the snake style, where the direction reverses on every other line, and
+        for a chart one block deep, where the sequence runs along the other axis entirely.
+        """
+
+        def unit_step(a, b):
+            # A step to the neighbouring cell moves along exactly one axis
+            delta = (b[0] - a[0], b[1] - a[1])
+            if delta[0] and not delta[1]:
+                return 0, 1 if delta[0] > 0 else -1
+            if delta[1] and not delta[0]:
+                return 1, 1 if delta[1] > 0 else -1
+            return None
+
+        steps = []
+        for i, cell in enumerate(cells):
+            forward = unit_step(cell, cells[i + 1]) if i + 1 < len(cells) else None
+            backward = unit_step(cells[i - 1], cell) if i > 0 else None
+
+            # At the end of a line the forward step is the wrap to the next line, which is not the
+            # direction the sequence was travelling, so prefer a step along the line axis.
+            candidates = [step for step in (forward, backward) if step is not None and step[0] == default_axis]
+            candidates += [step for step in (forward, backward) if step is not None]
+            steps.append(next(iter(candidates), (default_axis, 1)))
+        return steps
+
+    def _draw_fractional_blocks(
+        self,
+        ax: Axes,
+        cells: List[Tuple[int, int]],
+        spans: List[Tuple[int, float, float]],
+        colors: List,
+        is_vertical: bool,
+        x_full: float,
+        y_full: float,
+        block_x_length: float,
+        block_y_length: float,
+    ):
+        """
+        Draw blocks without rounding the values.
+
+        Each grid cell covers one unit of the block number line, so a category boundary can fall
+        inside a cell. Such a cell is drawn as two abutting rectangles, and the last cell of the
+        chart is drawn partially filled. The number of cells therefore depends only on the total of
+        the values, which is what makes the chart size stable when values change.
+        """
+        # Blocks advance along rows within a column, unless vertical swaps the two
+        steps = self._fill_steps(cells, default_axis=0 if is_vertical else 1)
+
+        for cell_index, (col, row) in enumerate(cells):
+            axis, direction = steps[cell_index]
+            for class_index, start, end in self._cell_segments(spans, cell_index):
+                # Measure the offset from the edge the sequence arrives at
+                if direction < 0:
+                    start, end = 1 - end, 1 - start
+
+                x, y = x_full * col, y_full * row
+                width, height = block_x_length, block_y_length
+                if axis == 0:
+                    x += start * block_x_length
+                    width = (end - start) * block_x_length
+                else:
+                    y += start * block_y_length
+                    height = (end - start) * block_y_length
+
+                ax.add_artist(Rectangle(xy=(x, y), width=width, height=height, color=colors[class_index]))
+
+    @staticmethod
+    def _coloured_spans(block_per_cat: List, colored_block_per_cat: List) -> List[Tuple[int, float, float]]:
+        """
+        Lay the categories out on a continuous number line of blocks.
+
+        Returns ``(class_index, start, end)`` per category, measured in blocks from the start of the
+        chart. ``block_per_cat`` is the space a category occupies and ``colored_block_per_cat`` the
+        part of it that is coloured; the two differ only for the "new-line" style, where a category
+        is padded out to a whole line and the padding stays blank.
+        """
+        spans = []
+        position = 0.0
+        for class_index, (occupied, coloured) in enumerate(zip(block_per_cat, colored_block_per_cat)):
+            if coloured > 0:
+                spans.append((class_index, position, position + coloured))
+            position += occupied
+        return spans
+
+    @staticmethod
+    def _cell_segments(spans: List[Tuple[int, float, float]], cell_index: int) -> List[Tuple[int, float, float]]:
+        """
+        The portions of one grid cell covered by each category.
+
+        A cell spans ``[cell_index, cell_index + 1)`` on the block number line. Returns
+        ``(class_index, start, end)`` with start and end as fractions of the cell, so a cell in the
+        middle of a category yields one segment of (0, 1) and a cell straddling a boundary yields
+        two segments that between them cover it.
+        """
+        segments = []
+        for class_index, span_start, span_end in spans:
+            start = max(span_start, cell_index)
+            end = min(span_end, cell_index + 1)
+            if end - start > 1e-9:
+                segments.append((class_index, start - cell_index, end - cell_index))
+        return segments
 
     @staticmethod
     def _colors_from_cmap(cmap_name: str, length: int) -> List:
@@ -383,7 +498,7 @@ class Waffle(Figure):
 
     def _parameter_validation(self, par: Dict):
         # - rounding_rule, block_arranging_style, starting_location
-        self._validate_choice(par, "rounding_rule", ("nearest", "ceil", "floor"), case="lower")
+        self._validate_choice(par, "rounding_rule", ("nearest", "ceil", "floor", "float"), case="lower")
         self._validate_choice(
             par,
             "block_arranging_style",
@@ -418,6 +533,14 @@ class Waffle(Figure):
             raise ValueError(
                 "Argument values should not sum to zero when both rows and columns are given, "
                 "as there is no way to scale the values to the chart size."
+            )
+
+        # - rounding_rule="float" draws partial blocks, which only works for rectangles.
+        # A Text artist cannot be partially filled.
+        if par["rounding_rule"] == "float" and (par["icons"] or par["characters"]):
+            raise ValueError(
+                'Argument rounding_rule="float" draws partially filled blocks and cannot be '
+                "combined with icons or characters. Use nearest, ceil or floor instead."
             )
 
         # - icon_style
@@ -581,14 +704,32 @@ class Waffle(Figure):
         column_order = self._direction_values[_pa["starting_location"]]["column_order"]
         row_order = self._direction_values[_pa["starting_location"]]["row_order"]
 
-        for col, row in self._block_arranger(
-            rows=_pa["rows"],
-            columns=_pa["columns"],
-            row_order=row_order,
-            column_order=column_order,
-            is_vertical=_pa["vertical"],
-            is_snake=_pa["block_arranging_style"] == "snake",
-        ):
+        cells = list(
+            self._block_arranger(
+                rows=_pa["rows"],
+                columns=_pa["columns"],
+                row_order=row_order,
+                column_order=column_order,
+                is_vertical=_pa["vertical"],
+                is_snake=_pa["block_arranging_style"] == "snake",
+            )
+        )
+
+        if _pa["rounding_rule"] == "float":
+            self._draw_fractional_blocks(
+                ax=ax,
+                cells=cells,
+                spans=self._coloured_spans(block_per_cat, colored_block_per_cat),
+                colors=_pa["colors"],
+                is_vertical=_pa["vertical"],
+                x_full=x_full,
+                y_full=y_full,
+                block_x_length=block_x_length,
+                block_y_length=block_y_length,
+            )
+            cells = []
+
+        for col, row in cells:
             # Value could be 0. If so, skip it
             while class_index < self.values_len and block_per_cat[class_index] == 0:
                 class_index += 1
