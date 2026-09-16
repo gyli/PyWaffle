@@ -323,3 +323,131 @@ class TestBlockGeometry(WaffleTestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestArrangement(WaffleTestCase):
+    """Orientation and arranging styles, including the columns-only sizing path."""
+
+    @staticmethod
+    def _positions(**kwargs):
+        fig = plt.figure(FigureClass=Waffle, **kwargs)
+        return [(round(p.get_x(), 6), round(p.get_y(), 6)) for p in fig.axes[0].patches]
+
+    def test_vertical_fills_down_a_column_before_moving_across(self):
+        horizontal = self._positions(rows=2, columns=3, values=[3, 3])
+        vertical = self._positions(rows=2, columns=3, values=[3, 3], vertical=True)
+        self.assertNotEqual(horizontal, vertical)
+        self.assertEqual(sorted(horizontal), sorted(vertical))
+
+    def test_columns_only_derives_the_row_count(self):
+        fig = plt.figure(FigureClass=Waffle, columns=5, values=[7, 3])
+        self.assertEqual(fig.plot_args[0]["rows"], 2)
+
+    def test_rows_only_derives_the_column_count(self):
+        fig = plt.figure(FigureClass=Waffle, rows=5, values=[10, 10])
+        self.assertEqual(fig.plot_args[0]["columns"], 4)
+
+    def test_new_line_starts_each_category_on_its_own_line(self):
+        # CHANGELOG v0.6.2 recorded a wrong block count for this style
+        fig = plt.figure(
+            FigureClass=Waffle,
+            rows=3,
+            values=[2, 2],
+            block_arranging_style="new-line",
+        )
+        # Each category is padded up to a whole line of 3, so 2 lines are needed
+        self.assertEqual(fig.plot_args[0]["columns"], 2)
+        # Only the 4 valued blocks are opaque; the padding is transparent
+        opaque = [p for p in fig.axes[0].patches if p.get_facecolor()[3] > 0]
+        self.assertEqual(len(opaque), 4)
+
+    def test_new_line_vertical(self):
+        fig = plt.figure(
+            FigureClass=Waffle,
+            columns=3,
+            values=[2, 2],
+            vertical=True,
+            block_arranging_style="new-line",
+        )
+        self.assertEqual(fig.plot_args[0]["rows"], 2)
+
+    def test_new_line_pads_short_categories_with_transparent_blocks(self):
+        # Padding to a whole line is the only case that produces transparent blocks;
+        # ordinary scaling fills every cell.
+        fig = plt.figure(FigureClass=Waffle, rows=3, values=[2, 2], block_arranging_style="new-line")
+        transparent = [p for p in fig.axes[0].patches if p.get_facecolor()[3] == 0]
+        self.assertEqual(len(transparent), 2)
+
+        fig = plt.figure(FigureClass=Waffle, rows=2, columns=5, values=[3, 3])
+        self.assertEqual([p for p in fig.axes[0].patches if p.get_facecolor()[3] == 0], [])
+
+
+class TestLegendAndTitle(WaffleTestCase):
+    def test_icon_legend_uses_icon_handles(self):
+        fig = plt.figure(
+            FigureClass=Waffle,
+            rows=5,
+            values=[10, 20],
+            labels=["A", "B"],
+            icons="star",
+            icon_legend=True,
+        )
+        self.assertIn("handler_map", fig.plot_args[0]["legend"])
+        self.assertEqual([t.get_text() for t in fig.axes[0].get_legend().get_texts()], ["A", "B"])
+
+    def test_title_is_applied(self):
+        fig = plt.figure(FigureClass=Waffle, rows=5, values=[10], title={"label": "Hello"})
+        self.assertEqual(fig.axes[0].get_title(), "Hello")
+
+    def test_labels_from_legend_dict_alone(self):
+        fig = plt.figure(FigureClass=Waffle, rows=5, values=[10, 20], legend={"labels": ["A", "B"]})
+        self.assertEqual([t.get_text() for t in fig.axes[0].get_legend().get_texts()], ["A", "B"])
+
+
+class TestErrorPaths(WaffleTestCase):
+    def test_values_is_required(self):
+        with self.assertRaisesRegex(ValueError, "values is required"):
+            plt.figure(FigureClass=Waffle, rows=5, values=[])
+
+    def test_rows_or_columns_is_required(self):
+        with self.assertRaisesRegex(ValueError, "At least one of rows and columns"):
+            plt.figure(FigureClass=Waffle, values=[10, 20])
+
+    def test_colors_length_mismatch(self):
+        with self.assertRaisesRegex(ValueError, "colors"):
+            plt.figure(FigureClass=Waffle, rows=5, values=[10, 20], colors=["red"])
+
+    def test_labels_length_mismatch(self):
+        with self.assertRaisesRegex(ValueError, "labels"):
+            plt.figure(FigureClass=Waffle, rows=5, values=[10, 20], labels=["A"])
+
+    def test_icons_length_mismatch(self):
+        with self.assertRaisesRegex(ValueError, "icons"):
+            plt.figure(FigureClass=Waffle, rows=5, values=[10, 20], icons=["star", "tree", "car"])
+
+    def test_characters_length_mismatch(self):
+        with self.assertRaisesRegex(ValueError, "characters"):
+            plt.figure(FigureClass=Waffle, rows=5, values=[10, 20], characters=["a", "b", "c"])
+
+    def test_invalid_subplot_position_type(self):
+        with self.assertRaisesRegex(TypeError, "Subplot position"):
+            plt.figure(FigureClass=Waffle, rows=5, plots={1.5: {"values": [10]}})
+
+    def test_tuple_subplot_position(self):
+        fig = plt.figure(FigureClass=Waffle, rows=5, plots={(1, 1, 1): {"values": [10, 20]}})
+        self.assertEqual(len(fig.axes), 1)
+
+    def test_icon_size_is_deprecated_in_favour_of_font_size(self):
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            fig = plt.figure(FigureClass=Waffle, rows=5, values=[10], icons="star", icon_size=20)
+        self.assertTrue(any(issubclass(w.category, DeprecationWarning) for w in caught))
+        self.assertEqual(fig.axes[0].texts[0].get_fontproperties().get_size_in_points(), 20)
+
+
+class TestMakeWaffleOnAxes(WaffleTestCase):
+    def test_draws_into_an_existing_axes(self):
+        fig, ax = plt.subplots()
+        Waffle.make_waffle(ax=ax, rows=5, columns=10, values={"a": 30, "b": 20})
+        self.assertEqual(len(ax.patches), 50)
+        self.assertEqual([t.get_text() for t in ax.get_legend().get_texts()], ["a", "b"])
