@@ -4,3 +4,4 @@ build
 pandas
 pytest
 pytest-cov
+pytest-mpl

@@ -22,6 +22,7 @@ New
 
 Other
 
+* Add opt-in image-comparison tests (`pytest tests/test_images.py --mpl`), which catch rendering regressions that block-by-block assertions cannot
 * Add `pywaffle.__version__`
 * Ship `py.typed`, so the existing type hints are visible to type checkers
 * Require Python 3.9+, and move packaging to PEP 621
