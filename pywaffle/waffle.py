@@ -60,17 +60,13 @@ def array_resize(array: Union[Tuple, List], length: int, array_len: Optional[int
 
 
 def chunked(iterable: Iterable, step: int) -> List:
-    """
-    Yield successive step-sized chunks from list
-    """
+    """Yield successive step-sized chunks from a list."""
     iterable = iter(iterable)
     yield from iter(lambda: list(islice(iterable, step)), [])
 
 
 def flip_lines(matrix: Iterable[Tuple[int, int]], base: int) -> Tuple[int, int]:
-    """
-    Given a matrix in a linear array, flip the element order of every odd row
-    """
+    """Given a matrix in a linear array, flip the element order of every odd row."""
     for line_number, line in enumerate(chunked(matrix, base)):
         yield from line if line_number % 2 == 0 else line[::-1]
 
@@ -92,8 +88,10 @@ class Waffle(Figure):
     :param columns: The number of columns of the waffle chart.
 
         | At least one of rows and columns is required.
-        | If either rows or columns is passed, the other parameter would be calculated automatically through the absolute value of values.
-        | If both of rows and columns are passed, the block number is fixed and block numbers are calculated from scaled values.
+        | If either rows or columns is passed, the other is calculated automatically from the
+          sum of values.
+        | If both of rows and columns are passed, the block number is fixed and block numbers are
+          calculated from scaled values.
     :type columns: int
 
     :param colors: A list of colors for each category. Its length should be the same as values.
@@ -142,7 +140,8 @@ class Waffle(Figure):
     :param font_size: Font size of Font Awesome icons.
 
         | The default size is not fixed and depends on the block size.
-        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute font size.
+        | Either a relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large'
+          or 'xx-large', or an absolute font size.
     :type icons: int|str, optional
 
     :param font_file: Path to custom font file.
@@ -173,7 +172,8 @@ class Waffle(Figure):
 
         | Deprecated! Use font_size instead.
         | The default size is not fixed and depends on the block size.
-        | Either an relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' or an absolute value of font size.
+        | Either a relative value of 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large'
+          or 'xx-large', or an absolute font size.
     :type icon_size: int|str, optional
 
     :param icon_legend: Whether to use icon but not color bar in legend. [Default False]
@@ -188,8 +188,11 @@ class Waffle(Figure):
     :param plots: Position and parameters of Waffle class for subplots in a dict,
         with format like {pos: {subplot_args: values, }, }.
 
-        | Pos could be a tuple of three integer, where the first digit is the number of rows, the second the number of columns, and the third the index of the subplot.
-        | Pos could also be a 3-digit number in int or string type. For example, it accept 235 or '235' standing for the Ith plot on a grid with J rows and K columns. Note that all integers must be less than 10 for this form to work.
+        | Pos could be a tuple of three integers, where the first is the number of rows, the
+          second the number of columns, and the third the index of the subplot.
+        | Pos could also be a 3-digit number, as an int or a string. For example, 235 or '235'
+          means the 5th plot on a grid with 2 rows and 3 columns. All three digits must be less
+          than 10 for this form to work.
         | The parameters of subplots are the same as Waffle class parameters, excluding plots itself.
         | If any parameter of subplots is not assigned, it use the same parameter in Waffle class as default value.
     :type plots: dict, optional
@@ -199,11 +202,13 @@ class Waffle(Figure):
 
     :param starting_location: Change the starting location plotting the blocks. ``{'NW', 'SW', 'NE', 'SE'}``
 
-        | When it's 'NW', it means plots start from upper-left; 'SW' means plots start from lower-left; 'NE' means plots start from upper-right; 'SE' means plots start from lower-right.
+        | 'NW' starts from the upper-left, 'SW' from the lower-left, 'NE' from the upper-right
+          and 'SE' from the lower-right.
         | [Default 'SW']
     :type starting_location: str, optional
 
-    :param rounding_rule: The rounding rule applied when adjusting values to fit the chart size. ``{'nearest', 'floor', 'ceil', 'float'}``
+    :param rounding_rule: The rounding rule applied when adjusting values to fit the chart size.
+        ``{'nearest', 'floor', 'ceil', 'float'}``
 
         | When it's 'nearest', it is "round to nearest, ties to even" rounding mode;
         | When it's 'floor', it rounds to less of the two endpoints of the interval;
@@ -269,7 +274,9 @@ class Waffle(Figure):
 
         | If it is 'normal', it draws blocks line by line with same direction.
         | If it is 'snake', it draws blocks with snake pattern.
-        | If it is 'new-line', it starts with a new line when drawing each category. This only works when only one of ``rows`` and ``columns`` is assigned, and ``vertical=False`` when ``rows`` is assigned or ``vertical=True`` when ``rows`` is assigned.
+        | If it is 'new-line', it starts a new line when drawing each category. This only works
+          when just one of ``rows`` and ``columns`` is assigned, with ``vertical=False`` when
+          ``rows`` is assigned or ``vertical=True`` when ``columns`` is assigned.
         | [Default 'normal']
     :type block_arranging_style: string, optional
     """
@@ -316,14 +323,14 @@ class Waffle(Figure):
     }
 
     def __init__(self, *args, **kwargs):
-        #:All Waffle-specific arguments with default values
+        #: All Waffle-specific arguments with default values
         self.fig_args: Dict = self._kwarg_processor(kwargs=kwargs, default_values=self._default_parameters)
         super().__init__(*args, **kwargs)
 
-        #:Standardized arguments of all subplots
+        #: Standardized arguments of all subplots
         self.plot_args: List = []
 
-        #:The length of values
+        #: The length of values
         self.values_len: Optional[int] = None
 
         plots = self.fig_args["plots"] or {111: self.fig_args}
@@ -354,6 +361,7 @@ class Waffle(Figure):
         """
 
         def unit_step(a, b):
+            """The axis and direction from cell a to cell b, or None if they are not neighbours."""
             # A step to the neighbouring cell moves along exactly one axis
             delta = (b[0] - a[0], b[1] - a[1])
             if delta[0] and not delta[1]:
@@ -527,9 +535,7 @@ class Waffle(Figure):
         is_vertical: bool,
         is_snake: bool,
     ) -> Iterator[Tuple[int, int]]:
-        """
-        Given the size of a matrix and starting point, return how to go through every element in the matrix
-        """
+        """Walk every cell of the grid, from the given starting corner and in the given order."""
         if is_vertical:
             x, x_order, y, y_order = rows, row_order, columns, column_order
             vertical_order = -1
@@ -603,9 +609,7 @@ class Waffle(Figure):
 
     @staticmethod
     def _validate_choice(par: Dict, name: str, choices: Tuple[str, ...], case: str):
-        """
-        Normalize the case of a string argument and check it against the allowed values.
-        """
+        """Normalize the case of a string argument and check it against the allowed values."""
         value = par[name]
         if not isinstance(value, str):
             # ValueError rather than TypeError, deliberately: every argument check in this class
@@ -621,6 +625,12 @@ class Waffle(Figure):
         par[name] = value
 
     def _parameter_validation(self, par: Dict):
+        """Check and normalize every argument, before anything downstream depends on it.
+
+        Validation lives in one place so that a bad argument is reported against its own name rather
+        than surfacing as an error from arithmetic or matplotlib several frames later, and so that
+        every failure is a ValueError.
+        """
         # - rounding_rule, block_arranging_style, starting_location
         self._validate_choice(par, "rounding_rule", ("nearest", "ceil", "floor", "float"), case="lower")
         self._validate_choice(

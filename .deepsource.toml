@@ -1,7 +1,23 @@
-  version = 1
+version = 1
 
-  [[analyzers]]
-  name = "python"
-  enabled = true
+# Documentation coverage is a metric over the analyzed files. Without these, it is measured across
+# the test suite as well, where a docstring on every test method is noise rather than documentation,
+# and the package's own 79.5% is reported as 37.4%.
+test_patterns = ["tests/**"]
+exclude_patterns = ["examples/**", "docs/**", "binder/**"]
+
+[[analyzers]]
+name = "python"
+enabled = true
+
+  [analyzers.meta]
   runtime_version = "3.x.x"
-  
+
+  # The project formats with black at 120 (see [tool.black] in pyproject.toml). Without this,
+  # DeepSource lints at its 88-character default and reports ~180 line-length violations that are
+  # not violations of this project's actual style.
+  max_line_length = 120
+
+  # A module docstring, a docstring on __init__, and docstrings on dunder methods are not
+  # meaningful documentation here; the class docstring is where the API is described.
+  skip_doc_coverage = ["module", "magic", "init"]
