@@ -11,6 +11,7 @@ import importlib.util
 import os
 import pathlib
 import shutil
+import sys
 import tempfile
 import unittest
 
@@ -492,3 +493,92 @@ class TestReloading(unittest.TestCase):
         """It should be safe to call at any time, including before the first chart."""
         handler.reload_font_awesome()
         handler.reload_font_awesome()
+
+
+class TestPlatformBehaviour(unittest.TestCase):
+    """The search list has to be meaningful on the platform actually running.
+
+    A Linux-only list makes the fallback silently useless on macOS and Windows, which looks
+    identical to Font Awesome not being installed.
+    """
+
+    def test_the_directories_suit_this_platform(self):
+        """Every entry should be somewhere this operating system could plausibly keep fonts."""
+        directories = handler.SYSTEM_FONT_DIRECTORIES
+        self.assertTrue(directories, "no system font directories for this platform")
+
+        if sys.platform == "darwin":
+            expected = "Library/Fonts"
+        elif sys.platform == "win32":
+            expected = "Fonts"
+        else:
+            expected = "/usr/share/fonts"
+        self.assertTrue(
+            any(expected in d for d in directories),
+            f"no {expected!r} entry for {sys.platform}: {directories}",
+        )
+
+    @unittest.skipIf(sys.platform not in ("darwin", "win32"), "checks the non-Linux platforms")
+    def test_linux_only_paths_are_not_the_whole_list(self):
+        """The regression this guards: shipping only /usr/share/fonts everywhere."""
+        non_linux = [d for d in handler.SYSTEM_FONT_DIRECTORIES if not d.startswith("/usr/share/fonts")]
+        self.assertTrue(non_linux, "every entry is a Linux path on a non-Linux platform")
+
+    def test_the_entries_are_absolute(self):
+        """A relative entry would resolve against the working directory, which is nobody's fonts."""
+        for directory in handler.SYSTEM_FONT_DIRECTORIES:
+            with self.subTest(directory=directory):
+                self.assertTrue(pathlib.Path(directory).is_absolute())
+
+    def test_discovery_survives_directories_that_do_not_exist(self):
+        """Most of the list will be absent on any given machine, which is normal."""
+        candidates = list(handler.font_directory_candidates())
+        self.assertTrue(candidates)
+        # Must not raise merely from listing them
+        for directory, _ in candidates:
+            handler._styles_in(directory)
+
+
+class TestFontFileNaming(unittest.TestCase):
+    """Font file names vary in case between distributions and manual installs."""
+
+    def setUp(self):
+        self._saved = os.environ.get(handler.FONT_DIRECTORY_VARIABLE)
+        self._tmp = pathlib.Path(tempfile.mkdtemp())
+        reset_caches()
+
+    def tearDown(self):
+        if self._saved is None:
+            os.environ.pop(handler.FONT_DIRECTORY_VARIABLE, None)
+        else:
+            os.environ[handler.FONT_DIRECTORY_VARIABLE] = self._saved
+        reset_caches()
+        shutil.rmtree(self._tmp, ignore_errors=True)
+        plt.close("all")
+
+    @unittest.skipIf(not HAS_FONT_AWESOME, "needs Font Awesome to copy")
+    def test_an_uppercase_extension_is_found(self):
+        """glob("*.otf") is case sensitive whatever the filesystem, so .OTF was invisible."""
+        source = next(p for p in handler.font_file_finder().values() if "Solid" in p.name)
+        shutil.copy(source, self._tmp / (source.stem + ".OTF"))
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = str(self._tmp)
+        reset_caches()
+
+        self.assertIn("solid", handler.font_file_finder())
+        fig = plt.figure(FigureClass=Waffle, rows=5, values=[10], icons="star")
+        self.assertEqual(len(fig.axes[0].texts), 10)
+
+    @unittest.skipIf(not HAS_FONT_AWESOME, "needs Font Awesome to copy")
+    def test_the_style_suffix_match_ignores_case(self):
+        """Some packagers lowercase the whole file name."""
+        source = next(p for p in handler.font_file_finder().values() if "Solid" in p.name)
+        shutil.copy(source, self._tmp / source.name.lower())
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = str(self._tmp)
+        reset_caches()
+        self.assertIn("solid", handler.font_file_finder())
+
+    def test_a_directory_of_unrelated_fonts_is_not_mistaken_for_font_awesome(self):
+        """System font directories hold hundreds of fonts; only Font Awesome should match."""
+        for name in ("Arial.otf", "DejaVuSans.otf", "SomeOther-Regular-400.otf"):
+            (self._tmp / name).write_bytes(b"x")
+        self.assertEqual(handler._styles_in(self._tmp), {})

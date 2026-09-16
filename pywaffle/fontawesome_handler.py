@@ -5,10 +5,11 @@ import inspect
 import json
 import os
 import pathlib
+import sys
 from dataclasses import dataclass
 from functools import lru_cache
 from collections import defaultdict
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
 
 import matplotlib.font_manager as fm
 from matplotlib.legend_handler import HandlerBase
@@ -34,17 +35,48 @@ MISSING_FONT_AWESOME = (
 #: fontawesomefree package. Set it to use a system-provided Font Awesome.
 FONT_DIRECTORY_VARIABLE = "PYWAFFLE_FONTAWESOME_DIR"
 
-#: Where distributions put Font Awesome. Searched only when the environment variable is unset and
-#: the fontawesomefree package is not installed.
-SYSTEM_FONT_DIRECTORIES = (
-    "/usr/share/fonts/fontawesome",  # Fedora, fontawesome-fonts
-    "/usr/share/fonts/OTF",  # Arch, otf-font-awesome
-    "/usr/share/fonts/opentype/font-awesome",  # Debian and Ubuntu
-    "/usr/share/fonts/truetype/font-awesome",
-    "/usr/local/share/fonts",  # manual installs
-    "/opt/homebrew/share/fonts",  # Homebrew on Apple silicon
-    "/usr/local/share/fonts/otf",
-)
+
+def _system_font_directories() -> Tuple[str, ...]:
+    """Where this platform keeps fonts, searched when nothing else supplies them.
+
+    Listing only the Linux paths would make the fallback silently useless on macOS and Windows,
+    where none of them exist.
+    """
+    home = pathlib.Path.home()
+
+    if sys.platform == "darwin":
+        return (
+            str(home / "Library/Fonts"),  # where Homebrew casks install
+            "/Library/Fonts",
+            "/System/Library/Fonts",
+            "/opt/homebrew/share/fonts",  # Homebrew on Apple silicon
+            "/usr/local/share/fonts",  # Homebrew on Intel
+        )
+
+    if sys.platform == "win32":
+        local = os.environ.get("LOCALAPPDATA")
+        windir = os.environ.get("WINDIR", r"C:\Windows")
+        directories = [str(pathlib.Path(windir) / "Fonts")]
+        if local:
+            # Per-user font installs, the default since Windows 10
+            directories.append(str(pathlib.Path(local) / "Microsoft/Windows/Fonts"))
+        return tuple(directories)
+
+    return (
+        "/usr/share/fonts/fontawesome",  # Fedora, fontawesome-fonts
+        "/usr/share/fonts/OTF",  # Arch, otf-font-awesome
+        "/usr/share/fonts/opentype/font-awesome",  # Debian and Ubuntu
+        "/usr/share/fonts/truetype/font-awesome",
+        "/usr/share/fonts",  # the parent, for layouts not listed above
+        str(home / ".local/share/fonts"),  # per-user installs
+        str(home / ".fonts"),  # the older per-user location
+        "/usr/local/share/fonts",
+    )
+
+
+#: Where this platform keeps fonts. Searched only when the environment variable is unset and the
+#: fontawesomefree package is not installed.
+SYSTEM_FONT_DIRECTORIES = _system_font_directories()
 
 
 def fontawesome_package_path() -> pathlib.Path:
@@ -71,7 +103,9 @@ def _styles_in(directory: pathlib.Path) -> Dict[str, pathlib.Path]:
     try:
         if not directory.is_dir():
             return {}
-        paths = sorted(directory.glob("*.otf"))
+        # glob("*.otf") is case sensitive whatever the filesystem, so an .OTF file would be
+        # invisible on every platform. Filter by suffix instead.
+        paths = sorted(p for p in directory.iterdir() if p.suffix.lower() == ".otf")
     except OSError:
         # An unreadable directory, a path too long for the filesystem, a broken symlink: all mean
         # "no fonts here", and none of them should escape as an OSError from a chart call.
@@ -135,7 +169,11 @@ def font_file_finder() -> Dict[str, pathlib.Path]:
         # Falling back past an explicit setting would hide the fact that it did not work
         if override is not None and directory == override:
             try:
-                present = sorted(p.name for p in directory.glob("*.otf")) if directory.is_dir() else []
+                present = (
+                    sorted(p.name for p in directory.iterdir() if p.suffix.lower() == ".otf")
+                    if directory.is_dir()
+                    else []
+                )
             except OSError as exc:
                 raise ImportError(
                     f"{FONT_DIRECTORY_VARIABLE} is set to {directory}, which cannot be read: {exc}.\n"

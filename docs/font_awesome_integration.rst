@@ -63,12 +63,20 @@ instead::
 
    $ export PYWAFFLE_FONTAWESOME_DIR=/usr/share/fonts/fontawesome
 
-If neither the environment variable nor the Python package provides the fonts, the usual system
-font directories are searched, so a distribution's font package is often enough on its own:
+If neither the environment variable nor the Python package provides the fonts, the font
+directories of the platform you are on are searched, so an operating system font package is often
+enough on its own:
 
-* Fedora, ``fontawesome-6-free-fonts`` and ``fontawesome-6-brands-fonts``
-* Arch, ``otf-font-awesome`` in :code:`/usr/share/fonts/OTF`
-* Debian and Ubuntu, ``fonts-font-awesome``
+* Linux: :code:`/usr/share/fonts` and its Font Awesome subdirectories, plus
+  :code:`~/.local/share/fonts` and :code:`~/.fonts`. Fedora packages
+  ``fontawesome-6-free-fonts`` and ``fontawesome-6-brands-fonts``; Arch ``otf-font-awesome``;
+  Debian and Ubuntu ``fonts-font-awesome``.
+* macOS: :code:`~/Library/Fonts`, where Homebrew casks install, plus :code:`/Library/Fonts` and
+  :code:`/System/Library/Fonts`.
+* Windows: the system :code:`Fonts` directory, plus the per-user one under
+  :code:`%LOCALAPPDATA%`.
+
+File names are matched case insensitively, so :code:`.OTF` works as well as :code:`.otf`.
 
 Distribution packages ship the fonts without Font Awesome's ``icons.json``, so in that case the
 icon names are recovered from the fonts themselves -- Font Awesome stores each icon's name as its
