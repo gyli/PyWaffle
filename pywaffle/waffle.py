@@ -3,6 +3,8 @@
 
 import copy
 import math
+import numbers
+import operator
 from itertools import islice, product
 from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional, Tuple, Union
 import warnings
@@ -13,6 +15,12 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.patches import Patch, Rectangle
 import matplotlib.pyplot as plt
+
+#: Largest number of blocks a single chart may draw. Blocks cost roughly 36 microseconds each, so
+#: a million already takes the best part of a minute; beyond that a chart is not readable anyway and
+#: the usual cause is values that were meant to be scaled. Raise it if you really need to:
+#: ``pywaffle.waffle.MAX_BLOCKS = 5_000_000``.
+MAX_BLOCKS = 1_000_000
 
 #: A ListedColormap with at most this many entries is treated as a qualitative palette and used in
 #: order. Larger ones are continuous ramps stored as a list of samples, and are sampled across their
@@ -608,6 +616,30 @@ class Waffle(Figure):
         return [f"{label} ({template.format(number)})" for label, number in zip(labels, numbers)]
 
     @staticmethod
+    def _validate_positive_int(par: Dict, name: str):
+        """Check that a grid dimension is a positive whole number, if it was given at all.
+
+        Without this, rows=-5 produces columns=-6 and an empty chart with no error, and rows=2.5 or
+        rows="5" surface as a TypeError from arithmetic several frames down.
+        """
+        value = par[name]
+        if value is None:
+            return
+
+        if isinstance(value, float) and value.is_integer():
+            value = int(value)
+
+        try:
+            value = operator.index(value)
+        except TypeError:
+            raise ValueError(f"Argument {name} should be a positive integer, got {value!r}.") from None
+
+        if value <= 0:
+            raise ValueError(f"Argument {name} should be a positive integer, got {value!r}.")
+
+        par[name] = value
+
+    @staticmethod
     def _validate_choice(par: Dict, name: str, choices: Tuple[str, ...], case: str):
         """Normalize the case of a string argument and check it against the allowed values."""
         value = par[name]
@@ -633,6 +665,7 @@ class Waffle(Figure):
         read them, then values, because almost everything else is sized against them.
         """
         self._validate_enums(par)
+        self._validate_geometry(par)
         self._validate_values(par)
         self._validate_labels_and_colors(par)
 
@@ -650,9 +683,32 @@ class Waffle(Figure):
         Waffle._validate_choice(par, "rounding_rule", ("nearest", "ceil", "floor", "float"), case="lower")
         Waffle._validate_choice(par, "block_arranging_style", ("normal", "snake", "new-line"), case="lower")
         Waffle._validate_choice(par, "starting_location", ("NW", "SW", "NE", "SE"), case="upper")
+        # matplotlib's set_anchor does not reject an unknown string, so an unusable anchor is
+        # silently stored on the axes and the plot is simply misplaced
+        Waffle._validate_choice(par, "plot_anchor", ("C", "SW", "S", "SE", "E", "NE", "N", "NW", "W"), case="upper")
+
+    @staticmethod
+    def _validate_geometry(par: Dict):
+        """Check the grid dimensions and the block shape arguments."""
+        Waffle._validate_positive_int(par, "rows")
+        Waffle._validate_positive_int(par, "columns")
+
+        if not isinstance(par["block_aspect_ratio"], numbers.Real) or par["block_aspect_ratio"] <= 0:
+            raise ValueError(
+                f"Argument block_aspect_ratio should be a positive number, got {par['block_aspect_ratio']!r}."
+            )
+
+        for name in ("interval_ratio_x", "interval_ratio_y"):
+            if not isinstance(par[name], numbers.Real) or par[name] < 0:
+                raise ValueError(f"Argument {name} should be zero or a positive number, got {par[name]!r}.")
 
     def _validate_values(self, par: Dict):
         """Check values is usable, and unpack a dict or Series into values plus labels."""
+        if isinstance(par["values"], str) or not hasattr(par["values"], "__len__"):
+            raise ValueError(
+                f"Argument values should be a list, tuple, dict or pandas Series, "
+                f"got {type(par['values']).__name__}."
+            )
         if len(par["values"]) == 0:
             raise ValueError("Argument values is required.")
         self.values_len = len(par["values"])
@@ -678,6 +734,10 @@ class Waffle(Figure):
     @staticmethod
     def _validate_value_numbers(par: Dict):
         """Check the values themselves, once they are a plain sequence of numbers."""
+        for value in par["values"]:
+            if isinstance(value, bool) or not isinstance(value, numbers.Real):
+                raise ValueError(f"Argument values should contain only numbers, got {value!r}.")
+
         if any(v < 0 for v in par["values"]):
             raise ValueError("Argument values should not contain negative numbers.")
 
@@ -816,21 +876,31 @@ class Waffle(Figure):
             block_per_cat = colored_block_per_cat = [
                 division(v * par["columns"] * par["rows"], total, method=par["rounding_rule"]) for v in par["values"]
             ]
-            return block_per_cat, colored_block_per_cat
-
-        # Otherwise the values are block counts, and the missing dimension follows from them
-        given, missing = ("columns", "rows") if par["rows"] is None else ("rows", "columns")
-        pads_to_whole_lines = par["block_arranging_style"] == "new-line" and (
-            par["vertical"] if given == "columns" else not par["vertical"]
-        )
-
-        if pads_to_whole_lines:
-            block_per_cat = [round_up_to_multiple(v, base=par[given]) for v in par["values"]]
-            colored_block_per_cat = as_blocks(par["values"])
         else:
-            block_per_cat = colored_block_per_cat = as_blocks(par["values"])
+            # Otherwise the values are block counts, and the missing dimension follows from them
+            given, missing = ("columns", "rows") if par["rows"] is None else ("rows", "columns")
+            pads_to_whole_lines = par["block_arranging_style"] == "new-line" and (
+                par["vertical"] if given == "columns" else not par["vertical"]
+            )
 
-        par[missing] = division(sum(block_per_cat), par[given], method="ceil")
+            if pads_to_whole_lines:
+                block_per_cat = [round_up_to_multiple(v, base=par[given]) for v in par["values"]]
+                colored_block_per_cat = as_blocks(par["values"])
+            else:
+                block_per_cat = colored_block_per_cat = as_blocks(par["values"])
+
+            par[missing] = division(sum(block_per_cat), par[given], method="ceil")
+
+        # A chart is drawn one artist per block, so an unscaled value quietly turns into minutes of
+        # drawing rather than an error. Fail fast and say what to do about it.
+        total_blocks = par["rows"] * par["columns"]
+        if total_blocks > MAX_BLOCKS:
+            raise ValueError(
+                f"This chart would need {total_blocks:,} blocks, over the limit of {MAX_BLOCKS:,}. "
+                f"Pass both rows and columns to scale the values into a fixed grid, or reduce the "
+                f"values. Raise pywaffle.waffle.MAX_BLOCKS if you really need a chart this large."
+            )
+
         return block_per_cat, colored_block_per_cat
 
     @staticmethod
