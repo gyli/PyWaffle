@@ -816,6 +816,7 @@ class Waffle(Figure):
             )
 
         def block_style(color):
+            """Styling keywords for one block of the given colour."""
             return self._block_style(color, _pa["block_edge_color"], _pa["block_edge_width"])
 
         # Build a color sequence if colors is empty
