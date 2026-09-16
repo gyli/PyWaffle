@@ -374,10 +374,6 @@ class TestBlockGeometry(WaffleTestCase):
         self.assertLess(corners["SE"][1], corners["NE"][1])
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class TestArrangement(WaffleTestCase):
     """Orientation and arranging styles, including the columns-only sizing path."""
 
@@ -504,3 +500,7 @@ class TestMakeWaffleOnAxes(WaffleTestCase):
         Waffle.make_waffle(ax=ax, rows=5, columns=10, values={"a": 30, "b": 20})
         self.assertEqual(len(ax.patches), 50)
         self.assertEqual([t.get_text() for t in ax.get_legend().get_texts()], ["a", "b"])
+
+
+if __name__ == "__main__":
+    unittest.main()
