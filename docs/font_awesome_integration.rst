@@ -32,6 +32,11 @@ PyWaffle can take its fonts from three places, so it can tell you which one it s
 It never raises. When Font Awesome cannot be found it reports every directory that was searched
 and how to install it, which is the case where knowing what PyWaffle looked at matters most.
 
+The fonts are resolved once and cached for the life of the process, so changing
+:code:`PYWAFFLE_FONTAWESOME_DIR` after a chart has been drawn has no effect until you call
+:code:`pywaffle.reload_font_awesome()`. That mostly matters in a notebook, where the process
+outlives the experiment.
+
 The returned :code:`FontAwesomeStatus` also carries the same information as attributes --
 :code:`available`, :code:`source`, :code:`directory`, :code:`version`, :code:`fonts`,
 :code:`icon_counts`, :code:`aliases_available` and :code:`problem` -- for checking in code.

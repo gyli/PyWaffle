@@ -992,10 +992,20 @@ class Waffle(Figure):
         KeyError leaves the user unable to tell a typo from an icon that was renamed, moved between
         styles, or added after their version.
         """
-        try:
-            return icons[style][name]
-        except KeyError:
-            pass
+        available = icons.get(style)
+        if available is not None and name in available:
+            return available[name]
+
+        if available is None:
+            # The installed Font Awesome does not provide this style at all. Distributions split
+            # the styles across packages -- Fedora ships free and brands separately -- so having
+            # some but not others is normal rather than exotic.
+            present = ", ".join(repr(s) for s in sorted(icons)) or "none"
+            raise ValueError(
+                f"Font Awesome style {style!r} is not available. The fonts found provide: {present}. "
+                "Install the missing style, or see pywaffle.font_awesome_status() for which fonts "
+                "are in use and where they came from."
+            )
 
         elsewhere = sorted(other for other in icons if other != style and name in icons[other])
         if elsewhere:
@@ -1006,11 +1016,11 @@ class Waffle(Figure):
 
         import difflib
 
-        close = difflib.get_close_matches(name, icons[style], n=3, cutoff=0.7)
+        close = difflib.get_close_matches(name, available, n=3, cutoff=0.7)
         suggestion = f" Did you mean {', '.join(repr(c) for c in close)}?" if close else ""
         raise ValueError(
             f"Icon {name!r} was not found in the {style!r} style of the installed Font Awesome, "
-            f"which has {len(icons[style]):,} {style} icons.{suggestion} "
+            f"which has {len(available):,} {style} icons.{suggestion} "
             "Names change between Font Awesome versions; check the icon exists in the version you "
             "have installed."
         )

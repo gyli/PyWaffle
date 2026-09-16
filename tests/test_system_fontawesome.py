@@ -28,10 +28,7 @@ HAS_FONT_AWESOME = importlib.util.find_spec("fontawesomefree") is not None
 
 def reset_caches():
     """Clear the resolved fonts and mapping, which are cached for the life of the process."""
-    handler.font_file_finder.cache_clear()
-    handler.icon_mapping_builder.cache_clear()
-    for name in handler._LAZY:
-        handler.__dict__.pop(name, None)
+    handler.reload_font_awesome()
 
 
 @unittest.skipIf(not HAS_FONT_AWESOME, "needs a Font Awesome to copy into a fake system directory")
@@ -321,3 +318,177 @@ class TestFontAwesomeStatus(unittest.TestCase):
 
         self.assertIn("font_awesome_status", pywaffle.__all__)
         self.assertIs(pywaffle.font_awesome_status, handler.font_awesome_status)
+
+
+class TestHostileFontDirectories(unittest.TestCase):
+    """PYWAFFLE_FONTAWESOME_DIR is user input, so nothing put in it may escape as a raw error.
+
+    Every failure here should be ImportError or ValueError -- the two the rest of the package
+    raises -- never OSError, RuntimeError or KeyError from somewhere deeper.
+    """
+
+    def setUp(self):
+        self._saved = os.environ.get(handler.FONT_DIRECTORY_VARIABLE)
+        self._tmp = pathlib.Path(tempfile.mkdtemp())
+        reset_caches()
+
+    def tearDown(self):
+        if self._saved is None:
+            os.environ.pop(handler.FONT_DIRECTORY_VARIABLE, None)
+        else:
+            os.environ[handler.FONT_DIRECTORY_VARIABLE] = self._saved
+        reset_caches()
+        shutil.rmtree(self._tmp, ignore_errors=True)
+        plt.close("all")
+
+    def _draw(self):
+        plt.figure(FigureClass=Waffle, rows=5, values=[10], icons="star")
+
+    def test_a_path_too_long_for_the_filesystem(self):
+        """os.listdir raises OSError for these; it must not reach the caller."""
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = "/tmp/" + "a" * 300
+        with self.assertRaises(ImportError):
+            self._draw()
+
+    def test_a_file_where_a_directory_was_expected(self):
+        """Pointing at a font file rather than its directory is an easy mistake."""
+        target = self._tmp / "afile"
+        target.write_text("x")
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = str(target)
+        with self.assertRaises(ImportError):
+            self._draw()
+
+    def test_a_blank_value_counts_as_unset(self):
+        """An empty or whitespace variable should not be treated as a directory named ''."""
+        for blank in ("", "   ", "\t"):
+            with self.subTest(value=repr(blank)):
+                os.environ[handler.FONT_DIRECTORY_VARIABLE] = blank
+                reset_caches()
+                self.assertIsNone(handler.configured_font_directory())
+
+    def test_a_tilde_is_expanded(self):
+        """A value set in code has not been through a shell."""
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = "~/some-fonts"
+        self.assertEqual(handler.configured_font_directory(), pathlib.Path(os.path.expanduser("~/some-fonts")))
+
+    def test_surrounding_whitespace_is_stripped(self):
+        """Copy-pasted values often carry a trailing newline or space."""
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = f"  {self._tmp}  "
+        self.assertEqual(handler.configured_font_directory(), self._tmp)
+
+    @unittest.skipIf(not HAS_FONT_AWESOME, "needs a real font to sit beside the corrupt one")
+    def test_a_file_that_is_not_really_a_font(self):
+        """FreeType raises RuntimeError, which says nothing about which file was at fault."""
+        for path in handler.font_file_finder().values():
+            shutil.copy(path, self._tmp)
+        # Truncate one of them, keeping the name that makes it a recognised style
+        solid = next(p for p in self._tmp.glob("*.otf") if "Solid" in p.name)
+        solid.write_bytes(b"not a font")
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = str(self._tmp)
+        reset_caches()
+
+        with self.assertRaises(ValueError) as caught:
+            handler._mapping_from_fonts()
+        self.assertIn(solid.name, str(caught.exception))
+
+    def test_status_never_raises_whatever_the_variable_holds(self):
+        """It is the tool people reach for when something is wrong."""
+        for value in ("", "   ", "/tmp/" + "a" * 300, str(self._tmp), "~/nope", "relative/path"):
+            with self.subTest(value=value[:30]):
+                os.environ[handler.FONT_DIRECTORY_VARIABLE] = value
+                reset_caches()
+                status = handler.font_awesome_status()
+                self.assertIsInstance(status.available, bool)
+                self.assertIsInstance(str(status), str)
+
+
+@unittest.skipIf(not HAS_FONT_AWESOME, "needs Font Awesome to build a partial set from")
+class TestPartialFontSet(unittest.TestCase):
+    """Distributions split the styles across packages, so having only some is normal.
+
+    Fedora ships fontawesome-6-free-fonts and fontawesome-6-brands-fonts separately.
+    """
+
+    def setUp(self):
+        self._saved = os.environ.get(handler.FONT_DIRECTORY_VARIABLE)
+        self._tmp = pathlib.Path(tempfile.mkdtemp())
+        reset_caches()
+        solid = next(p for p in handler.font_file_finder().values() if "Solid" in p.name)
+        shutil.copy(solid, self._tmp)
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = str(self._tmp)
+        reset_caches()
+
+    def tearDown(self):
+        if self._saved is None:
+            os.environ.pop(handler.FONT_DIRECTORY_VARIABLE, None)
+        else:
+            os.environ[handler.FONT_DIRECTORY_VARIABLE] = self._saved
+        reset_caches()
+        shutil.rmtree(self._tmp, ignore_errors=True)
+        plt.close("all")
+
+    def test_the_available_style_still_works(self):
+        """A partial set is not a broken set."""
+        fig = plt.figure(FigureClass=Waffle, rows=5, values=[10], icons="star")
+        self.assertEqual(len(fig.axes[0].texts), 10)
+
+    def test_a_missing_style_says_which_styles_exist(self):
+        """This used to be a bare KeyError naming only the style."""
+        with self.assertRaises(ValueError) as caught:
+            plt.figure(FigureClass=Waffle, rows=5, values=[10], icons="bluesky", icon_style="brands")
+        message = str(caught.exception)
+        self.assertIn("'brands' is not available", message)
+        self.assertIn("'solid'", message)
+        self.assertIn("font_awesome_status", message)
+
+    def test_a_missing_style_with_an_unknown_icon_also_explains_itself(self):
+        """The style check has to come first, or the icon lookup raises KeyError on the style."""
+        with self.assertRaises(ValueError) as caught:
+            plt.figure(FigureClass=Waffle, rows=5, values=[10], icons="nope", icon_style="regular")
+        self.assertIn("not available", str(caught.exception))
+
+
+class TestReloading(unittest.TestCase):
+    """The fonts are resolved once, so changing the variable later needs an explicit reload."""
+
+    def setUp(self):
+        self._saved = os.environ.get(handler.FONT_DIRECTORY_VARIABLE)
+        self._tmp = pathlib.Path(tempfile.mkdtemp())
+        reset_caches()
+
+    def tearDown(self):
+        if self._saved is None:
+            os.environ.pop(handler.FONT_DIRECTORY_VARIABLE, None)
+        else:
+            os.environ[handler.FONT_DIRECTORY_VARIABLE] = self._saved
+        reset_caches()
+        shutil.rmtree(self._tmp, ignore_errors=True)
+        plt.close("all")
+
+    def test_it_is_exported(self):
+        """Someone hitting the caching needs to be able to find the way out."""
+        import pywaffle
+
+        self.assertIn("reload_font_awesome", pywaffle.__all__)
+
+    @unittest.skipIf(not HAS_FONT_AWESOME, "needs Font Awesome installed")
+    def test_a_reload_picks_up_a_changed_directory(self):
+        """Setting the variable in a notebook after drawing once should be recoverable."""
+        os.environ.pop(handler.FONT_DIRECTORY_VARIABLE, None)
+        reset_caches()
+        self.assertEqual(handler.font_awesome_status().source, "fontawesomefree package")
+
+        for path in handler.font_file_finder().values():
+            shutil.copy(path, self._tmp)
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = str(self._tmp)
+
+        # Still the package: the resolution is cached
+        self.assertEqual(handler.font_awesome_status().source, "fontawesomefree package")
+
+        handler.reload_font_awesome()
+        self.assertIn(str(self._tmp), handler.font_awesome_status().source)
+
+    def test_reloading_with_nothing_resolved_yet_is_harmless(self):
+        """It should be safe to call at any time, including before the first chart."""
+        handler.reload_font_awesome()
+        handler.reload_font_awesome()

@@ -68,14 +68,33 @@ def _styles_in(directory: pathlib.Path) -> Dict[str, pathlib.Path]:
     Distributions keep the upstream file names -- "Font Awesome 6 Free-Solid-900.otf" and the
     like -- so the same suffix match works for a system directory as for the Python package.
     """
-    if not directory.is_dir():
+    try:
+        if not directory.is_dir():
+            return {}
+        paths = sorted(directory.glob("*.otf"))
+    except OSError:
+        # An unreadable directory, a path too long for the filesystem, a broken symlink: all mean
+        # "no fonts here", and none of them should escape as an OSError from a chart call.
         return {}
+
     return {
         style: path
-        for path in sorted(directory.glob("*.otf"))
+        for path in paths
         for style, font_suffix in FA_STYLES.items()
         if font_suffix.lower() in path.name.lower()
     }
+
+
+def configured_font_directory() -> Optional[pathlib.Path]:
+    """The directory named by the environment variable, or None when it is not usefully set.
+
+    Whitespace is stripped and ``~`` expanded, so a value set programmatically behaves the same as
+    one a shell would have expanded. An empty or blank value counts as unset.
+    """
+    raw = os.environ.get(FONT_DIRECTORY_VARIABLE)
+    if raw is None or not raw.strip():
+        return None
+    return pathlib.Path(os.path.expanduser(raw.strip()))
 
 
 def font_directory_candidates():
@@ -84,9 +103,9 @@ def font_directory_candidates():
     An explicit setting wins, then the Python package, then the places distributions install it.
     Yields (path, is_package) so the caller can tell whether icons.json sits alongside.
     """
-    override = os.environ.get(FONT_DIRECTORY_VARIABLE)
-    if override:
-        yield pathlib.Path(override), False
+    override = configured_font_directory()
+    if override is not None:
+        yield override, False
 
     try:
         yield fontawesome_package_path() / "otfs", True
@@ -104,7 +123,7 @@ def font_file_finder() -> Dict[str, pathlib.Path]:
     Prefers an explicitly configured directory, then the fontawesomefree package, then the system
     font directories, so a distribution can supply the fonts without the Python package.
     """
-    override = os.environ.get(FONT_DIRECTORY_VARIABLE)
+    override = configured_font_directory()
 
     searched = []
     for directory, _ in font_directory_candidates():
@@ -114,8 +133,16 @@ def font_file_finder() -> Dict[str, pathlib.Path]:
         searched.append(str(directory))
 
         # Falling back past an explicit setting would hide the fact that it did not work
-        if override and str(directory) == str(pathlib.Path(override)):
-            present = sorted(path.name for path in directory.glob("*.otf")) if directory.is_dir() else []
+        if override is not None and directory == override:
+            try:
+                present = sorted(p.name for p in directory.glob("*.otf")) if directory.is_dir() else []
+            except OSError as exc:
+                raise ImportError(
+                    f"{FONT_DIRECTORY_VARIABLE} is set to {directory}, which cannot be read: {exc}.\n"
+                    "Point it at a readable directory of Font Awesome .otf files, unset it to fall "
+                    "back to the Python package and the system font directories, or install the "
+                    "package:\n    pip install 'pywaffle[icons]'"
+                ) from exc
             detail = (
                 "it contains no Font Awesome .otf files"
                 if not present
@@ -202,8 +229,18 @@ def _mapping_from_fonts() -> Dict[str, Dict[str, str]]:
 
     mapping: Dict[str, Dict[str, str]] = defaultdict(dict)
     for style, path in font_file_finder().items():
-        face = FT2Font(str(path))
-        for code_point, glyph_index in face.get_charmap().items():
+        try:
+            face = FT2Font(str(path))
+            charmap = face.get_charmap()
+        except Exception as exc:
+            # FreeType raises RuntimeError for anything it cannot parse. Name the file, since the
+            # user chose the directory it came from.
+            raise ValueError(
+                f"Could not read the Font Awesome {style} font at {path}: {exc}. "
+                "The file may be truncated or not a font."
+            ) from exc
+
+        for code_point, glyph_index in charmap.items():
             name = face.get_glyph_name(glyph_index)
             if name:
                 mapping[style].setdefault(name, chr(code_point))
@@ -301,8 +338,25 @@ class FontAwesomeStatus:
         return "\n".join(lines)
 
 
+def reload_font_awesome() -> None:
+    """Forget which fonts were resolved, so they are looked up again on next use.
+
+    The fonts and the icon mapping are resolved once and cached for the life of the process, so
+    changing PYWAFFLE_FONTAWESOME_DIR after a chart has been drawn has no effect until this is
+    called. Mostly useful in a notebook, where the process outlives the experiment.
+    """
+    font_file_finder.cache_clear()
+    icon_mapping_builder.cache_clear()
+    _legend_handlers.cache_clear()
+    for name in _LAZY:
+        globals().pop(name, None)
+
+
 def font_awesome_status() -> FontAwesomeStatus:
     """Report which Font Awesome is in use, so it is never a guess.
+
+    Reflects what is currently resolved. The fonts are cached for the life of the process, so if
+    PYWAFFLE_FONTAWESOME_DIR has changed since the first chart, call reload_font_awesome() first.
 
     Never raises. When Font Awesome cannot be found it reports why, which is the case where
     knowing what PyWaffle looked at matters most.
@@ -311,6 +365,16 @@ def font_awesome_status() -> FontAwesomeStatus:
     >>> print(font_awesome_status())
     """
     override = os.environ.get(FONT_DIRECTORY_VARIABLE)
+    source = f"{FONT_DIRECTORY_VARIABLE}={override}" if override else "not found"
+    try:
+        return _describe_font_awesome()
+    except Exception as exc:  # noqa: BLE001 - a diagnostic that raises is no diagnostic
+        return FontAwesomeStatus(available=False, source=source, problem=f"{type(exc).__name__}: {exc}")
+
+
+def _describe_font_awesome() -> FontAwesomeStatus:
+    """Gather the report. Wrapped by font_awesome_status, which turns any failure into a report."""
+    override = configured_font_directory()
     try:
         fonts = font_file_finder()
     except ImportError as exc:
@@ -318,7 +382,7 @@ def font_awesome_status() -> FontAwesomeStatus:
         return FontAwesomeStatus(available=False, source=source, problem=str(exc))
 
     directory = next(iter(fonts.values())).parent
-    if override and directory == pathlib.Path(override):
+    if override is not None and directory == override:
         source = f"{FONT_DIRECTORY_VARIABLE}={override}"
     elif any(directory == candidate for candidate, is_package in font_directory_candidates() if is_package):
         source = "fontawesomefree package"

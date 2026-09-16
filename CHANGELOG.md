@@ -21,6 +21,7 @@ Breaking
 
 New
 
+* Add `pywaffle.reload_font_awesome()`, which forgets the resolved fonts so a changed `PYWAFFLE_FONTAWESOME_DIR` takes effect without restarting
 * Add `pywaffle.font_awesome_status()`, which reports which Font Awesome is in use, where it came from, its version, how many icons each style has, and whether aliases are available. It never raises: when Font Awesome cannot be found it reports every directory searched and how to install it
 * Font Awesome can now come from the system rather than the Python package. `PYWAFFLE_FONTAWESOME_DIR` points at a directory of `.otf` files, and the usual system font directories are searched as a fallback, so a distribution's font package works on its own. Distribution packages ship fonts without Font Awesome's `icons.json`, so in that case the icon names are recovered from the fonts themselves - every canonical name is available, though aliases are not ([#25](https://github.com/gyli/PyWaffle/issues/25))
 
