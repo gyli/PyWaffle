@@ -12,6 +12,11 @@ import matplotlib.pyplot as plt
 
 from pywaffle.waffle import Waffle
 
+try:
+    import pandas as pd
+except ImportError:  # pandas is not a dependency of pywaffle
+    pd = None
+
 
 class LabelsTestCase(unittest.TestCase):
     def tearDown(self):
@@ -146,9 +151,10 @@ class TestSortValues(LabelsTestCase):
         self.assertEqual(colors[0], tuple(fig.plot_args[0]["colors"][0]) + (1,))
 
 
+@unittest.skipIf(pd is None, "pandas is not installed")
 class TestPandasInput(LabelsTestCase):
     def setUp(self):
-        self.pd = __import__("pandas")
+        self.pd = pd
 
     def test_series_index_becomes_the_labels(self):
         series = self.pd.Series({"Alpha": 10, "Beta": 20, "Gamma": 5})
