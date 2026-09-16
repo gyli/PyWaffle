@@ -81,11 +81,11 @@ jobs:
     # Image comparison catches regressions that block-by-block assertions cannot: a layout engine
     # change, a matplotlib default moving, a legend drifting over the chart.
     #
-    # Non-blocking for now. The committed baselines were generated on macOS, and anything
-    # containing text renders differently on Linux, so some of these are expected to fail until
-    # the baselines are regenerated on this runner. The uploaded summary shows exactly which.
+    # The baselines are generated on macOS and compared here on Linux. That works because
+    # matplotlib ships its own fonts, so text renders identically on both. Regenerate with:
+    #   pytest tests/test_images.py --mpl-generate-path=tests/baseline
+    # The uploaded summary shows which images differ and by how much when one fails.
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

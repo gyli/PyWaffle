@@ -8,8 +8,12 @@ change that is correct block by block and still wrong as a picture: a layout eng
 matplotlib default moving underneath us, a legend drifting over the chart.
 
 These tests render a small set of charts and compare them against committed baseline images. They
-are opt-in and are skipped unless pytest-mpl is installed and --mpl is passed, because an image
-comparison that runs without baselines silently passes and is worse than no test at all.
+are opt-in and are skipped unless pytest-mpl is installed and --mpl is passed, because pytest-mpl
+runs the test body without comparing anything when the flag is absent, and a test that reports
+success while checking nothing is worse than no test at all.
+
+The baselines are generated on macOS and compared on Linux in CI. That works because matplotlib
+ships its own fonts, so text renders identically on both.
 
 Regenerate the baselines after an intended visual change:
 
