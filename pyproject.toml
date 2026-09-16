@@ -1,5 +1,10 @@
 [build-system]
-requires = ["setuptools>=64", "wheel"]
+# 77 is the first setuptools that understands PEP 639, which is what `license = "MIT"` and
+# `license-files` below are. An older one fails metadata generation outright:
+#   configuration error: `project.license` must be valid exactly by one definition
+# Build isolation hides that by always fetching the newest setuptools, so the floor only
+# bites a build with --no-build-isolation: conda-forge, distro packaging, offline CI.
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -19,9 +24,13 @@ keywords = [
     "pie plot",
     "data visualization",
 ]
+# matplotlib 3.6 is the first with Figure.set_layout_engine, which _apply_layout_engine uses
+# in place of the deprecated set_tight_layout. Without the floor, installing into an
+# environment that already pins an older matplotlib leaves the pin in place and every figure
+# then raises AttributeError.
 # fontawesomefree stays a hard dependency for now; making it an extra is a breaking
 # change and is tracked separately. The "icons" extra is an additive alias.
-dependencies = ["matplotlib", "fontawesomefree"]
+dependencies = ["matplotlib>=3.6", "fontawesomefree"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
