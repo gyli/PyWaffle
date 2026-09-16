@@ -1,0 +1,4 @@
+# Binder environment for demo.ipynb.
+# Installing the repository itself means the online demo runs THIS code, not the last PyPI release.
+-e .
+pandas
