@@ -14,6 +14,12 @@ from matplotlib.figure import Figure
 from matplotlib.patches import Patch, Rectangle
 import matplotlib.pyplot as plt
 
+#: A ListedColormap with at most this many entries is treated as a qualitative palette and used in
+#: order. Larger ones are continuous ramps stored as a list of samples, and are sampled across their
+#: range instead. Every qualitative colormap matplotlib ships has at most 20 entries (tab20); every
+#: continuous one has 256.
+QUALITATIVE_COLORMAP_MAX = 20
+
 METHOD_MAPPING = {
     "float": lambda a, b: a / b,
     "nearest": lambda a, b: round(a / b),
@@ -117,7 +123,10 @@ class Waffle(Figure):
 
     :param cmap_name: Name of colormaps for default color, if colors is not assigned.
 
-        | See full list in https://matplotlib.org/examples/color/colormaps_reference.html
+        | A qualitative colormap, such as the default 'Set2', is used in order and repeated if there
+          are more categories than colors. Any other colormap is sampled evenly across its range, so
+          that the categories are visibly distinct.
+        | See full list in https://matplotlib.org/stable/users/explain/colors/colormaps.html
         | [Default 'Set2']
     :type cmap_name: str, optional
 
@@ -426,13 +435,20 @@ class Waffle(Figure):
         """
         Pick one color per category from a named colormap.
 
-        A discrete (listed) colormap has a fixed palette, which is repeated or trimmed to the number
-        of categories. A continuous colormap has no such palette, so the categories are spread evenly
-        across its range instead. Reaching for .colors on a continuous colormap raises AttributeError.
+        A qualitative colormap is a designed palette of distinct colors, so it is used in order and
+        repeated or trimmed to the number of categories. Anything else is a continuous ramp, and the
+        categories are spread evenly across its range.
+
+        The distinction is not the colormap class. matplotlib stores viridis, plasma, magma, cividis
+        and turbo as ListedColormaps too, with 256 entries, so taking the first few of those gives
+        colors that differ by a fraction of a percent and look identical in a chart. Every
+        qualitative colormap matplotlib ships has at most 20 entries and every continuous one has
+        256, so the size is what separates them.
         """
         cmap = plt.get_cmap(cmap_name)
         palette = getattr(cmap, "colors", None)
-        if palette is not None:
+
+        if palette is not None and cmap.N <= QUALITATIVE_COLORMAP_MAX:
             return array_resize(array=list(palette), length=length, array_len=cmap.N)
 
         if length == 1:

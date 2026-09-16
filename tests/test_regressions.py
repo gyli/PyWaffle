@@ -2,6 +2,7 @@
 # -*-coding: utf-8 -*-
 """Regression tests for bugs fixed in 1.2.0. Each test names the behaviour that was wrong."""
 
+import itertools
 import unittest
 import warnings
 
@@ -145,6 +146,58 @@ class TestColormaps(WaffleTestCase):
     def test_single_category_continuous_colormap(self):
         fig = plt.figure(FigureClass=Waffle, rows=5, values=[10], cmap_name="viridis")
         self.assertEqual(len(fig.plot_args[0]["colors"]), 1)
+
+    def test_large_listed_colormaps_are_sampled_not_truncated(self):
+        # viridis and friends are ListedColormaps with 256 entries, so taking the first few gives
+        # colours differing by a fraction of a percent - five identical-looking dark purple blocks
+        for name in ("viridis", "plasma", "magma", "inferno", "cividis"):
+            with self.subTest(cmap_name=name):
+                colors = Waffle._colors_from_cmap(name, 5)
+                self.assertEqual(len(colors), 5)
+                separations = [
+                    max(abs(a[i] - b[i]) for i in range(3))
+                    for a, b in itertools.combinations([c[:3] for c in colors], 2)
+                ]
+                # Any two categories differ by at least 10% on some channel
+                self.assertGreater(min(separations), 0.1)
+
+    def test_a_qualitative_colormap_is_still_used_in_order(self):
+        # Set2 is a designed 8-colour palette; it must not be resampled
+        import matplotlib.pyplot as pyplot
+
+        palette = list(pyplot.get_cmap("Set2").colors)
+        self.assertEqual(Waffle._colors_from_cmap("Set2", 3), palette[:3])
+
+    def test_the_boundary_between_the_two_behaviours(self):
+        # tab20 has exactly 20 entries and is the largest qualitative map matplotlib ships
+        import matplotlib.pyplot as pyplot
+
+        from pywaffle.waffle import QUALITATIVE_COLORMAP_MAX
+
+        self.assertEqual(QUALITATIVE_COLORMAP_MAX, 20)
+        self.assertEqual(pyplot.get_cmap("tab20").N, QUALITATIVE_COLORMAP_MAX)
+        self.assertEqual(Waffle._colors_from_cmap("tab20", 3), list(pyplot.get_cmap("tab20").colors)[:3])
+
+    def test_every_matplotlib_qualitative_map_takes_the_palette_path(self):
+        import matplotlib.pyplot as pyplot
+
+        for name in (
+            "Pastel1",
+            "Pastel2",
+            "Paired",
+            "Accent",
+            "Dark2",
+            "Set1",
+            "Set2",
+            "Set3",
+            "tab10",
+            "tab20",
+            "tab20b",
+            "tab20c",
+        ):
+            with self.subTest(cmap_name=name):
+                palette = list(pyplot.get_cmap(name).colors)
+                self.assertEqual(Waffle._colors_from_cmap(name, 3), palette[:3])
 
     def test_listed_colormap_output_is_unchanged(self):
         fig = plt.figure(FigureClass=Waffle, rows=5, values=[10, 20])
