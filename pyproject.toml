@@ -19,9 +19,10 @@ keywords = [
     "pie plot",
     "data visualization",
 ]
-# fontawesomefree stays a hard dependency for now; making it an extra is a breaking
-# change and is tracked separately. The "icons" extra is an additive alias.
-dependencies = ["matplotlib", "fontawesomefree"]
+# Font Awesome is only needed to draw with icons, so it is an extra rather than a hard
+# dependency: pip install "pywaffle[icons]". Requesting icons without it raises ImportError
+# with installation instructions.
+dependencies = ["matplotlib"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",

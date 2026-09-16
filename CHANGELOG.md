@@ -14,6 +14,10 @@ Fixes
 * Reject unknown `block_arranging_style`, which was previously accepted and silently drawn as `normal`
 * Raise `ValueError` rather than `KeyError` or `AttributeError` for invalid `starting_location`, `rounding_rule` and `icon_style`, and accept `icon_style` lists in any case
 
+Breaking
+
+* **Font Awesome is now an optional dependency.** `pip install pywaffle` no longer pulls in `fontawesomefree`; install `pywaffle[icons]` to draw with `icons`. Everything else, including `characters`, works without it. Asking for `icons` without the extra raises `ImportError` naming the command to run, rather than a bare `ModuleNotFoundError`. This removes a font package from the dependency graph of every project that uses PyWaffle without icons, and is a step towards letting distributions use a system Font Awesome ([#25](https://github.com/gyli/PyWaffle/issues/25))
+
 New
 
 * Add `rounding_rule="float"`, which draws partial blocks instead of rounding values ([#26](https://github.com/gyli/PyWaffle/issues/26)). A category that ends part way through a block fills only that fraction of it, and a block containing a boundary between two categories is split between their colors. The block count then depends only on the total of the values, so two datasets with the same total produce charts of the same size - which rounding did not guarantee

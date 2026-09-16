@@ -1,10 +1,17 @@
 Font Awesome Integration
 ========================
 
-PyWaffle installs `Font Awesome
-<https://fontawesome.com/>`_ free version automatically as a dependent package.
-The package it is trying to install is the latest version of `fontawesomefree
+Icons come from the free version of `Font Awesome
+<https://fontawesome.com/>`_, packaged for Python as `fontawesomefree
 <https://pypi.org/project/fontawesomefree/>`_.
+
+It is an **optional** dependency, so install it alongside PyWaffle when you want icons::
+
+   $ pip install "pywaffle[icons]"
+
+Nothing else needs it. Rectangle blocks, and the ``characters`` parameter, work without it, and
+asking for ``icons`` when it is absent raises ``ImportError`` naming the command to run rather than
+a bare ``ModuleNotFoundError``.
 
 Upgrading or downgrading Font Awesome
 -------------------------------------

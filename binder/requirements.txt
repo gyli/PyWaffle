@@ -1,4 +1,5 @@
 # Binder environment for demo.ipynb.
 # Installing the repository itself means the online demo runs THIS code, not the last PyPI release.
--e .
+# The demo draws a pictogram chart, so it needs the icons extra.
+-e .[icons]
 pandas

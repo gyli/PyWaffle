@@ -4,6 +4,7 @@
 import inspect
 import json
 import pathlib
+from functools import lru_cache
 from collections import defaultdict
 from typing import Dict
 
@@ -18,14 +19,31 @@ FA_STYLES = {
 }
 
 
+MISSING_FONT_AWESOME = (
+    "Drawing with icons requires Font Awesome, which is an optional dependency of PyWaffle.\n"
+    "Install it with:\n"
+    "    pip install 'pywaffle[icons]'\n"
+    "or, if you manage the font package yourself:\n"
+    "    pip install fontawesomefree"
+)
+
+
 def fontawesome_package_path() -> pathlib.Path:
-    """Path to the static asset directory of the installed fontawesomefree package."""
-    import fontawesomefree
+    """Path to the static asset directory of the installed fontawesomefree package.
+
+    Raises ImportError with installation instructions when the optional font package is absent,
+    rather than letting a bare ModuleNotFoundError surface from several frames down.
+    """
+    try:
+        import fontawesomefree
+    except ImportError as exc:
+        raise ImportError(MISSING_FONT_AWESOME) from exc
 
     package_path = pathlib.Path(inspect.getsourcefile(fontawesomefree))
     return package_path.parent / "static/fontawesomefree"
 
 
+@lru_cache(maxsize=None)
 def font_file_finder() -> Dict[str, pathlib.Path]:
     """Map each Font Awesome style to the .otf file that provides it."""
     font_otf_path = (fontawesome_package_path() / "otfs").glob("*.otf")
@@ -37,6 +55,7 @@ def font_file_finder() -> Dict[str, pathlib.Path]:
     }
 
 
+@lru_cache(maxsize=None)
 def icon_mapping_builder() -> Dict[str, Dict[str, str]]:
     """
     Build the icon name to Unicode character mapping from the metadata shipped with the installed
@@ -113,8 +132,27 @@ class TextLegendHandler(HandlerBase):
         return [annotation]
 
 
-fontawesome_files = font_file_finder()
-icons = icon_mapping_builder()
-legend_handler_style_mapping = {
-    v: TextLegendHandler(font_file=fontawesome_files[k]) for k, v in legend_style_class_mapping.items()
+@lru_cache(maxsize=None)
+def _legend_handlers() -> Dict:
+    """Map each legend handle class to a handler that draws it in the right font."""
+    files = font_file_finder()
+    return {v: TextLegendHandler(font_file=files[k]) for k, v in legend_style_class_mapping.items()}
+
+
+#: Resolved on first use rather than at import, so that importing this module -- which
+#: _parameter_validation does simply to read FA_STYLES -- does not require the optional font
+#: package. Anything that actually needs a font raises ImportError with install instructions.
+_LAZY = {
+    "fontawesome_files": font_file_finder,
+    "icons": icon_mapping_builder,
+    "legend_handler_style_mapping": _legend_handlers,
 }
+
+
+def __getattr__(name: str):
+    """Resolve the font-backed module attributes on first access (PEP 562)."""
+    if name in _LAZY:
+        value = _LAZY[name]()
+        globals()[name] = value
+        return value
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
