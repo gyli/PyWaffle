@@ -37,8 +37,13 @@ except ImportError:
 
 
 def documentation_pages():
-    """Every page that carries runnable snippets, docs first then the README."""
-    return sorted((REPO_ROOT / "docs" / "examples").glob("*.md")) + [REPO_ROOT / "README.md"]
+    """Every page that carries runnable snippets, docs first then the README.
+
+    Both levels of docs/: the topic pages under docs/examples/, and the pages beside them such as
+    the quickstart, whose snippets are the first code most readers ever run.
+    """
+    docs = REPO_ROOT / "docs"
+    return sorted(docs.glob("*.md")) + sorted((docs / "examples").glob("*.md")) + [REPO_ROOT / "README.md"]
 
 
 class TestDocumentationSnippets(unittest.TestCase):

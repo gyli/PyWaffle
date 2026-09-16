@@ -5,6 +5,7 @@
 
 import matplotlib.pyplot as plt
 
+from pywaffle import waffle_chart
 from pywaffle.waffle import Waffle
 
 # For README
@@ -317,4 +318,114 @@ fig.text(
     bbox={"boxstyle": "square", "lw": 3, "ec": "gray", "fc": (0.9, 0.9, 0.9, 0.5), "alpha": 0.3},
 )
 fig.savefig(doc_examples_image_folder + "add_other_elements.svg", bbox_inches="tight")
+plt.close(fig)
+
+
+# ---------------------------------------------------------------------------
+# Quickstart
+#
+# One dataset carried through the whole quickstart, so that each chart adds a
+# single idea rather than restarting on new numbers. The values are real, which
+# is the point: a waffle chart's argument is that one block is one real thing.
+#
+# These calls are written exactly as docs/quickstart.md shows them, so the code a
+# reader copies is the code that produced the image underneath it.
+#
+# Source: Ember (2026) via Our World in Data, "Share of electricity production
+#         by source", 2025. Both CC BY 4.0.
+#         https://ourworldindata.org/grapher/share-elec-by-source
+#
+# Oil, bioenergy and other renewables are grouped as "Other". Shares are rounded
+# to one decimal and sum to exactly 100.0. To refresh for a later year, replace
+# the year and the seven numbers below; nothing else depends on them.
+# ---------------------------------------------------------------------------
+quickstart_image_folder = "examples/quickstart/"
+
+electricity = {
+    "Coal": 33.0,
+    "Gas": 21.8,
+    "Hydro": 14.0,
+    "Nuclear": 8.8,
+    "Solar": 8.7,
+    "Wind": 8.5,
+    "Other": 5.2,
+}
+energy_colors = ["#44413d", "#c4703a", "#2e6fa7", "#7a4b9e", "#f2b705", "#3fa796", "#b9b6b0"]
+energy_icons = ["fire", "gas-pump", "water", "atom", "solar-panel", "fan", "plug"]
+aside = {"loc": "upper left", "bbox_to_anchor": (1.02, 1), "frameon": False}
+
+# 1. The first chart: one block is 1% of world electricity
+fig, ax = waffle_chart(electricity, rows=10, columns=10, legend=aside, figsize=(6, 4))
+fig.savefig(quickstart_image_folder + "first_chart.svg", bbox_inches="tight")
+plt.close(fig)
+
+# 2. Colours, a title, and the values alongside the labels
+fig, ax = waffle_chart(
+    electricity,
+    rows=10,
+    columns=10,
+    colors=energy_colors,
+    title={"label": "How the world made its electricity in 2025", "loc": "left"},
+    legend=aside,
+    show_values=True,
+    value_format="{:g}%",
+    figsize=(6.5, 4),
+)
+fig.savefig(quickstart_image_folder + "labelled.svg", bbox_inches="tight")
+plt.close(fig)
+
+# 3. rounding_rule="float". One block is 2% here, so most shares land part way
+#    through a block and the partial blocks are plain to see.
+fig, ax = waffle_chart(
+    electricity,
+    rows=5,
+    columns=10,
+    colors=energy_colors,
+    rounding_rule="float",
+    title={"label": "One block = 2%, and nothing is rounded away", "loc": "left"},
+    legend=aside,
+    show_values=True,
+    value_format="{:g}%",
+    figsize=(6.5, 2.8),
+)
+fig.savefig(quickstart_image_folder + "fractional.svg", bbox_inches="tight")
+plt.close(fig)
+
+# 4. A continuous tiled grid, largest share first. Also the README and docs hero.
+fig, ax = waffle_chart(
+    electricity,
+    rows=10,
+    columns=10,
+    colors=energy_colors,
+    sort_values=True,
+    rounding_rule="float",
+    interval_ratio_x=0,
+    interval_ratio_y=0,
+    block_edge_color="white",
+    block_edge_width=1.2,
+    title={"label": "World electricity generation, 2025", "loc": "left"},
+    legend=aside,
+    show_values=True,
+    value_format="{:g}%",
+    figsize=(6.5, 4),
+)
+fig.savefig(quickstart_image_folder + "tiled.svg", bbox_inches="tight")
+plt.close(fig)
+
+# 5. Pictogram. Icons are Text and cannot take a block edge, so background_color
+#    is how the grid is given a panel to sit on.
+fig, ax = waffle_chart(
+    electricity,
+    rows=5,
+    columns=10,
+    colors=energy_colors,
+    icons=energy_icons,
+    font_size=20,
+    icon_legend=True,
+    background_color="#f4f2ee",
+    title={"label": "World electricity generation, 2025", "loc": "left"},
+    legend=aside,
+    figsize=(6.5, 2.8),
+)
+fig.savefig(quickstart_image_folder + "pictogram.svg", bbox_inches="tight")
 plt.close(fig)
