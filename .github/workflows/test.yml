@@ -77,6 +77,34 @@ jobs:
           MPLBACKEND: Agg
         run: pytest tests
 
+  images:
+    # Image comparison catches regressions that block-by-block assertions cannot: a layout engine
+    # change, a matplotlib default moving, a legend drifting over the chart.
+    #
+    # The baselines are generated on macOS and compared here on Linux. That works because
+    # matplotlib ships its own fonts, so text renders identically on both. Regenerate with:
+    #   pytest tests/test_images.py --mpl-generate-path=tests/baseline
+    # The uploaded summary shows which images differ and by how much when one fails.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e . pytest pytest-mpl
+      - name: Compare against baselines
+        env:
+          MPLBACKEND: Agg
+        run: >
+          pytest tests/test_images.py --mpl
+          --mpl-generate-summary=html
+          --mpl-results-path=image-results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: image-comparison-results
+          path: image-results/
+
   lint:
     runs-on: ubuntu-latest
     steps:
