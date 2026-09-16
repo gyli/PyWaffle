@@ -21,9 +21,11 @@ class ValidationMixin:
     """
 
     def tearDown(self):
+        """Close every figure, so a long parameter sweep does not accumulate them."""
         plt.close("all")
 
     def _rejects(self, message, **kwargs):
+        """Assert that the given arguments raise a ValueError matching message."""
         kwargs.setdefault("values", [10, 20])
         kwargs.setdefault("rows", 5)
         with self.assertRaisesRegex(ValueError, message):
