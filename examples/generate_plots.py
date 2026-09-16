@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*-coding: utf-8 -*-
 
-# Run `python3 -m README_images.generate_plots` on root folder to generate plots for README
+# Run `python3 -m examples.generate_plots` from the repository root to regenerate the images
+# used by the README and the documentation.
 
 import matplotlib.pyplot as plt
 
