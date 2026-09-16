@@ -19,7 +19,7 @@ Documentation: [http://pywaffle.readthedocs.io/](http://pywaffle.readthedocs.io/
 
 ## Installation
 
-```python
+```shell
 pip install pywaffle
 ```
 

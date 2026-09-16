@@ -26,6 +26,7 @@ New
 Other
 
 * Add opt-in image-comparison tests (`pytest tests/test_images.py --mpl`), which catch rendering regressions that block-by-block assertions cannot
+* `Waffle.make_waffle()` now raises `ValueError` when given `plots`, which it silently ignored. It draws into the single axis passed as `ax`, so `plots` never had any effect
 * Add `pywaffle.__version__`
 * Ship `py.typed`, so the existing type hints are visible to type checkers
 * Require Python 3.9+, and move packaging to PEP 621

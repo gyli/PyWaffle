@@ -48,34 +48,80 @@ jobs:
         continue-on-error: true
 
   deprecations:
-    # Matplotlib deprecations have broken this package before. Surface them early, without
-    # letting them block the merge.
+    # Matplotlib deprecations have broken this package before, so surface them early. A deprecation
+    # is not necessarily ours to fix and should not block a merge, so only that step tolerates
+    # failure -- the job itself does not. A broken environment or a genuinely failing suite fails
+    # the job, which is what a job-level continue-on-error would have hidden.
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -e . pytest
-      - env:
+      - run: pip install -e . pytest pandas
+
+      - name: The suite must pass normally
+        env:
           MPLBACKEND: Agg
-        run: pytest tests -W error::DeprecationWarning -W error::PendingDeprecationWarning
+        run: pytest tests -q
+
+      - name: Deprecation warnings as errors (advisory)
+        id: deprecations
+        continue-on-error: true
+        env:
+          MPLBACKEND: Agg
+        run: pytest tests -W error::DeprecationWarning -W error::PendingDeprecationWarning -q
+
+      - name: Report the result where it can be seen
+        run: |
+          if [ "${{ steps.deprecations.outcome }}" = "failure" ]; then
+            echo "### :warning: Deprecation warnings" >> "$GITHUB_STEP_SUMMARY"
+            echo "The suite passes, but raises deprecation warnings. Not blocking, worth a look." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### :white_check_mark: No deprecation warnings" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
   matplotlib-prerelease:
+    # A pre-release breaking is matplotlib's business until it ships, so it does not block. The
+    # same split applies: the suite has to pass on the released matplotlib first, so that a failure
+    # here means the pre-release changed something rather than that this job is misconfigured.
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: |
-          pip install -e . pytest
-          pip install --upgrade --pre matplotlib
-      - env:
+      - run: pip install -e . pytest pandas
+
+      - name: The suite must pass on the released matplotlib
+        env:
           MPLBACKEND: Agg
-        run: pytest tests
+        run: pytest tests -q
+
+      - name: Install the matplotlib pre-release
+        id: prerelease
+        continue-on-error: true
+        run: |
+          pip install --upgrade --pre matplotlib
+          python -c "import matplotlib; print('matplotlib', matplotlib.__version__)"
+
+      - name: Run against the pre-release (advisory)
+        id: against_prerelease
+        continue-on-error: true
+        env:
+          MPLBACKEND: Agg
+        run: pytest tests -q
+
+      - name: Report the result where it can be seen
+        run: |
+          if [ "${{ steps.prerelease.outcome }}" = "failure" ]; then
+            echo "### :grey_question: No matplotlib pre-release available" >> "$GITHUB_STEP_SUMMARY"
+          elif [ "${{ steps.against_prerelease.outcome }}" = "failure" ]; then
+            echo "### :warning: Fails against the matplotlib pre-release" >> "$GITHUB_STEP_SUMMARY"
+            echo "The suite passes on the released matplotlib, so the pre-release changed something." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### :white_check_mark: Passes against the matplotlib pre-release" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
   images:
     # Image comparison catches regressions that block-by-block assertions cannot: a layout engine
