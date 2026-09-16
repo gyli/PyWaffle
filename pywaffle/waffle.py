@@ -272,7 +272,8 @@ class Waffle(Figure):
 
     :param sort_values: Order the categories by value.
 
-        | ``True`` or ``'desc'`` sorts largest first; ``'asc'`` sorts smallest first.
+        | ``True`` or ``'desc'`` sorts largest first; ``'asc'`` sorts smallest first. The string
+          is case insensitive, as every other string argument is.
         | Every per-category argument - ``labels``, ``colors``, ``icons``, ``characters`` and
           ``icon_style`` - is reordered along with the values.
         | [Default False]
@@ -585,7 +586,7 @@ class Waffle(Figure):
         move with its value, or the chart silently mislabels itself. Arguments given as a single
         value apply to every category and need no reordering.
         """
-        descending = par["sort_values"] in (True, "desc")
+        descending = par["sort_values"] == "desc"
         order = sorted(range(len(par["values"])), key=lambda i: par["values"][i], reverse=descending)
 
         par["values"] = [par["values"][i] for i in order]
@@ -686,6 +687,31 @@ class Waffle(Figure):
         # matplotlib's set_anchor does not reject an unknown string, so an unusable anchor is
         # silently stored on the axes and the plot is simply misplaced
         Waffle._validate_choice(par, "plot_anchor", ("C", "SW", "S", "SE", "E", "NE", "N", "NW", "W"), case="upper")
+        Waffle._validate_sort_values(par)
+
+    @staticmethod
+    def _validate_sort_values(par: Dict):
+        """Normalize sort_values to False, "desc" or "asc".
+
+        It takes a bool as well as a string, so it cannot go through _validate_choice. It was
+        previously compared to its literal value, which made it the one string argument in this
+        class that was case sensitive: sort_values="DESC" matched neither "True" nor "desc" and
+        fell through to ascending order, the opposite of what was asked, with no error.
+        """
+        value = par["sort_values"]
+
+        if value is None or value is False:
+            par["sort_values"] = False
+            return
+        if value is True:
+            par["sort_values"] = "desc"
+            return
+
+        if isinstance(value, str) and value.strip().lower() in ("desc", "asc"):
+            par["sort_values"] = value.strip().lower()
+            return
+
+        raise ValueError(f'Argument sort_values should be True, False, "desc" or "asc", got {value!r}.')
 
     @staticmethod
     def _validate_geometry(par: Dict):
