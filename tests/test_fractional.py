@@ -103,7 +103,7 @@ class TestSplitBlocks(FractionalTestCase):
 
     def test_boundary_block_is_split_between_two_categories(self):
         fig = plt.figure(FigureClass=Waffle, values=[2.5, 2.5], rows=1, rounding_rule="float")
-        width, height = self._block_size(fig.plot_args[0])
+        width, _ = self._block_size(fig.plot_args[0])
         patches = fig.axes[0].patches
 
         # 5 cells, the middle one split in two
@@ -118,13 +118,13 @@ class TestSplitBlocks(FractionalTestCase):
     def test_split_runs_along_the_direction_of_travel(self):
         # With several rows the sequence runs up a column, so a split block is cut horizontally
         fig = plt.figure(FigureClass=Waffle, values=[2.5, 2.5], rows=5, rounding_rule="float")
-        width, height = self._block_size(fig.plot_args[0])
+        _, height = self._block_size(fig.plot_args[0])
         halves = [p for p in fig.axes[0].patches if abs(p.get_height() - height / 2) < 1e-9]
         self.assertEqual(len(halves), 2)
 
         # With a single row it runs along the columns, so the cut is vertical
         fig = plt.figure(FigureClass=Waffle, values=[2.5, 2.5], rows=1, rounding_rule="float")
-        width, height = self._block_size(fig.plot_args[0])
+        width, _ = self._block_size(fig.plot_args[0])
         halves = [p for p in fig.axes[0].patches if abs(p.get_width() - width / 2) < 1e-9]
         self.assertEqual(len(halves), 2)
 
