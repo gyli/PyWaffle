@@ -20,7 +20,8 @@ class ValidationMixin:
     A mixin rather than a TestCase subclass, so it is not collected as a test class of its own.
     """
 
-    def tearDown(self):
+    @staticmethod
+    def tearDown():
         """Close every figure, so a long parameter sweep does not accumulate them."""
         plt.close("all")
 
