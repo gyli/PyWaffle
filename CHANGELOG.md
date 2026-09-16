@@ -11,6 +11,7 @@ Fixes
 * Reject a negative or non-integer `rows` / `columns`, a non-positive `block_aspect_ratio`, a negative `interval_ratio_x` / `interval_ratio_y`, an unknown `plot_anchor`, and non-numeric `values` elements. `rows=-5` previously drew an empty chart with no error, and `plot_anchor='XX'` was accepted because matplotlib's `set_anchor` does not validate it either
 * Refuse to draw a chart of more than `MAX_BLOCKS` (10,000,000) blocks. Values that were meant to be scaled previously turned into minutes of drawing rather than an error; the limit can be raised with `pywaffle.waffle.MAX_BLOCKS`
 * Reject negative `values` and a `values` sum of zero up front, instead of silently drawing a wrong chart or raising `ZeroDivisionError`
+* An unknown icon name now raises `ValueError` explaining itself rather than a bare `KeyError`. If the icon exists in another style it says which and what to pass; if it looks like a typo it suggests the nearest name; otherwise it notes that names change between Font Awesome versions
 * Reject unknown `block_arranging_style`, which was previously accepted and silently drawn as `normal`
 * Raise `ValueError` rather than `KeyError` or `AttributeError` for invalid `starting_location`, `rounding_rule` and `icon_style`, and accept `icon_style` lists in any case
 

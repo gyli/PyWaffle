@@ -168,3 +168,85 @@ class TestDiscoveryOrder(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestExplicitDirectoryIsNotIgnored(unittest.TestCase):
+    """An explicitly configured directory that yields nothing must say so.
+
+    Falling through to the Python package would leave someone believing their system font was in
+    use when it was not.
+    """
+
+    def setUp(self):
+        self._saved = os.environ.get(handler.FONT_DIRECTORY_VARIABLE)
+        self._tmp = pathlib.Path(tempfile.mkdtemp())
+        reset_caches()
+
+    def tearDown(self):
+        if self._saved is None:
+            os.environ.pop(handler.FONT_DIRECTORY_VARIABLE, None)
+        else:
+            os.environ[handler.FONT_DIRECTORY_VARIABLE] = self._saved
+        reset_caches()
+        shutil.rmtree(self._tmp, ignore_errors=True)
+        plt.close("all")
+
+    def test_an_empty_directory_is_an_error(self):
+        """Not a silent fallback to whatever else happens to be installed."""
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = str(self._tmp)
+        with self.assertRaisesRegex(ImportError, "contains no Font Awesome"):
+            handler.font_file_finder()
+
+    def test_unrecognised_fonts_are_named(self):
+        """Font Awesome 4 ships one FontAwesome.otf with no style split, and Fedora packages it."""
+        (self._tmp / "FontAwesome.otf").write_bytes(b"not really a font")
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = str(self._tmp)
+        with self.assertRaises(ImportError) as caught:
+            handler.font_file_finder()
+        message = str(caught.exception)
+        self.assertIn("FontAwesome.otf", message)
+        self.assertIn("Font Awesome 4 is not supported", message)
+
+    def test_a_missing_directory_is_an_error(self):
+        """A typo in the variable should not quietly do nothing."""
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = str(self._tmp / "nope")
+        with self.assertRaisesRegex(ImportError, "contains no Font Awesome"):
+            handler.font_file_finder()
+
+
+@unittest.skipIf(not HAS_FONT_AWESOME, "needs Font Awesome installed")
+class TestUnknownIconNames(unittest.TestCase):
+    """Which names exist depends on the installed Font Awesome version and on the style."""
+
+    @staticmethod
+    def tearDown():
+        """Close the figures each test leaves behind."""
+        plt.close("all")
+
+    def test_an_icon_in_another_style_says_which(self):
+        """bluesky is a brands icon, and the default style is solid."""
+        with self.assertRaises(ValueError) as caught:
+            plt.figure(FigureClass=Waffle, rows=5, values=[10], icons="bluesky")
+        message = str(caught.exception)
+        self.assertIn("'brands'", message)
+        self.assertIn("icon_style='brands'", message)
+
+    def test_a_near_miss_is_suggested(self):
+        """A typo should not read the same as an icon that does not exist."""
+        with self.assertRaises(ValueError) as caught:
+            plt.figure(FigureClass=Waffle, rows=5, values=[10], icons="strr")
+        self.assertIn("Did you mean", str(caught.exception))
+        self.assertIn("'star'", str(caught.exception))
+
+    def test_an_unknown_name_mentions_the_installed_version(self):
+        """The usual cause is an icon added after the Font Awesome the user has."""
+        with self.assertRaises(ValueError) as caught:
+            plt.figure(FigureClass=Waffle, rows=5, values=[10], icons="definitely-not-an-icon")
+        message = str(caught.exception)
+        self.assertIn("installed Font Awesome", message)
+        self.assertIn("Font Awesome versions", message)
+
+    def test_it_is_a_valueerror_like_every_other_argument_error(self):
+        """A bare KeyError is not catchable alongside the rest of the argument validation."""
+        with self.assertRaises(ValueError):
+            plt.figure(FigureClass=Waffle, rows=5, values=[10], icons="definitely-not-an-icon")

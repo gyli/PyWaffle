@@ -103,12 +103,29 @@ def font_file_finder() -> Dict[str, pathlib.Path]:
     Prefers an explicitly configured directory, then the fontawesomefree package, then the system
     font directories, so a distribution can supply the fonts without the Python package.
     """
+    override = os.environ.get(FONT_DIRECTORY_VARIABLE)
+
     searched = []
     for directory, _ in font_directory_candidates():
         found = _styles_in(directory)
         if found:
             return found
         searched.append(str(directory))
+
+        # Falling back past an explicit setting would hide the fact that it did not work
+        if override and str(directory) == str(pathlib.Path(override)):
+            present = sorted(path.name for path in directory.glob("*.otf")) if directory.is_dir() else []
+            detail = (
+                "it contains no Font Awesome .otf files"
+                if not present
+                else "the .otf files there are not recognised: " + ", ".join(present)
+            )
+            raise ImportError(
+                f"{FONT_DIRECTORY_VARIABLE} is set to {directory}, but {detail}.\n"
+                f"Expected file names ending in: " + ", ".join(sorted(FA_STYLES.values())) + ".\n"
+                "Font Awesome 4 is not supported: it ships a single FontAwesome.otf with no "
+                "separate solid, regular and brands styles."
+            )
 
     raise ImportError(
         MISSING_FONT_AWESOME

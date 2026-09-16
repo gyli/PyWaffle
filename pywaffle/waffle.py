@@ -963,7 +963,8 @@ class Waffle(Figure):
 
             # Replace icon name with Unicode symbols in parameter icons
             par["icons"] = [
-                icons[icon_style][icon_name] for icon_name, icon_style in zip(par["icons"], par["icon_style"])
+                self._resolve_icon(icons, icon_name, icon_style)
+                for icon_name, icon_style in zip(par["icons"], par["icon_style"])
             ]
 
             return fm.FontProperties(size=par["font_size"] or self._block_font_size(ax, block_x_length))
@@ -982,6 +983,37 @@ class Waffle(Figure):
             )
 
         return None
+
+    @staticmethod
+    def _resolve_icon(icons: Dict, name: str, style: str) -> str:
+        """Look up one icon name, and say something useful when it is not there.
+
+        Which names exist depends on the Font Awesome version installed and on the style, so a bare
+        KeyError leaves the user unable to tell a typo from an icon that was renamed, moved between
+        styles, or added after their version.
+        """
+        try:
+            return icons[style][name]
+        except KeyError:
+            pass
+
+        elsewhere = sorted(other for other in icons if other != style and name in icons[other])
+        if elsewhere:
+            raise ValueError(
+                f"Icon {name!r} is not in the {style!r} style, but it is in "
+                f"{', '.join(repr(s) for s in elsewhere)}. Pass icon_style={elsewhere[0]!r}."
+            )
+
+        import difflib
+
+        close = difflib.get_close_matches(name, icons[style], n=3, cutoff=0.7)
+        suggestion = f" Did you mean {', '.join(repr(c) for c in close)}?" if close else ""
+        raise ValueError(
+            f"Icon {name!r} was not found in the {style!r} style of the installed Font Awesome, "
+            f"which has {len(icons[style]):,} {style} icons.{suggestion} "
+            "Names change between Font Awesome versions; check the icon exists in the version you "
+            "have installed."
+        )
 
     def _draw_blocks(
         self,
