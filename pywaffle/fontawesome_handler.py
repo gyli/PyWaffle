@@ -30,13 +30,12 @@ def fontawesome_package_path() -> pathlib.Path:
 
 def font_file_finder() -> Dict[str, pathlib.Path]:
     font_otf_path = (fontawesome_package_path() / "otfs").glob("*.otf")
-    font_file_mapping = {
+    return {
         style: path
         for path in font_otf_path
         for style, font_suffix in FA_STYLES.items()
         if font_suffix.lower() in path.name.lower()
     }
-    return font_file_mapping
 
 
 def icon_mapping_builder() -> Dict[str, Dict[str, str]]:
@@ -79,13 +78,10 @@ def LegendClassFactory(name, BaseClass=TextLegendBase):
     def __init__(self, text, color, **kwargs):
         BaseClass.__init__(self, text=text, color=color, **kwargs)
 
-    new_legend_class = type(name, (BaseClass,), {"__init__": __init__})
-    return new_legend_class
+    return type(name, (BaseClass,), {"__init__": __init__})
 
 
-legend_style_class_mapping = {
-    style: LegendClassFactory(name=f"{style.capitalize()}TextLegend") for style in FA_STYLES.keys()
-}
+legend_style_class_mapping = {style: LegendClassFactory(name=f"{style.capitalize()}TextLegend") for style in FA_STYLES}
 
 
 class TextLegendHandler(HandlerBase):
