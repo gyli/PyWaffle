@@ -74,7 +74,10 @@ class Waffle(Figure):
 
     A custom Figure class to make waffle charts.
 
-    :param values: Numerical value of each category. If it is a dict, the keys would be used as labels.
+    :param values: Numerical value of each category.
+
+        | If it is a dict, the keys are used as labels.
+        | If it is a pandas Series, the index is used as labels.
     :type values: list|dict|pandas.Series
 
     :param rows: The number of lines of the waffle chart.
@@ -214,6 +217,27 @@ class Waffle(Figure):
         | [Default True]
     :type tight: bool|dict, optional
 
+    :param show_values: Append each category's value to its legend label, as ``Label (value)``.
+
+        | ``True`` or ``'value'`` shows the value itself;
+        | ``'percentage'`` shows the category's share of the total.
+        | [Default False]
+    :type show_values: bool|str, optional
+
+    :param value_format: Format string for the number added by ``show_values``.
+
+        | For example ``'{:.2f}%'`` or ``'{:,.0f} units'``.
+        | Defaults to ``'{:g}'`` for values and ``'{:.1f}%'`` for percentages.
+    :type value_format: str, optional
+
+    :param sort_values: Order the categories by value.
+
+        | ``True`` or ``'desc'`` sorts largest first; ``'asc'`` sorts smallest first.
+        | Every per-category argument - ``labels``, ``colors``, ``icons``, ``characters`` and
+          ``icon_style`` - is reordered along with the values.
+        | [Default False]
+    :type sort_values: bool|str, optional
+
     :param block_arranging_style: Set how to arrange blocks. ``{'normal', 'snake', 'new-line'}``
 
         | If it is 'normal', it draws blocks line by line with same direction.
@@ -253,6 +277,9 @@ class Waffle(Figure):
         "vertical": False,
         "starting_location": "SW",
         "rounding_rule": "nearest",
+        "show_values": False,
+        "value_format": None,
+        "sort_values": False,
         "tight": True,
         "block_arranging_style": "normal",
         "plots": None,
@@ -481,6 +508,45 @@ class Waffle(Figure):
         return (c[::vertical_order] for c in block_matrix)
 
     @staticmethod
+    def _sort_categories(par: Dict):
+        """
+        Reorder the categories by value, carrying every per-category argument along with them.
+
+        Anything given one-per-category - labels, colors, icons, characters, icon_style - has to
+        move with its value, or the chart silently mislabels itself. Arguments given as a single
+        value apply to every category and need no reordering.
+        """
+        descending = par["sort_values"] in (True, "desc")
+        order = sorted(range(len(par["values"])), key=lambda i: par["values"][i], reverse=descending)
+
+        par["values"] = [par["values"][i] for i in order]
+        for name in ("labels", "colors", "icons", "characters", "icon_style"):
+            value = par[name]
+            if isinstance(value, (list, tuple)) and len(value) == len(order):
+                reordered = [value[i] for i in order]
+                par[name] = tuple(reordered) if isinstance(value, tuple) else reordered
+
+    @staticmethod
+    def _format_values(labels: Iterable, values: List, show_values, value_format: Optional[str]) -> List[str]:
+        """
+        Append each category's value to its label, as "Label (value)".
+
+        Writing this by hand is what the documentation has always told people to do:
+        ``labels=[f"{k} ({v}%)" for k, v in data.items()]``.
+        """
+        as_percentage = isinstance(show_values, str) and show_values.lower().strip() == "percentage"
+        if as_percentage:
+            total = sum(values)
+            if total == 0:
+                raise ValueError('show_values="percentage" needs the values to sum to more than zero.')
+            numbers = [v / total * 100 for v in values]
+        else:
+            numbers = list(values)
+
+        template = value_format or ("{:.1f}%" if as_percentage else "{:g}")
+        return [f"{label} ({template.format(number)})" for label, number in zip(labels, numbers)]
+
+    @staticmethod
     def _validate_choice(par: Dict, name: str, choices: Tuple[str, ...], case: str):
         """
         Normalize the case of a string argument and check it against the allowed values.
@@ -521,9 +587,18 @@ class Waffle(Figure):
             if not par["labels"]:
                 par["labels"] = list(par["values"].keys())
             par["values"] = list(par["values"].values())
+        elif hasattr(par["values"], "index") and hasattr(par["values"], "tolist"):
+            # A pandas Series carries its labels in the index, just as a dict does in its keys
+            if not par["labels"]:
+                par["labels"] = [str(label) for label in par["values"].index]
+            par["values"] = par["values"].tolist()
 
         if par["labels"] and len(par["labels"]) != self.values_len:
             raise ValueError("Length of labels doesn't match the values.")
+
+        # - sort_values, before anything downstream depends on the order
+        if par["sort_values"]:
+            self._sort_categories(par)
 
         # - values, after they are guaranteed to be a sequence of numbers
         if any(v < 0 for v in par["values"]):
@@ -534,6 +609,12 @@ class Waffle(Figure):
                 "Argument values should not sum to zero when both rows and columns are given, "
                 "as there is no way to scale the values to the chart size."
             )
+
+        # - show_values
+        if par["show_values"] not in (False, True, None) and not (
+            isinstance(par["show_values"], str) and par["show_values"].lower().strip() in ("value", "percentage")
+        ):
+            raise ValueError('Argument show_values should be True, False, "value" or "percentage".')
 
         # - rounding_rule="float" draws partial blocks, which only works for rectangles.
         # A Text artist cannot be partially filled.
@@ -792,6 +873,14 @@ class Waffle(Figure):
             legend_args = {**_pa["legend"]}
             labels = _pa["labels"] or legend_args.get("labels")
 
+            if _pa["show_values"]:
+                labels = self._format_values(
+                    labels=labels,
+                    values=_pa["values"],
+                    show_values=_pa["show_values"],
+                    value_format=_pa["value_format"],
+                )
+
             if _pa["icons"] and _pa["icon_legend"] is True:
                 from pywaffle.fontawesome_handler import (
                     legend_handler_style_mapping,
@@ -808,7 +897,9 @@ class Waffle(Figure):
 
             # labels is an alias of legend['labels']
             if "labels" not in legend_args and _pa["labels"]:
-                legend_args["labels"] = _pa["labels"]
+                legend_args["labels"] = labels
+            elif _pa["show_values"]:
+                legend_args["labels"] = labels
 
             _pa["legend"] = legend_args
 
