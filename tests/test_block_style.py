@@ -85,6 +85,49 @@ class TestBlockEdge(BlockStyleTestCase):
         self.assertEqual(Waffle._block_style("red", "white", None), {"facecolor": "red", "edgecolor": "white"})
 
 
+class TestNewLinePaddingHasNoEdge(BlockStyleTestCase):
+    """block_arranging_style="new-line" pads a category out to a whole line with blank cells.
+
+    They are drawn as fully transparent rectangles, which is invisible by default because a block
+    takes face and edge from one colour. An edge argument sets the edge independently, so the
+    padding came out as empty outlined squares after the end of the chart.
+    """
+
+    KWARGS = {"rows": 5, "values": [3, 3], "block_arranging_style": "new-line"}
+
+    def _padding(self, **kwargs):
+        fig = plt.figure(FigureClass=Waffle, **self.KWARGS, **kwargs)
+        padding = [p for p in self._blocks(fig.axes[0]) if p.get_facecolor()[3] == 0]
+        self.assertEqual(len(padding), 4, "expected two blank cells on each of the two lines")
+        return padding
+
+    def test_edge_color_does_not_outline_the_padding(self):
+        for block in self._padding(block_edge_color="black", block_edge_width=2):
+            self.assertEqual(block.get_edgecolor()[3], 0)
+
+    def test_edge_width_alone_does_not_outline_the_padding(self):
+        for block in self._padding(block_edge_width=3):
+            self.assertEqual(block.get_edgecolor()[3], 0)
+
+    def test_valued_blocks_still_get_their_edge(self):
+        fig = plt.figure(FigureClass=Waffle, **self.KWARGS, block_edge_color="black")
+        valued = [p for p in self._blocks(fig.axes[0]) if p.get_facecolor()[3] > 0]
+        self.assertEqual(len(valued), 6)
+        for block in valued:
+            self.assertEqual(tuple(block.get_edgecolor()), to_rgba("black"))
+
+    def test_the_padding_is_still_drawn_and_still_invisible(self):
+        # Kept as artists so the block count is unchanged; just with nothing visible about them
+        for kwargs in ({}, {"block_edge_color": "black"}):
+            with self.subTest(**kwargs):
+                fig = plt.figure(FigureClass=Waffle, **self.KWARGS, **kwargs)
+                blocks = self._blocks(fig.axes[0])
+                self.assertEqual(len(blocks), 10)
+                for block in blocks:
+                    if block.get_facecolor()[3] == 0:
+                        self.assertEqual(block.get_edgecolor()[3], 0)
+
+
 class TestBackgroundColor(BlockStyleTestCase):
     """The issue's actual request: fill the gaps between blocks."""
 
