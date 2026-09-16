@@ -26,6 +26,15 @@ PYTHON_FENCE = re.compile(r"```(?:python|py)\n(.*?)```", re.DOTALL)
 # Only the first documentation page shows the imports; later pages assume a reader has them
 PREAMBLE = "import matplotlib.pyplot as plt\nfrom pywaffle import Waffle\n"
 
+# Some snippets demonstrate pandas input. pandas is not a dependency of pywaffle, so a snippet
+# needing it is skipped rather than failed when it is absent.
+try:
+    import pandas  # noqa: F401
+
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
+
 
 def documentation_pages():
     """Every page that carries runnable snippets, docs first then the README."""
@@ -44,7 +53,13 @@ class TestDocumentationSnippets(unittest.TestCase):
         """A renamed parameter or a stricter validation rule must not break the docs silently."""
         for page in documentation_pages():
             snippets = PYTHON_FENCE.findall(page.read_text())
-            # Snippets on a page build on each other, so they share one namespace, in order
+            # Snippets on a page build on each other, so a later one can depend on a variable an
+            # earlier one defined. Skipping just the snippet that needs pandas would leave the
+            # next one undefined, so the whole page is skipped.
+            if not HAS_PANDAS and any("pandas" in code for code in snippets):
+                continue
+
+            # They share one namespace, in order
             namespace = {"__name__": "__doc_snippet__"}
             exec(PREAMBLE, namespace)  # noqa: S102 - running the docs is the point
             for number, code in enumerate(snippets, 1):

@@ -57,7 +57,7 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - run: pip install -e . pytest
+      - run: pip install -e . pytest pandas
       - env:
           MPLBACKEND: Agg
         run: pytest tests -W error::DeprecationWarning -W error::PendingDeprecationWarning
@@ -71,7 +71,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: |
-          pip install -e . pytest
+          pip install -e . pytest pandas
           pip install --upgrade --pre matplotlib
       - env:
           MPLBACKEND: Agg
