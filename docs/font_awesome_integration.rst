@@ -13,6 +13,34 @@ Nothing else needs it. Rectangle blocks, and the ``characters`` parameter, work 
 asking for ``icons`` when it is absent raises ``ImportError`` naming the command to run rather than
 a bare ``ModuleNotFoundError``.
 
+Using a system Font Awesome
+---------------------------
+
+PyWaffle does not need the Python package specifically -- it needs the fonts. Set
+:code:`PYWAFFLE_FONTAWESOME_DIR` to a directory of Font Awesome ``.otf`` files and they are used
+instead::
+
+   $ export PYWAFFLE_FONTAWESOME_DIR=/usr/share/fonts/fontawesome
+
+If neither the environment variable nor the Python package provides the fonts, the usual system
+font directories are searched, so a distribution's font package is often enough on its own:
+
+* Fedora, ``fontawesome-6-free-fonts`` and ``fontawesome-6-brands-fonts``
+* Arch, ``otf-font-awesome`` in :code:`/usr/share/fonts/OTF`
+* Debian and Ubuntu, ``fonts-font-awesome``
+
+Distribution packages ship the fonts without Font Awesome's ``icons.json``, so in that case the
+icon names are recovered from the fonts themselves -- Font Awesome stores each icon's name as its
+glyph name, so the character map gives every name back. Two consequences worth knowing:
+
+* **Aliases are unavailable.** They exist only in ``icons.json``, so ``circle-half-stroke`` works
+  while its alias ``adjust`` does not.
+* Some icons resolve to a different code point, because Font Awesome maps both a private-use code
+  point and the matching real Unicode one to the same glyph. The chart is unchanged; only the
+  character behind it differs.
+
+Everything else is identical, including which icons exist.
+
 Upgrading or downgrading Font Awesome
 -------------------------------------
 

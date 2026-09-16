@@ -20,6 +20,8 @@ Breaking
 
 New
 
+* Font Awesome can now come from the system rather than the Python package. `PYWAFFLE_FONTAWESOME_DIR` points at a directory of `.otf` files, and the usual system font directories are searched as a fallback, so a distribution's font package works on its own. Distribution packages ship fonts without Font Awesome's `icons.json`, so in that case the icon names are recovered from the fonts themselves - every canonical name is available, though aliases are not ([#25](https://github.com/gyli/PyWaffle/issues/25))
+
 * Add `rounding_rule="float"`, which draws partial blocks instead of rounding values ([#26](https://github.com/gyli/PyWaffle/issues/26)). A category that ends part way through a block fills only that fraction of it, and a block containing a boundary between two categories is split between their colors. The block count then depends only on the total of the values, so two datasets with the same total produce charts of the same size - which rounding did not guarantee
 * Add `background_color`, which fills the space behind the blocks including the gaps between them, and `block_edge_color` / `block_edge_width`, which draw a border around each block ([#37](https://github.com/gyli/PyWaffle/issues/37))
 * Add `show_values` and `value_format`, which append each category's value or its percentage of the total to its legend label. This is the f-string the documentation has always told people to write by hand: `labels=[f"{k} ({v}%)" for k, v in data.items()]`

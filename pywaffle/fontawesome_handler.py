@@ -3,6 +3,7 @@
 
 import inspect
 import json
+import os
 import pathlib
 from functools import lru_cache
 from collections import defaultdict
@@ -28,6 +29,23 @@ MISSING_FONT_AWESOME = (
 )
 
 
+#: Environment variable naming a directory of Font Awesome .otf files to use instead of the
+#: fontawesomefree package. Set it to use a system-provided Font Awesome.
+FONT_DIRECTORY_VARIABLE = "PYWAFFLE_FONTAWESOME_DIR"
+
+#: Where distributions put Font Awesome. Searched only when the environment variable is unset and
+#: the fontawesomefree package is not installed.
+SYSTEM_FONT_DIRECTORIES = (
+    "/usr/share/fonts/fontawesome",  # Fedora, fontawesome-fonts
+    "/usr/share/fonts/OTF",  # Arch, otf-font-awesome
+    "/usr/share/fonts/opentype/font-awesome",  # Debian and Ubuntu
+    "/usr/share/fonts/truetype/font-awesome",
+    "/usr/local/share/fonts",  # manual installs
+    "/opt/homebrew/share/fonts",  # Homebrew on Apple silicon
+    "/usr/local/share/fonts/otf",
+)
+
+
 def fontawesome_package_path() -> pathlib.Path:
     """Path to the static asset directory of the installed fontawesomefree package.
 
@@ -43,29 +61,88 @@ def fontawesome_package_path() -> pathlib.Path:
     return package_path.parent / "static/fontawesomefree"
 
 
-@lru_cache(maxsize=None)
-def font_file_finder() -> Dict[str, pathlib.Path]:
-    """Map each Font Awesome style to the .otf file that provides it."""
-    font_otf_path = (fontawesome_package_path() / "otfs").glob("*.otf")
+def _styles_in(directory: pathlib.Path) -> Dict[str, pathlib.Path]:
+    """Match the .otf files in one directory to the Font Awesome styles they provide.
+
+    Distributions keep the upstream file names -- "Font Awesome 6 Free-Solid-900.otf" and the
+    like -- so the same suffix match works for a system directory as for the Python package.
+    """
+    if not directory.is_dir():
+        return {}
     return {
         style: path
-        for path in font_otf_path
+        for path in sorted(directory.glob("*.otf"))
         for style, font_suffix in FA_STYLES.items()
         if font_suffix.lower() in path.name.lower()
     }
 
 
-@lru_cache(maxsize=None)
-def icon_mapping_builder() -> Dict[str, Dict[str, str]]:
-    """
-    Build the icon name to Unicode character mapping from the metadata shipped with the installed
-    fontawesomefree package.
+def font_directory_candidates():
+    """Directories to search for Font Awesome, most specific first.
 
-    Reading it at runtime keeps the mapping in sync with whichever Font Awesome version is installed.
-    Generating it at install time does not work, because a wheel install never runs setup.py.
+    An explicit setting wins, then the Python package, then the places distributions install it.
+    Yields (path, is_package) so the caller can tell whether icons.json sits alongside.
     """
-    icons_json_path = fontawesome_package_path() / "metadata" / "icons.json"
-    with open(icons_json_path, "r") as f:
+    override = os.environ.get(FONT_DIRECTORY_VARIABLE)
+    if override:
+        yield pathlib.Path(override), False
+
+    try:
+        yield fontawesome_package_path() / "otfs", True
+    except ImportError:
+        pass
+
+    for directory in SYSTEM_FONT_DIRECTORIES:
+        yield pathlib.Path(directory), False
+
+
+@lru_cache(maxsize=None)
+def font_file_finder() -> Dict[str, pathlib.Path]:
+    """Map each Font Awesome style to the .otf file that provides it.
+
+    Prefers an explicitly configured directory, then the fontawesomefree package, then the system
+    font directories, so a distribution can supply the fonts without the Python package.
+    """
+    searched = []
+    for directory, _ in font_directory_candidates():
+        found = _styles_in(directory)
+        if found:
+            return found
+        searched.append(str(directory))
+
+    raise ImportError(
+        MISSING_FONT_AWESOME
+        + "\n\nNo Font Awesome .otf files were found in:\n    "
+        + "\n    ".join(searched or ["(nowhere searched)"])
+        + f"\n\nSet {FONT_DIRECTORY_VARIABLE} to a directory of Font Awesome .otf files to use "
+        "a system copy."
+    )
+
+
+def _metadata_file() -> pathlib.Path:
+    """Path to Font Awesome's icons.json, if whatever is providing the fonts also provides it.
+
+    The Python package ships it. Distribution font packages generally do not -- they package
+    fonts, not the web tooling -- so this can legitimately find nothing.
+    """
+    for directory, is_package in font_directory_candidates():
+        if not _styles_in(directory):
+            continue
+        candidates = [directory.parent / "metadata" / "icons.json"] if is_package else []
+        candidates += [directory / "icons.json", directory / "metadata" / "icons.json"]
+        for candidate in candidates:
+            if candidate.is_file():
+                return candidate
+        break
+    return None
+
+
+def _mapping_from_metadata(path: pathlib.Path) -> Dict[str, Dict[str, str]]:
+    """Build the name to character mapping from Font Awesome's own metadata.
+
+    This is the better source: it carries the aliases, which the fonts do not.
+    """
+    with open(path, "r") as f:
         icons_metadata = json.load(f)
 
     mapping: Dict[str, Dict[str, str]] = defaultdict(dict)
@@ -83,6 +160,47 @@ def icon_mapping_builder() -> Dict[str, Dict[str, str]]:
                 mapping[style].setdefault(alias, character)
 
     return dict(mapping)
+
+
+def _mapping_from_fonts() -> Dict[str, Dict[str, str]]:
+    """Build the name to character mapping out of the font files themselves.
+
+    Font Awesome stores real icon names as glyph names, so the character map inverted gives every
+    canonical name without any metadata file. Read through matplotlib's own FreeType binding, so
+    this needs no dependency beyond matplotlib.
+
+    Two differences from the metadata, both checked rather than assumed:
+
+    * Aliases are absent. They exist only in icons.json, so ``adjust`` will not resolve while
+      ``circle-half-stroke`` will.
+    * Where a glyph has several code points -- Font Awesome maps both its private-use code point
+      and the matching real Unicode one -- this may pick the other one. It renders the same glyph,
+      because both code points map to it.
+    """
+    from matplotlib.ft2font import FT2Font
+
+    mapping: Dict[str, Dict[str, str]] = defaultdict(dict)
+    for style, path in font_file_finder().items():
+        face = FT2Font(str(path))
+        for code_point, glyph_index in face.get_charmap().items():
+            name = face.get_glyph_name(glyph_index)
+            if name:
+                mapping[style].setdefault(name, chr(code_point))
+    return dict(mapping)
+
+
+@lru_cache(maxsize=None)
+def icon_mapping_builder() -> Dict[str, Dict[str, str]]:
+    """Map each style's icon names to the characters that draw them.
+
+    Prefers Font Awesome's own metadata, which includes aliases. Falls back to reading the fonts,
+    so a system Font Awesome works even though distributions ship fonts without icons.json.
+
+    Built at runtime either way, so the names always match the fonts actually being drawn from.
+    Generating it at install time did not work, because a wheel install never runs setup.py.
+    """
+    metadata = _metadata_file()
+    return _mapping_from_metadata(metadata) if metadata else _mapping_from_fonts()
 
 
 class TextLegendBase:

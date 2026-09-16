@@ -76,12 +76,25 @@ class TestWithoutFontAwesome(unittest.TestCase):
         self.assertIn("pywaffle[icons]", message)
         self.assertIn("fontawesomefree", message)
 
-    def test_the_message_is_the_shared_one(self):
-        """One message, so the install instructions cannot drift between call sites."""
+    def test_the_message_starts_with_the_shared_instructions(self):
+        """One source for the install instructions, so they cannot drift between call sites.
+
+        The message continues with the directories that were searched, which is why this is a
+        prefix check rather than an equality one.
+        """
         with without_fontawesome():
             with self.assertRaises(ImportError) as caught:
                 plt.figure(FigureClass=Waffle, rows=5, values=[10, 20], icons="star")
-        self.assertEqual(str(caught.exception), MISSING_FONT_AWESOME)
+        self.assertTrue(str(caught.exception).startswith(MISSING_FONT_AWESOME))
+
+    def test_the_message_names_where_it_looked(self):
+        """Someone with a system Font Awesome needs to know which directories were tried."""
+        with without_fontawesome():
+            with self.assertRaises(ImportError) as caught:
+                plt.figure(FigureClass=Waffle, rows=5, values=[10, 20], icons="star")
+        message = str(caught.exception)
+        self.assertIn("PYWAFFLE_FONTAWESOME_DIR", message)
+        self.assertIn("/usr/share/fonts", message)
 
     def test_the_handler_module_still_imports(self):
         """_parameter_validation imports it just to read FA_STYLES, before any font is needed."""
