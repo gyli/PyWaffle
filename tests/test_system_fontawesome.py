@@ -41,8 +41,7 @@ class TestSystemFontDirectory(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Build a directory holding only fonts, the way a distribution package does."""
-        cls._tmp = tempfile.TemporaryDirectory()
-        cls.font_dir = pathlib.Path(cls._tmp.name)
+        cls.font_dir = pathlib.Path(tempfile.mkdtemp())
         reset_caches()
         for path in handler.font_file_finder().values():
             shutil.copy(path, cls.font_dir)
@@ -50,8 +49,10 @@ class TestSystemFontDirectory(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls._tmp.cleanup()
+        # Clear the caches first, so nothing is still holding a font open. Windows refuses to
+        # delete an open file, and FreeType keeps the handle for the life of the face object.
         reset_caches()
+        shutil.rmtree(cls.font_dir, ignore_errors=True)
 
     def setUp(self):
         self._saved = os.environ.get(handler.FONT_DIRECTORY_VARIABLE)
@@ -154,9 +155,10 @@ class TestDiscoveryOrder(unittest.TestCase):
             candidates = [str(d) for d, _ in handler.font_directory_candidates()]
         finally:
             os.environ.pop(handler.FONT_DIRECTORY_VARIABLE, None)
-        self.assertEqual(candidates[0], "/nonexistent-on-purpose")
-        self.assertTrue(any("/usr/share/fonts" in c for c in candidates))
-        self.assertLess(candidates.index("/nonexistent-on-purpose"), len(candidates) - 1)
+        self.assertEqual(pathlib.Path(candidates[0]), pathlib.Path("/nonexistent-on-purpose"))
+        system = [pathlib.Path(d) for d in handler.SYSTEM_FONT_DIRECTORIES]
+        self.assertTrue(any(pathlib.Path(c) in system for c in candidates))
+        self.assertLess(candidates.index(candidates[0]), len(candidates) - 1)
 
     def test_the_package_is_flagged_as_the_package(self):
         """Only the package has icons.json one level up, so the caller has to be able to tell."""

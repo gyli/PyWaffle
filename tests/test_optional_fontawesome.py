@@ -4,6 +4,7 @@
 
 import builtins
 import importlib.util
+import pathlib
 import sys
 import unittest
 from unittest import mock
@@ -94,7 +95,11 @@ class TestWithoutFontAwesome(unittest.TestCase):
                 plt.figure(FigureClass=Waffle, rows=5, values=[10, 20], icons="star")
         message = str(caught.exception)
         self.assertIn("PYWAFFLE_FONTAWESOME_DIR", message)
-        self.assertIn("/usr/share/fonts", message)
+        # The paths are rendered with the platform separator, so compare against what this
+        # platform would actually print rather than against a Unix-shaped string.
+        from pywaffle.fontawesome_handler import SYSTEM_FONT_DIRECTORIES
+
+        self.assertIn(str(pathlib.Path(SYSTEM_FONT_DIRECTORIES[0])), message)
 
     def test_the_handler_module_still_imports(self):
         """_parameter_validation imports it just to read FA_STYLES, before any font is needed."""
