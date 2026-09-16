@@ -20,7 +20,7 @@ jobs:
       - run: pip install build twine
       - run: python -m build
       - run: twine check dist/*
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
