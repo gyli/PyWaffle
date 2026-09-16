@@ -17,10 +17,10 @@ from matplotlib.patches import Patch, Rectangle
 import matplotlib.pyplot as plt
 
 #: Largest number of blocks a single chart may draw. Blocks cost roughly 36 microseconds each, so
-#: a million already takes the best part of a minute; beyond that a chart is not readable anyway and
-#: the usual cause is values that were meant to be scaled. Raise it if you really need to:
-#: ``pywaffle.waffle.MAX_BLOCKS = 5_000_000``.
-MAX_BLOCKS = 1_000_000
+#: this many takes several minutes; the limit is a backstop against values that were meant to be
+#: scaled, not a recommendation. Adjust it either way if you need to:
+#: ``pywaffle.waffle.MAX_BLOCKS = 1_000_000``.
+MAX_BLOCKS = 10_000_000
 
 #: A ListedColormap with at most this many entries is treated as a qualitative palette and used in
 #: order. Larger ones are continuous ramps stored as a list of samples, and are sampled across their
@@ -608,12 +608,12 @@ class Waffle(Figure):
             total = sum(values)
             if total == 0:
                 raise ValueError('show_values="percentage" needs the values to sum to more than zero.')
-            numbers = [v / total * 100 for v in values]
+            amounts = [v / total * 100 for v in values]
         else:
-            numbers = list(values)
+            amounts = list(values)
 
         template = value_format or ("{:.1f}%" if as_percentage else "{:g}")
-        return [f"{label} ({template.format(number)})" for label, number in zip(labels, numbers)]
+        return [f"{label} ({template.format(amount)})" for label, amount in zip(labels, amounts)]
 
     @staticmethod
     def _validate_positive_int(par: Dict, name: str):
