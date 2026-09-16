@@ -250,3 +250,74 @@ class TestUnknownIconNames(unittest.TestCase):
         """A bare KeyError is not catchable alongside the rest of the argument validation."""
         with self.assertRaises(ValueError):
             plt.figure(FigureClass=Waffle, rows=5, values=[10], icons="definitely-not-an-icon")
+
+
+class TestFontAwesomeStatus(unittest.TestCase):
+    """Which font is in use should never be a guess."""
+
+    def setUp(self):
+        self._saved = os.environ.get(handler.FONT_DIRECTORY_VARIABLE)
+        self._tmp = pathlib.Path(tempfile.mkdtemp())
+        reset_caches()
+
+    def tearDown(self):
+        if self._saved is None:
+            os.environ.pop(handler.FONT_DIRECTORY_VARIABLE, None)
+        else:
+            os.environ[handler.FONT_DIRECTORY_VARIABLE] = self._saved
+        reset_caches()
+        shutil.rmtree(self._tmp, ignore_errors=True)
+
+    def test_it_never_raises(self):
+        """It is a diagnostic, so it has to work in exactly the situations that are broken."""
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = str(self._tmp / "nowhere")
+        status = handler.font_awesome_status()
+        self.assertFalse(status.available)
+        self.assertIsNotNone(status.problem)
+
+    def test_a_failure_still_says_how_to_install(self):
+        """The whole point of reporting a problem is telling the user what to do about it."""
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = str(self._tmp)
+        self.assertIn("pip install 'pywaffle[icons]'", handler.font_awesome_status().problem)
+
+    @unittest.skipIf(not HAS_FONT_AWESOME, "needs Font Awesome installed")
+    def test_it_names_the_package_as_the_source(self):
+        """The common case: the extra is installed and nothing is overridden."""
+        os.environ.pop(handler.FONT_DIRECTORY_VARIABLE, None)
+        reset_caches()
+        status = handler.font_awesome_status()
+        self.assertTrue(status.available)
+        self.assertEqual(status.source, "fontawesomefree package")
+        self.assertTrue(status.aliases_available, "the package ships icons.json")
+        self.assertRegex(status.version or "", r"^\d+\.")
+        self.assertEqual(set(status.fonts), {"solid", "regular", "brands"})
+
+    @unittest.skipIf(not HAS_FONT_AWESOME, "needs Font Awesome to copy")
+    def test_it_names_an_overridden_directory_and_the_missing_aliases(self):
+        """Someone using a system font needs to know the aliases are unavailable."""
+        for path in handler.font_file_finder().values():
+            shutil.copy(path, self._tmp)
+        os.environ[handler.FONT_DIRECTORY_VARIABLE] = str(self._tmp)
+        reset_caches()
+        status = handler.font_awesome_status()
+        self.assertTrue(status.available)
+        self.assertIn(handler.FONT_DIRECTORY_VARIABLE, status.source)
+        self.assertEqual(status.directory, self._tmp)
+        self.assertFalse(status.aliases_available, "no icons.json beside the fonts")
+        self.assertEqual(status.version, "6", "major version read from the font family name")
+
+    @unittest.skipIf(not HAS_FONT_AWESOME, "needs Font Awesome installed")
+    def test_the_report_reads_as_a_report(self):
+        """It is printed by people diagnosing a problem, so the text matters."""
+        os.environ.pop(handler.FONT_DIRECTORY_VARIABLE, None)
+        reset_caches()
+        text = str(handler.font_awesome_status())
+        for expected in ("Font Awesome", "source:", "directory:", "aliases:", "solid"):
+            self.assertIn(expected, text)
+
+    def test_it_is_exported_from_the_package(self):
+        """Discoverable as pywaffle.font_awesome_status, not buried in a submodule."""
+        import pywaffle
+
+        self.assertIn("font_awesome_status", pywaffle.__all__)
+        self.assertIs(pywaffle.font_awesome_status, handler.font_awesome_status)

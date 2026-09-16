@@ -5,9 +5,10 @@ import inspect
 import json
 import os
 import pathlib
+from dataclasses import dataclass
 from functools import lru_cache
 from collections import defaultdict
-from typing import Dict
+from typing import Dict, Optional
 
 import matplotlib.font_manager as fm
 from matplotlib.legend_handler import HandlerBase
@@ -122,9 +123,12 @@ def font_file_finder() -> Dict[str, pathlib.Path]:
             )
             raise ImportError(
                 f"{FONT_DIRECTORY_VARIABLE} is set to {directory}, but {detail}.\n"
-                f"Expected file names ending in: " + ", ".join(sorted(FA_STYLES.values())) + ".\n"
+                "Expected file names ending in: " + ", ".join(sorted(FA_STYLES.values())) + ".\n"
                 "Font Awesome 4 is not supported: it ships a single FontAwesome.otf with no "
-                "separate solid, regular and brands styles."
+                "separate solid, regular and brands styles.\n\n"
+                f"Point {FONT_DIRECTORY_VARIABLE} at a directory holding those files, unset it to "
+                "fall back to the Python package and the system font directories, or install the "
+                "package:\n    pip install 'pywaffle[icons]'"
             )
 
     raise ImportError(
@@ -265,6 +269,88 @@ class TextLegendHandler(HandlerBase):
         kwargs.update(orig_handle.kwargs)
         annotation = Text(x, y, orig_handle.text, **kwargs)
         return [annotation]
+
+
+@dataclass(frozen=True)
+class FontAwesomeStatus:
+    """Which Font Awesome PyWaffle is using, and where it came from."""
+
+    available: bool
+    source: str
+    directory: Optional[pathlib.Path] = None
+    version: Optional[str] = None
+    fonts: Optional[Dict[str, pathlib.Path]] = None
+    icon_counts: Optional[Dict[str, int]] = None
+    aliases_available: bool = False
+    problem: Optional[str] = None
+
+    def __str__(self) -> str:
+        if not self.available:
+            return f"Font Awesome: not available\n  source:  {self.source}\n  problem: {self.problem}"
+
+        lines = [
+            f"Font Awesome {self.version or '(unknown version)'}",
+            f"  source:    {self.source}",
+            f"  directory: {self.directory}",
+            f"  aliases:   {'yes, from icons.json' if self.aliases_available else 'no, names read from the fonts'}",
+            "  styles:",
+        ]
+        for style in sorted(self.fonts or {}):
+            count = (self.icon_counts or {}).get(style, 0)
+            lines.append(f"    {style:8s} {count:>5,} icons  {self.fonts[style].name}")
+        return "\n".join(lines)
+
+
+def font_awesome_status() -> FontAwesomeStatus:
+    """Report which Font Awesome is in use, so it is never a guess.
+
+    Never raises. When Font Awesome cannot be found it reports why, which is the case where
+    knowing what PyWaffle looked at matters most.
+
+    >>> from pywaffle import font_awesome_status
+    >>> print(font_awesome_status())
+    """
+    override = os.environ.get(FONT_DIRECTORY_VARIABLE)
+    try:
+        fonts = font_file_finder()
+    except ImportError as exc:
+        source = f"{FONT_DIRECTORY_VARIABLE}={override}" if override else "not found"
+        return FontAwesomeStatus(available=False, source=source, problem=str(exc))
+
+    directory = next(iter(fonts.values())).parent
+    if override and directory == pathlib.Path(override):
+        source = f"{FONT_DIRECTORY_VARIABLE}={override}"
+    elif any(directory == candidate for candidate, is_package in font_directory_candidates() if is_package):
+        source = "fontawesomefree package"
+    else:
+        source = "system font directory"
+
+    version = None
+    if source == "fontawesomefree package":
+        try:
+            from importlib.metadata import version as _version
+
+            version = _version("fontawesomefree")
+        except Exception:  # pragma: no cover - metadata is normally present
+            version = None
+    if version is None:
+        # The family name carries the major version, e.g. "Font Awesome 6 Free"
+        from matplotlib.ft2font import FT2Font
+
+        families = {FT2Font(str(path)).family_name for path in fonts.values()}
+        majors = {name.split()[2] for name in families if len(name.split()) > 2 and name.split()[2].isdigit()}
+        version = majors.pop() if len(majors) == 1 else None
+
+    mapping = icon_mapping_builder()
+    return FontAwesomeStatus(
+        available=True,
+        source=source,
+        directory=directory,
+        version=version,
+        fonts=dict(fonts),
+        icon_counts={style: len(names) for style, names in mapping.items()},
+        aliases_available=_metadata_file() is not None,
+    )
 
 
 @lru_cache(maxsize=None)

@@ -13,6 +13,42 @@ Nothing else needs it. Rectangle blocks, and the ``characters`` parameter, work 
 asking for ``icons`` when it is absent raises ``ImportError`` naming the command to run rather than
 a bare ``ModuleNotFoundError``.
 
+Which Font Awesome is in use
+----------------------------
+
+PyWaffle can take its fonts from three places, so it can tell you which one it settled on::
+
+   >>> from pywaffle import font_awesome_status
+   >>> print(font_awesome_status())
+   Font Awesome 6.6.0
+     source:    fontawesomefree package
+     directory: .../site-packages/fontawesomefree/static/fontawesomefree/otfs
+     aliases:   yes, from icons.json
+     styles:
+       brands     527 icons  Font Awesome 6 Brands-Regular-400.otf
+       regular    257 icons  Font Awesome 6 Free-Regular-400.otf
+       solid    1,959 icons  Font Awesome 6 Free-Solid-900.otf
+
+It never raises. When Font Awesome cannot be found it reports every directory that was searched
+and how to install it, which is the case where knowing what PyWaffle looked at matters most.
+
+The returned :code:`FontAwesomeStatus` also carries the same information as attributes --
+:code:`available`, :code:`source`, :code:`directory`, :code:`version`, :code:`fonts`,
+:code:`icon_counts`, :code:`aliases_available` and :code:`problem` -- for checking in code.
+
+Where the fonts come from
+-------------------------
+
+In order:
+
+1. :code:`PYWAFFLE_FONTAWESOME_DIR`, if set. If it is set but holds no usable fonts this is an
+   error rather than a silent fall-through, since an ignored setting is worse than a refusal.
+2. The :code:`fontawesomefree` package, from :code:`pip install "pywaffle[icons]"`.
+3. The system font directories listed below.
+
+If none of them provide the fonts, asking for :code:`icons` raises :code:`ImportError` naming
+every directory tried and the command to install the package.
+
 Using a system Font Awesome
 ---------------------------
 

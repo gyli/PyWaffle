@@ -21,6 +21,7 @@ Breaking
 
 New
 
+* Add `pywaffle.font_awesome_status()`, which reports which Font Awesome is in use, where it came from, its version, how many icons each style has, and whether aliases are available. It never raises: when Font Awesome cannot be found it reports every directory searched and how to install it
 * Font Awesome can now come from the system rather than the Python package. `PYWAFFLE_FONTAWESOME_DIR` points at a directory of `.otf` files, and the usual system font directories are searched as a fallback, so a distribution's font package works on its own. Distribution packages ship fonts without Font Awesome's `icons.json`, so in that case the icon names are recovered from the fonts themselves - every canonical name is available, though aliases are not ([#25](https://github.com/gyli/PyWaffle/issues/25))
 
 * Add `rounding_rule="float"`, which draws partial blocks instead of rounding values ([#26](https://github.com/gyli/PyWaffle/issues/26)). A category that ends part way through a block fills only that fraction of it, and a block containing a boundary between two categories is split between their colors. The block count then depends only on the total of the values, so two datasets with the same total produce charts of the same size - which rounding did not guarantee
