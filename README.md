@@ -3,8 +3,13 @@
 [![PyPI version](https://badge.fury.io/py/pywaffle.svg)](https://pypi.org/project/pywaffle/)
 [![ReadTheDocs](https://readthedocs.org/projects/pywaffle/badge/?version=latest&style=flat)](http://pywaffle.readthedocs.io/)
 [![Binder](https://img.shields.io/badge/run-Online%20Demo-blue)](https://mybinder.org/v2/gh/gyli/PyWaffle/master?filepath=demo.ipynb)
+[![Downloads](https://static.pepy.tech/badge/pywaffle/month)](https://pepy.tech/project/pywaffle)
+[![Tests](https://github.com/gyli/PyWaffle/actions/workflows/test.yml/badge.svg)](https://github.com/gyli/PyWaffle/actions/workflows/test.yml)
 
-PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts.
+PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts — also known as
+square pie charts, and, when drawn with icons, pictogram charts.
+
+![PyWaffle](examples/readme/title_and_legend.svg)
 
 It provides a [Figure constructor class](https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html) `Waffle`, which could be passed to [matplotlib.pyplot.figure](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.figure.html) and generates a matplotlib Figure object.
 
