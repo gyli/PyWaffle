@@ -84,8 +84,7 @@ def LegendClassFactory(name, BaseClass=TextLegendBase):
 
 
 legend_style_class_mapping = {
-    style: LegendClassFactory(name=f"{style.capitalize()}TextLegend")
-    for style in FA_STYLES.keys()
+    style: LegendClassFactory(name=f"{style.capitalize()}TextLegend") for style in FA_STYLES.keys()
 }
 
 
@@ -94,9 +93,7 @@ class TextLegendHandler(HandlerBase):
         super().__init__()
         self.font_file = font_file
 
-    def create_artists(
-        self, legend, orig_handle, xdescent, ydescent, width, height, fontsize, trans
-    ):
+    def create_artists(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize, trans):
         x = xdescent + width / 2.0
         y = ydescent + height / 2.0
         kwargs = {
@@ -113,6 +110,5 @@ class TextLegendHandler(HandlerBase):
 fontawesome_files = font_file_finder()
 icons = icon_mapping_builder()
 legend_handler_style_mapping = {
-    v: TextLegendHandler(font_file=fontawesome_files[k])
-    for k, v in legend_style_class_mapping.items()
+    v: TextLegendHandler(font_file=fontawesome_files[k]) for k, v in legend_style_class_mapping.items()
 }

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pywaffle"
-version = "1.2.0"
+dynamic = ["version"]
 description = "PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts."
 readme = { file = "README_pypi.rst", content-type = "text/x-rst" }
 license = "MIT"
@@ -52,6 +52,9 @@ Issues = "https://github.com/gyli/PyWaffle/issues"
 
 [tool.setuptools]
 packages = ["pywaffle"]
+
+[tool.setuptools.dynamic]
+version = { attr = "pywaffle._version.__version__" }
 
 [tool.setuptools.package-data]
 pywaffle = ["py.typed"]

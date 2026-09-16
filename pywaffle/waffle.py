@@ -39,9 +39,7 @@ def round_up_to_multiple(x: int, base: int) -> int:
     return base * math.ceil(x / base)
 
 
-def array_resize(
-    array: Union[Tuple, List], length: int, array_len: int = None
-) -> Union[Tuple, List]:
+def array_resize(array: Union[Tuple, List], length: int, array_len: int = None) -> Union[Tuple, List]:
     """
     Resize array to given length. If the array is shorter than given length, repeat the array; If the array is longer
     than the length, trim the array.
@@ -256,9 +254,7 @@ class Waffle(Figure):
 
     def __init__(self, *args, **kwargs):
         #:All Waffle-specific arguments with default values
-        self.fig_args: Dict = self._kwarg_processor(
-            kwargs=kwargs, default_values=self._default_parameters
-        )
+        self.fig_args: Dict = self._kwarg_processor(kwargs=kwargs, default_values=self._default_parameters)
         super().__init__(*args, **kwargs)
 
         #:Standardized arguments of all subplots
@@ -376,33 +372,25 @@ class Waffle(Figure):
         """
         value = par[name]
         if not isinstance(value, str):
-            raise ValueError(
-                f"Argument {name} should be a string, one of {', '.join(choices)}."
-            )
+            raise ValueError(f"Argument {name} should be a string, one of {', '.join(choices)}.")
 
         value = value.strip()
         value = value.lower() if case == "lower" else value.upper()
         if value not in choices:
-            raise ValueError(
-                f"Argument {name} should be one of {', '.join(choices)}."
-            )
+            raise ValueError(f"Argument {name} should be one of {', '.join(choices)}.")
 
         par[name] = value
 
     def _parameter_validation(self, par: Dict):
         # - rounding_rule, block_arranging_style, starting_location
-        self._validate_choice(
-            par, "rounding_rule", ("nearest", "ceil", "floor"), case="lower"
-        )
+        self._validate_choice(par, "rounding_rule", ("nearest", "ceil", "floor"), case="lower")
         self._validate_choice(
             par,
             "block_arranging_style",
             ("normal", "snake", "new-line"),
             case="lower",
         )
-        self._validate_choice(
-            par, "starting_location", ("NW", "SW", "NE", "SE"), case="upper"
-        )
+        self._validate_choice(par, "starting_location", ("NW", "SW", "NE", "SE"), case="upper")
 
         # - values
         if len(par["values"]) == 0:
@@ -446,8 +434,7 @@ class Waffle(Figure):
             invalid_styles = sorted(set(par["icon_style"]) - set(FA_STYLES))
             if invalid_styles:
                 raise ValueError(
-                    f"Argument icon_style should be one of {', '.join(FA_STYLES)}. "
-                    f"Got {', '.join(invalid_styles)}."
+                    f"Argument icon_style should be one of {', '.join(FA_STYLES)}. " f"Got {', '.join(invalid_styles)}."
                 )
 
     @classmethod
@@ -470,9 +457,7 @@ class Waffle(Figure):
 
         w._make_single_waffle(
             ax=ax,
-            plot_args=cls._kwarg_processor(
-                kwargs=kwargs, default_values=cls._default_parameters
-            ),
+            plot_args=cls._kwarg_processor(kwargs=kwargs, default_values=cls._default_parameters),
         )
 
     def _make_single_waffle(self, ax: Axes, plot_args: Dict, fig_args: Dict = {}):
@@ -504,12 +489,8 @@ class Waffle(Figure):
         # if columns is given, rows is not
         elif _pa["rows"] is None:
             if _pa["block_arranging_style"] == "new-line" and _pa["vertical"]:
-                block_per_cat = [
-                    round_up_to_multiple(i, base=_pa["columns"]) for i in _pa["values"]
-                ]
-                colored_block_per_cat = [
-                    division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]
-                ]
+                block_per_cat = [round_up_to_multiple(i, base=_pa["columns"]) for i in _pa["values"]]
+                colored_block_per_cat = [division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]]
             else:
                 block_per_cat = colored_block_per_cat = [
                     division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]
@@ -518,12 +499,8 @@ class Waffle(Figure):
         # if rows is given, columns is not
         elif _pa["columns"] is None:
             if _pa["block_arranging_style"] == "new-line" and not _pa["vertical"]:
-                block_per_cat = [
-                    round_up_to_multiple(i, base=_pa["rows"]) for i in _pa["values"]
-                ]
-                colored_block_per_cat = [
-                    division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]
-                ]
+                block_per_cat = [round_up_to_multiple(i, base=_pa["rows"]) for i in _pa["values"]]
+                colored_block_per_cat = [division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]]
             else:
                 block_per_cat = colored_block_per_cat = [
                     division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]
@@ -542,22 +519,13 @@ class Waffle(Figure):
 
         # Absolute height of the plot
         figure_height = 1
-        block_y_length = figure_height / (
-            _pa["rows"]
-            + _pa["rows"] * _pa["interval_ratio_y"]
-            - _pa["interval_ratio_y"]
-        )
+        block_y_length = figure_height / (_pa["rows"] + _pa["rows"] * _pa["interval_ratio_y"] - _pa["interval_ratio_y"])
         block_x_length = _pa["block_aspect_ratio"] * block_y_length
 
         # Define the limit of X, Y axis
         ax.axis(
             xmin=0,
-            xmax=(
-                _pa["columns"]
-                + _pa["columns"] * _pa["interval_ratio_x"]
-                - _pa["interval_ratio_x"]
-            )
-            * block_x_length,
+            xmax=(_pa["columns"] + _pa["columns"] * _pa["interval_ratio_x"] - _pa["interval_ratio_x"]) * block_x_length,
             ymin=0,
             ymax=figure_height,
         )
@@ -586,13 +554,10 @@ class Waffle(Figure):
 
             # Replace icon name with Unicode symbols in parameter icons
             _pa["icons"] = [
-                icons[icon_style][icon_name]
-                for icon_name, icon_style in zip(_pa["icons"], _pa["icon_style"])
+                icons[icon_style][icon_name] for icon_name, icon_style in zip(_pa["icons"], _pa["icon_style"])
             ]
 
-            prop = fm.FontProperties(
-                size=_pa["font_size"] or self._block_font_size(ax, block_x_length)
-            )
+            prop = fm.FontProperties(size=_pa["font_size"] or self._block_font_size(ax, block_x_length))
 
         elif _pa["characters"]:
             # If characters is a string, convert it into a list of same characters. It's length is the value's length
@@ -694,15 +659,11 @@ class Waffle(Figure):
 
                 legend_args["handles"] = [
                     legend_style_class_mapping[style](color=color, text=icon)
-                    for color, icon, style in zip(
-                        _pa["colors"], _pa["icons"], _pa["icon_style"]
-                    )
+                    for color, icon, style in zip(_pa["colors"], _pa["icons"], _pa["icon_style"])
                 ]
                 legend_args["handler_map"] = legend_handler_style_mapping
             elif not legend_args.get("handles"):
-                legend_args["handles"] = [
-                    Patch(color=c, label=str(l)) for c, l in zip(_pa["colors"], labels)
-                ]
+                legend_args["handles"] = [Patch(color=c, label=str(l)) for c, l in zip(_pa["colors"], labels)]
 
             # labels is an alias of legend['labels']
             if "labels" not in legend_args and _pa["labels"]:

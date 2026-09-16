@@ -1,0 +1,48 @@
+name: Bug report
+description: Something renders wrong or raises an error
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Most reports that stall do so because the versions and the environment are missing.
+        Rendering bugs in particular often depend on the backend and the figure DPI.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you expect, and what did you get? Attach the chart if it is a rendering problem.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Code to reproduce
+      description: The smallest complete snippet that shows the problem.
+      render: python
+    validations:
+      required: true
+
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions
+      description: |
+        Paste the output of:
+        ```
+        python -c "import sys, matplotlib, pywaffle; print(sys.version); print('matplotlib', matplotlib.__version__); print('backend', matplotlib.get_backend()); print('pywaffle', pywaffle.__version__)"
+        pip show fontawesomefree | head -2
+        ```
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: How are you running it
+      description: e.g. a script, Jupyter in the browser, a VS Code notebook, PyCharm. Include the OS.
+    validations:
+      required: true
