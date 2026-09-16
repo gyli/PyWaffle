@@ -14,6 +14,7 @@ Fixes
 
 New
 
+* Add `rounding_rule="float"`, which draws partial blocks instead of rounding values ([#26](https://github.com/gyli/PyWaffle/issues/26)). A category that ends part way through a block fills only that fraction of it, and a block containing a boundary between two categories is split between their colors. The block count then depends only on the total of the values, so two datasets with the same total produce charts of the same size - which rounding did not guarantee
 * Add a top-level `waffle()` function with an explicit signature, so the parameters are visible to IDEs and `help()`, and a chart can be drawn straight into an existing axes with `ax=`. `plt.figure(FigureClass=Waffle, ...)` and `Waffle.make_waffle()` are unchanged and not deprecated
 
 Other

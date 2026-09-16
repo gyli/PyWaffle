@@ -39,3 +39,34 @@ plt.figure(
 ```
 
 <img class="img_middle" alt="Ignore columns" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/value_scaling_and_auto_sizing_ignore_columns.svg?sanitize=true">
+
+---
+
+## Fractional Blocks
+
+Set `rounding_rule='float'` to stop rounding values altogether. A category that ends part way
+through a block fills only that fraction of it, and a block that contains a boundary between two
+categories is split between their colors.
+
+```python
+plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    values={'Net income': 18.46, 'Income tax': 1.64, 'MG&A': 7.52, 'R&D': 15.3, 'Cost of sales': 44.54},
+    rounding_rule='float',
+    block_arranging_style='snake',
+)
+```
+
+<img class="img_middle" alt="Fractional blocks" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/value_scaling_and_auto_sizing_fractional.svg?sanitize=true">
+
+The useful consequence is that the number of blocks depends only on the **total** of the values.
+With rounding, two datasets that sum to the same number could produce charts of different sizes,
+because each value is rounded independently and the errors need not cancel. With
+`rounding_rule='float'` they are always the same size, which matters when charts are compared
+side by side or animated over time.
+
+```{note}
+`rounding_rule='float'` draws partially filled rectangles, so it cannot be combined with `icons`
+or `characters` — a glyph cannot be partially filled. Passing them together raises a `ValueError`.
+```
