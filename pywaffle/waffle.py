@@ -795,7 +795,8 @@ class Waffle(Figure):
         if hasattr(self, "plot_args"):
             self.plot_args.append(_pa)
 
-    def _resolve_grid(self, par: Dict) -> Tuple[List, List]:
+    @staticmethod
+    def _resolve_grid(par: Dict) -> Tuple[List, List]:
         """Work out the grid size and how many blocks each category occupies.
 
         Returns the blocks a category takes up and the blocks it actually colors. The two differ
@@ -806,6 +807,7 @@ class Waffle(Figure):
             raise ValueError("At least one of rows and columns is required.")
 
         def as_blocks(values):
+            """Round each value to a whole number of blocks."""
             return [division(v, 1, method=par["rounding_rule"]) for v in values]
 
         # When both are given the values are scaled to fill the grid exactly
@@ -831,7 +833,8 @@ class Waffle(Figure):
         par[missing] = division(sum(block_per_cat), par[given], method="ceil")
         return block_per_cat, colored_block_per_cat
 
-    def _setup_axes(self, ax: Axes, par: Dict) -> Tuple[float, float]:
+    @staticmethod
+    def _setup_axes(ax: Axes, par: Dict) -> Tuple[float, float]:
         """Set the anchor and axis limits, draw the background, and return the block dimensions."""
         ax.set_anchor(par["plot_anchor"])
 
@@ -992,17 +995,20 @@ class Waffle(Figure):
             from pywaffle.fontawesome_handler import fontawesome_files
 
             def draw(x, y, color, class_index):
+                """Draw one block as a Font Awesome icon."""
                 font_properties.set_file(fontawesome_files[par["icon_style"][class_index]])
                 ax.text(x=x, y=y, s=par["icons"][class_index], color=color, fontproperties=font_properties)
 
         elif par["characters"]:
 
             def draw(x, y, color, class_index):
+                """Draw one block as a character."""
                 ax.text(x=x, y=y, s=par["characters"][class_index], color=color, fontproperties=font_properties)
 
         else:
 
             def draw(x, y, color, class_index):
+                """Draw one block as a rectangle."""
                 ax.add_artist(Rectangle(xy=(x, y), width=block_x_length, height=block_y_length, **block_style(color)))
 
         return draw
