@@ -1,5 +1,11 @@
 version = 1
 
+# Documentation coverage is a metric over the analyzed files. Without these, it is measured across
+# the test suite as well, where a docstring on every test method is noise rather than documentation,
+# and the package's own 79.5% is reported as 37.4%.
+test_patterns = ["tests/**"]
+exclude_patterns = ["examples/**", "docs/**", "binder/**"]
+
 [[analyzers]]
 name = "python"
 enabled = true

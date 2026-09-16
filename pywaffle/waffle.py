@@ -293,14 +293,14 @@ class Waffle(Figure):
     }
 
     def __init__(self, *args, **kwargs):
-        #:All Waffle-specific arguments with default values
+        #: All Waffle-specific arguments with default values
         self.fig_args: Dict = self._kwarg_processor(kwargs=kwargs, default_values=self._default_parameters)
         super().__init__(*args, **kwargs)
 
-        #:Standardized arguments of all subplots
+        #: Standardized arguments of all subplots
         self.plot_args: List = []
 
-        #:The length of values
+        #: The length of values
         self.values_len: Optional[int] = None
 
         plots = self.fig_args["plots"] or {} or {111: self.fig_args}
