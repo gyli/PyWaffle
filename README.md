@@ -23,6 +23,36 @@ pip install pywaffle
 * Python 3.9+
 * Matplotlib
 
+## Quickstart
+
+```python
+from pywaffle import waffle
+
+fig, ax = waffle([48, 46, 6], rows=5, columns=10, figsize=(5, 3))
+```
+
+`waffle()` returns the matplotlib `(figure, axes)` pair, so everything you already know about
+matplotlib still applies. To draw into a layout you have already built, pass `ax`:
+
+```python
+import matplotlib.pyplot as plt
+from pywaffle import waffle
+
+fig, axes = plt.subplots(1, 2)
+waffle({"Yes": 70, "No": 30}, rows=5, ax=axes[0])
+waffle({"Yes": 30, "No": 70}, rows=5, ax=axes[1])
+```
+
+PyWaffle is also a matplotlib [Figure constructor
+class](https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html), which is
+the form used throughout the examples below and is fully supported:
+
+```python
+fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 6])
+```
+
+Both build the same chart. Use whichever reads better in your code.
+
 ## Examples
 
 ### 1. Value Scaling

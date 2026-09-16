@@ -12,6 +12,10 @@ Fixes
 * Reject unknown `block_arranging_style`, which was previously accepted and silently drawn as `normal`
 * Raise `ValueError` rather than `KeyError` or `AttributeError` for invalid `starting_location`, `rounding_rule` and `icon_style`, and accept `icon_style` lists in any case
 
+New
+
+* Add a top-level `waffle()` function with an explicit signature, so the parameters are visible to IDEs and `help()`, and a chart can be drawn straight into an existing axes with `ax=`. `plt.figure(FigureClass=Waffle, ...)` and `Waffle.make_waffle()` are unchanged and not deprecated
+
 Other
 
 * Add `pywaffle.__version__`
