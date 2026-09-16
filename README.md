@@ -3,8 +3,13 @@
 [![PyPI version](https://badge.fury.io/py/pywaffle.svg)](https://pypi.org/project/pywaffle/)
 [![ReadTheDocs](https://readthedocs.org/projects/pywaffle/badge/?version=latest&style=flat)](http://pywaffle.readthedocs.io/)
 [![Binder](https://img.shields.io/badge/run-Online%20Demo-blue)](https://mybinder.org/v2/gh/gyli/PyWaffle/master?filepath=demo.ipynb)
+[![Downloads](https://static.pepy.tech/badge/pywaffle/month)](https://pepy.tech/project/pywaffle)
+[![Tests](https://github.com/gyli/PyWaffle/actions/workflows/test.yml/badge.svg)](https://github.com/gyli/PyWaffle/actions/workflows/test.yml)
 
-PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts.
+PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts — also known as
+square pie charts, and, when drawn with icons, pictogram charts.
+
+![PyWaffle](examples/readme/title_and_legend.svg)
 
 It provides a [Figure constructor class](https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html) `Waffle`, which could be passed to [matplotlib.pyplot.figure](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.figure.html) and generates a matplotlib Figure object.
 
@@ -20,8 +25,38 @@ pip install pywaffle
 
 ## Requirements
 
-* Python 3.5+
+* Python 3.9+
 * Matplotlib
+
+## Quickstart
+
+```python
+from pywaffle import waffle
+
+fig, ax = waffle([48, 46, 6], rows=5, columns=10, figsize=(5, 3))
+```
+
+`waffle()` returns the matplotlib `(figure, axes)` pair, so everything you already know about
+matplotlib still applies. To draw into a layout you have already built, pass `ax`:
+
+```python
+import matplotlib.pyplot as plt
+from pywaffle import waffle
+
+fig, axes = plt.subplots(1, 2)
+waffle({"Yes": 70, "No": 30}, rows=5, ax=axes[0])
+waffle({"Yes": 30, "No": 70}, rows=5, ax=axes[1])
+```
+
+PyWaffle is also a matplotlib [Figure constructor
+class](https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html), which is
+the form used throughout the examples below and is fully supported:
+
+```python
+fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 6])
+```
+
+Both build the same chart. Use whichever reads better in your code.
 
 ## Examples
 

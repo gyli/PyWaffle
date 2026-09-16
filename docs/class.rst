@@ -1,6 +1,15 @@
 API Reference
 =============
 
+Function
+--------
+
+.. module:: pywaffle.functional
+.. autofunction:: waffle
+
+Figure class
+------------
+
 .. module:: pywaffle.waffle
 .. autoclass:: Waffle
     :members:
@@ -8,7 +17,6 @@ API Reference
 
 **Attributes:**
 
-.. module:: pywaffle.waffle
 .. autoattribute:: Waffle.fig_args
 .. autoattribute:: Waffle.plot_args
 .. autoattribute:: Waffle.values_len

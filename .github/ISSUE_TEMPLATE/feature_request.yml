@@ -1,0 +1,16 @@
+name: Feature request
+description: Suggest a new capability
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to make
+      description: A picture or a sketch of the chart you want is the most useful thing you can include.
+    validations:
+      required: true
+  - type: textarea
+    id: workaround
+    attributes:
+      label: How do you do it today
+      description: What you currently write to work around the gap, if anything.

@@ -1,0 +1,6 @@
+-r requirements.txt
+black
+build
+pandas
+pytest
+pytest-cov

@@ -1,8 +1,13 @@
 #!/usr/bin/python
 # -*-coding: utf-8 -*-
 
-import os
+import tempfile
 import unittest
+from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 
@@ -10,6 +15,16 @@ from pywaffle.waffle import Waffle
 
 
 class TestWaffle(unittest.TestCase):
+    def setUp(self):
+        # Write rendered charts to a temporary directory, so the tests do not depend on a
+        # pre-existing folder relative to the current working directory
+        self._tmpdir = tempfile.TemporaryDirectory()
+        self.test_plots_folder = self._tmpdir.name + "/"
+
+    def tearDown(self):
+        self._tmpdir.cleanup()
+        plt.close("all")
+
     def test_parameters(self):
         values = [10, 20]
         fig = plt.figure(
@@ -77,7 +92,7 @@ class TestWaffle(unittest.TestCase):
         self.assertEqual(fig.gca().get_legend().texts[0]._text, "cat1")
 
     def test_plot(self):
-        test_plots_folder = "test_plots/"
+        test_plots_folder = self.test_plots_folder
 
         # Most of the parameters
         plot_file_name = "title_and_legend.png"
@@ -93,7 +108,7 @@ class TestWaffle(unittest.TestCase):
             starting_location="NW",
         )
         fig.savefig(test_plots_folder + plot_file_name, bbox_inches="tight", facecolor="#EEEEEE")
-        self.assertTrue(os.path.exists(test_plots_folder + plot_file_name))
+        self.assertGreater(Path(test_plots_folder + plot_file_name).stat().st_size, 0)
 
         # Test positions
         plot_file_name = "subplot_types.png"
@@ -113,10 +128,10 @@ class TestWaffle(unittest.TestCase):
             rows=5,
         )
         fig.savefig(test_plots_folder + plot_file_name, bbox_inches="tight")
-        self.assertTrue(os.path.exists(test_plots_folder + plot_file_name))
+        self.assertGreater(Path(test_plots_folder + plot_file_name).stat().st_size, 0)
 
     def test_make_waffle(self):
-        test_plots_folder = "test_plots/"
+        test_plots_folder = self.test_plots_folder
 
         # Most of the parameters
         plot_file_name = "make_waffle_on_ax.png"
@@ -134,7 +149,7 @@ class TestWaffle(unittest.TestCase):
             starting_location="NW",
         )
         fig.savefig(test_plots_folder + plot_file_name, bbox_inches="tight", facecolor="#EEEEEE")
-        self.assertTrue(os.path.exists(test_plots_folder + plot_file_name))
+        self.assertGreater(Path(test_plots_folder + plot_file_name).stat().st_size, 0)
 
 
 if __name__ == "__main__":

@@ -8,5 +8,5 @@ The last stable release is available on PyPI and can be installed with ``pip``::
 
 .. rubric:: Requirements
 
-* Python 3.5+
+* Python 3.9+
 * Matplotlib

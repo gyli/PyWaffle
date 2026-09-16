@@ -21,6 +21,18 @@ fig = plt.figure(
 
 To specify the font, pass the absolute path to a .ttf or .otf file to parameter `font_file`.
 
+```{note}
+**Saving to PDF with a custom font.** The default PDF backend embeds custom fonts in a way that
+can render characters at the wrong size or position, while the same chart is correct on screen and
+in PNG and SVG. This is a matplotlib font-embedding issue rather than a PyWaffle one. If you hit
+it, install `pycairo` and switch backend before plotting:
+
+    import matplotlib
+    matplotlib.use("cairo")
+
+See [issue #17](https://github.com/gyli/PyWaffle/issues/17) for the original report.
+```
+
 ---
 
 ## Icons

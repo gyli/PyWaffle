@@ -7,6 +7,7 @@ from itertools import islice, product
 from typing import Dict, Iterable, Iterator, List, Optional, Tuple, Union
 import warnings
 
+import matplotlib as mpl
 import matplotlib.font_manager as fm
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
@@ -38,9 +39,7 @@ def round_up_to_multiple(x: int, base: int) -> int:
     return base * math.ceil(x / base)
 
 
-def array_resize(
-    array: Union[Tuple, List], length: int, array_len: int = None
-) -> Union[Tuple, List]:
+def array_resize(array: Union[Tuple, List], length: int, array_len: int = None) -> Union[Tuple, List]:
     """
     Resize array to given length. If the array is shorter than given length, repeat the array; If the array is longer
     than the length, trim the array.
@@ -255,9 +254,7 @@ class Waffle(Figure):
 
     def __init__(self, *args, **kwargs):
         #:All Waffle-specific arguments with default values
-        self.fig_args: Dict = self._kwarg_processor(
-            kwargs=kwargs, default_values=self._default_parameters
-        )
+        self.fig_args: Dict = self._kwarg_processor(kwargs=kwargs, default_values=self._default_parameters)
         super().__init__(*args, **kwargs)
 
         #:Standardized arguments of all subplots
@@ -280,7 +277,52 @@ class Waffle(Figure):
             self._make_single_waffle(ax=ax, fig_args=self.fig_args, plot_args=plot_args)
 
         # Adjust the layout
-        self.set_tight_layout(self.fig_args["tight"])
+        self._apply_layout_engine(self.fig_args["tight"])
+
+    @staticmethod
+    def _colors_from_cmap(cmap_name: str, length: int) -> List:
+        """
+        Pick one color per category from a named colormap.
+
+        A discrete (listed) colormap has a fixed palette, which is repeated or trimmed to the number
+        of categories. A continuous colormap has no such palette, so the categories are spread evenly
+        across its range instead. Reaching for .colors on a continuous colormap raises AttributeError.
+        """
+        cmap = plt.get_cmap(cmap_name)
+        palette = getattr(cmap, "colors", None)
+        if palette is not None:
+            return array_resize(array=list(palette), length=length, array_len=cmap.N)
+
+        if length == 1:
+            return [cmap(0.5)]
+        return [cmap(i / (length - 1)) for i in range(length)]
+
+    @staticmethod
+    def _block_font_size(ax: Axes, block_x_length: float) -> float:
+        """
+        Default font size, in points, for an icon or character that should fill one block.
+
+        transData returns display pixels, while font sizes are in points, so the conversion depends
+        on the figure's DPI. Assuming a fixed DPI makes icons scale wrongly on any other figure -
+        at 200 DPI they come out about twice the intended size.
+        """
+        (_, y0), (_, y1) = ax.transData.transform([(0, 0), (0, block_x_length)])
+        return (y1 - y0) * 72 / ax.figure.dpi
+
+    def _apply_layout_engine(self, tight: Union[bool, Dict, None]):
+        """
+        Set the layout engine from the ``tight`` argument.
+
+        Figure.set_tight_layout has been deprecated since matplotlib 3.6 in favour of set_layout_engine.
+        """
+        if tight is None:
+            tight = mpl.rcParams["figure.autolayout"]
+
+        if isinstance(tight, dict):
+            self.set_layout_engine("tight")
+            self.get_layout_engine().set(**tight)
+        else:
+            self.set_layout_engine("tight" if tight else "none")
 
     @staticmethod
     def _kwarg_processor(kwargs: Dict, default_values: Dict) -> Dict:
@@ -323,24 +365,32 @@ class Waffle(Figure):
 
         return (c[::vertical_order] for c in block_matrix)
 
+    @staticmethod
+    def _validate_choice(par: Dict, name: str, choices: Tuple[str, ...], case: str):
+        """
+        Normalize the case of a string argument and check it against the allowed values.
+        """
+        value = par[name]
+        if not isinstance(value, str):
+            raise ValueError(f"Argument {name} should be a string, one of {', '.join(choices)}.")
+
+        value = value.strip()
+        value = value.lower() if case == "lower" else value.upper()
+        if value not in choices:
+            raise ValueError(f"Argument {name} should be one of {', '.join(choices)}.")
+
+        par[name] = value
+
     def _parameter_validation(self, par: Dict):
-        # Standardization
-        lower_string_par = (
-            "rounding_rule",
+        # - rounding_rule, block_arranging_style, starting_location
+        self._validate_choice(par, "rounding_rule", ("nearest", "ceil", "floor"), case="lower")
+        self._validate_choice(
+            par,
             "block_arranging_style",
+            ("normal", "snake", "new-line"),
+            case="lower",
         )
-        for ls in lower_string_par:
-            par[ls] = par[ls].lower().strip()
-
-        upper_string_par = ("starting_location",)
-        for us in upper_string_par:
-            par[us] = par[us].upper().strip()
-
-        # - rounding_rule
-        if par["rounding_rule"] not in ("nearest", "ceil", "floor"):
-            raise ValueError(
-                "Argument rounding_rule should be one of nearest, ceil or floor."
-            )
+        self._validate_choice(par, "starting_location", ("NW", "SW", "NE", "SE"), case="upper")
 
         # - values
         if len(par["values"]) == 0:
@@ -354,15 +404,38 @@ class Waffle(Figure):
         # - labels and values
         if isinstance(par["values"], dict):
             if not par["labels"]:
-                par["labels"] = par["values"].keys()
+                par["labels"] = list(par["values"].keys())
             par["values"] = list(par["values"].values())
 
         if par["labels"] and len(par["labels"]) != self.values_len:
             raise ValueError("Length of labels doesn't match the values.")
 
-        # - starting_location
-        if par["starting_location"] not in ("NW", "SW", "NE", "SE"):
-            raise KeyError("starting_location should be one of 'NW', 'SW', 'NE', 'SE'")
+        # - values, after they are guaranteed to be a sequence of numbers
+        if any(v < 0 for v in par["values"]):
+            raise ValueError("Argument values should not contain negative numbers.")
+
+        if par["rows"] and par["columns"] and sum(par["values"]) == 0:
+            raise ValueError(
+                "Argument values should not sum to zero when both rows and columns are given, "
+                "as there is no way to scale the values to the chart size."
+            )
+
+        # - icon_style
+        if par["icons"]:
+            from pywaffle.fontawesome_handler import FA_STYLES
+
+            if isinstance(par["icon_style"], str):
+                par["icon_style"] = [par["icon_style"].lower().strip()] * self.values_len
+            else:
+                par["icon_style"] = [str(i).lower().strip() for i in par["icon_style"]]
+                if len(par["icon_style"]) != self.values_len:
+                    raise ValueError("Length of icon_style doesn't match the values.")
+
+            invalid_styles = sorted(set(par["icon_style"]) - set(FA_STYLES))
+            if invalid_styles:
+                raise ValueError(
+                    f"Argument icon_style should be one of {', '.join(FA_STYLES)}. " f"Got {', '.join(invalid_styles)}."
+                )
 
     @classmethod
     def make_waffle(cls, ax: Axes, **kwargs):
@@ -384,9 +457,7 @@ class Waffle(Figure):
 
         w._make_single_waffle(
             ax=ax,
-            plot_args=cls._kwarg_processor(
-                kwargs=kwargs, default_values=cls._default_parameters
-            ),
+            plot_args=cls._kwarg_processor(kwargs=kwargs, default_values=cls._default_parameters),
         )
 
     def _make_single_waffle(self, ax: Axes, plot_args: Dict, fig_args: Dict = {}):
@@ -418,12 +489,8 @@ class Waffle(Figure):
         # if columns is given, rows is not
         elif _pa["rows"] is None:
             if _pa["block_arranging_style"] == "new-line" and _pa["vertical"]:
-                block_per_cat = [
-                    round_up_to_multiple(i, base=_pa["columns"]) for i in _pa["values"]
-                ]
-                colored_block_per_cat = [
-                    division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]
-                ]
+                block_per_cat = [round_up_to_multiple(i, base=_pa["columns"]) for i in _pa["values"]]
+                colored_block_per_cat = [division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]]
             else:
                 block_per_cat = colored_block_per_cat = [
                     division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]
@@ -432,12 +499,8 @@ class Waffle(Figure):
         # if rows is given, columns is not
         elif _pa["columns"] is None:
             if _pa["block_arranging_style"] == "new-line" and not _pa["vertical"]:
-                block_per_cat = [
-                    round_up_to_multiple(i, base=_pa["rows"]) for i in _pa["values"]
-                ]
-                colored_block_per_cat = [
-                    division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]
-                ]
+                block_per_cat = [round_up_to_multiple(i, base=_pa["rows"]) for i in _pa["values"]]
+                colored_block_per_cat = [division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]]
             else:
                 block_per_cat = colored_block_per_cat = [
                     division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]
@@ -456,51 +519,30 @@ class Waffle(Figure):
 
         # Absolute height of the plot
         figure_height = 1
-        block_y_length = figure_height / (
-            _pa["rows"]
-            + _pa["rows"] * _pa["interval_ratio_y"]
-            - _pa["interval_ratio_y"]
-        )
+        block_y_length = figure_height / (_pa["rows"] + _pa["rows"] * _pa["interval_ratio_y"] - _pa["interval_ratio_y"])
         block_x_length = _pa["block_aspect_ratio"] * block_y_length
 
         # Define the limit of X, Y axis
         ax.axis(
             xmin=0,
-            xmax=(
-                _pa["columns"]
-                + _pa["columns"] * _pa["interval_ratio_x"]
-                - _pa["interval_ratio_x"]
-            )
-            * block_x_length,
+            xmax=(_pa["columns"] + _pa["columns"] * _pa["interval_ratio_x"] - _pa["interval_ratio_x"]) * block_x_length,
             ymin=0,
             ymax=figure_height,
         )
 
         # Build a color sequence if colors is empty
         if not _pa["colors"]:
-            default_colors = plt.get_cmap(_pa["cmap_name"]).colors
-            default_color_num = plt.get_cmap(_pa["cmap_name"]).N
-            _pa["colors"] = array_resize(
-                array=default_colors,
-                length=self.values_len,
-                array_len=default_color_num,
-            )
+            _pa["colors"] = self._colors_from_cmap(_pa["cmap_name"], self.values_len)
 
         # Set icons
         if _pa["icons"]:
-            from pywaffle.fontawesome_mapping import icons
-            from pywaffle.fontawesome_handler import fontawesome_files
+            from pywaffle.fontawesome_handler import fontawesome_files, icons
 
             if _pa["icon_size"]:
                 warnings.warn("Parameter icon_size is deprecated. Use font_size instead.", DeprecationWarning)
                 _pa["font_size"] = _pa["icon_size"]
 
-            # If icon_style is a string, convert it into a list of same icons. The length is the value's length
-            # 'solid' -> ['solid', 'solid', 'solid', ]
-            if isinstance(_pa["icon_style"], str):
-                _pa["icon_style"] = [_pa["icon_style"].lower()] * self.values_len
-            elif set(_pa["icon_style"]) - set(icons.keys()):
-                raise KeyError(f"icon_style should be one of {', '.join(icons.keys())}")
+            # icon_style has already been normalized to a list by _parameter_validation
 
             # If icons is a string, convert it into a list of same icon. The length is the value's length
             # '\uf26e' -> ['\uf26e', '\uf26e', '\uf26e', ]
@@ -512,15 +554,10 @@ class Waffle(Figure):
 
             # Replace icon name with Unicode symbols in parameter icons
             _pa["icons"] = [
-                icons[icon_style][icon_name]
-                for icon_name, icon_style in zip(_pa["icons"], _pa["icon_style"])
+                icons[icon_style][icon_name] for icon_name, icon_style in zip(_pa["icons"], _pa["icon_style"])
             ]
 
-            # Calculate icon size based on the block size
-            tx, ty = ax.transData.transform([(0, 0), (0, block_x_length)])
-            prop = fm.FontProperties(
-                size=_pa["font_size"] or int((ty[1] - tx[1]) / 16 * 12)
-            )
+            prop = fm.FontProperties(size=_pa["font_size"] or self._block_font_size(ax, block_x_length))
 
         elif _pa["characters"]:
             # If characters is a string, convert it into a list of same characters. It's length is the value's length
@@ -530,10 +567,8 @@ class Waffle(Figure):
             if len(_pa["characters"]) != self.values_len:
                 raise ValueError("Length of characters doesn't match the values.")
 
-            # Calculate icon size based on the block size
-            tx, ty = ax.transData.transform([(0, 0), (0, block_x_length)])
             prop = fm.FontProperties(
-                size=_pa["font_size"] or int((ty[1] - tx[1]) / 16 * 12),
+                size=_pa["font_size"] or self._block_font_size(ax, block_x_length),
                 fname=_pa["font_file"],
             )
 
@@ -561,9 +596,6 @@ class Waffle(Figure):
 
             if class_index > self.values_len - 1:
                 break
-
-            if block_per_cat[class_index] < 0:
-                raise ValueError("Negative value is not acceptable")
 
             if this_cat_block_count > colored_block_per_cat[class_index] - 1:
                 color = (0, 0, 0, 0)  # transparent
@@ -613,32 +645,34 @@ class Waffle(Figure):
             ax.set_title(**_pa["title"])
 
         # Add legend
+        # The arguments are built in a new dict rather than mutating _pa["legend"], which subplots
+        # share by reference with the figure-level arguments
         if _pa["labels"] or "labels" in _pa["legend"]:
-            labels = _pa["labels"] or _pa["legend"].get("labels")
+            legend_args = {**_pa["legend"]}
+            labels = _pa["labels"] or legend_args.get("labels")
+
             if _pa["icons"] and _pa["icon_legend"] is True:
                 from pywaffle.fontawesome_handler import (
                     legend_handler_style_mapping,
                     legend_style_class_mapping,
                 )
 
-                _pa["legend"]["handles"] = [
+                legend_args["handles"] = [
                     legend_style_class_mapping[style](color=color, text=icon)
-                    for color, icon, style in zip(
-                        _pa["colors"], _pa["icons"], _pa["icon_style"]
-                    )
+                    for color, icon, style in zip(_pa["colors"], _pa["icons"], _pa["icon_style"])
                 ]
-                _pa["legend"]["handler_map"] = legend_handler_style_mapping
-            elif not _pa['legend'].get('handles'):
-                _pa["legend"]["handles"] = [
-                    Patch(color=c, label=str(l)) for c, l in zip(_pa["colors"], labels)
-                ]
+                legend_args["handler_map"] = legend_handler_style_mapping
+            elif not legend_args.get("handles"):
+                legend_args["handles"] = [Patch(color=c, label=str(l)) for c, l in zip(_pa["colors"], labels)]
 
             # labels is an alias of legend['labels']
-            if "labels" not in _pa["legend"] and _pa["labels"]:
-                _pa["legend"]["labels"] = _pa["labels"]
+            if "labels" not in legend_args and _pa["labels"]:
+                legend_args["labels"] = _pa["labels"]
 
-            if "handles" in _pa["legend"] and "labels" in _pa["legend"]:
-                ax.legend(**_pa["legend"])
+            _pa["legend"] = legend_args
+
+            if "handles" in legend_args and "labels" in legend_args:
+                ax.legend(**legend_args)
 
         # Remove borders, ticks, etc.
         ax.axis("off")

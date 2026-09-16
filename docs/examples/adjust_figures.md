@@ -17,6 +17,21 @@ fig = plt.figure(
 
 <img class="img_middle" alt="Adjust Figures - Change Background Color" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/adjust_figure_change_background.svg?sanitize=true">
 
+```{note}
+**Charts with many blocks.** In a raster format such as PNG, block edges land on fractional pixel
+positions and the rasterizer rounds them to whole pixels, so the gaps between columns alternate by
+one pixel. PyWaffle's own geometry is exactly uniform - the difference appears only when the chart
+is rasterized. It is invisible at ordinary sizes, but with a thousand blocks a block may be only
+~15 pixels wide and a 1 pixel difference becomes noticeable.
+
+To avoid it, save to a vector format, where coordinates stay fractional and the grid is exact:
+
+    fig.savefig("chart.svg")   # or .pdf
+
+Raising `dpi` also helps, since the 1 pixel error stays constant while the blocks grow. See
+[issue #2](https://github.com/gyli/PyWaffle/issues/2) for measurements.
+```
+
 ---
 
 ## Plot Location

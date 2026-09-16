@@ -6,26 +6,37 @@ PyWaffle installs `Font Awesome
 The package it is trying to install is the latest version of `fontawesomefree
 <https://pypi.org/project/fontawesomefree/>`_.
 
-If you would like to upgrade or downgrade :code:`fontawesomefree`, and use the specific version within PyWaffle, you can upgrade :code:`fontawesomefree` and then reinstall :code:`pywaffle`. In commands, that is:
+Upgrading or downgrading Font Awesome
+-------------------------------------
+
+Install the version of :code:`fontawesomefree` you want. PyWaffle picks it up on the next run;
+there is nothing else to do and no need to reinstall PyWaffle.
 
 ::
-
 
    # Either upgrade to the latest, or specify a version number
    pip install --upgrade fontawesomefree
    # OR
    pip install fontawesomefree==6.1.1
 
-   # Then reinstall pywaffle
-   pip install --force-reinstall --no-deps pywaffle
+PyWaffle builds the icon name to character mapping from the installed :code:`fontawesomefree`
+package, the first time a chart uses icons in a given session. The names you can use and the
+glyphs you get therefore always come from the same Font Awesome version.
 
-Option :code:`--force-reinstal` ensures icon mapping file in the package would be regenerated, and option :code:`--no-deps` avoid package :code:`fontawesomefree` being upgraded to unexpected version.
-
-To validate the upgrade, you may check the version number at the first line of the icon mapping file. The file path is :code:`<PYTHON_LIB>/pywaffle/fontawesome_mapping.py`. The line should be something like:
+To check which version is in use:
 
 ::
 
-   # For Font Awesome version: 6.1.1
+   pip show fontawesomefree
+
+.. note::
+
+   Before PyWaffle 1.2.0 the mapping was a file generated during installation, which required
+   :code:`pip install --force-reinstall --no-deps pywaffle` after every Font Awesome change. That
+   step regenerated nothing for wheel installs, so PyWaffle up to 1.1.1 shipped a Font Awesome
+   5.14 mapping regardless of the font version installed. If you use icons, upgrade to 1.2.0 or
+   later: on older versions several hundred valid icon names raise :code:`KeyError`, and a number
+   of others silently draw the wrong icon.
 
 For how to use Font Awesome with PyWaffle, please visit `Plot with Characters or Icons
 <examples/plot_with_characters_or_icons.html#icons>`_.

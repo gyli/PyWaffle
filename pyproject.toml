@@ -1,24 +1,65 @@
-[tool.black]
-line-length = 88
-target-version = ['py310']
-include = '\.pyi?$'
-exclude = '''
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
 
-(
-  /(
-      \.eggs         # exclude a few common directories in the
-    | \.git          # root of the project
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.venv
-    | \venv
-    | _build
-    | buck-out
-    | build
-    | dist
-  )/
-  | foo.py           # also separately exclude a file named foo.py in
-                     # the root of the project
-)
-'''
+[project]
+name = "pywaffle"
+dynamic = ["version"]
+description = "PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts."
+readme = { file = "README_pypi.rst", content-type = "text/x-rst" }
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+authors = [{ name = "Guangyang Li", email = "mail@guangyangli.com" }]
+keywords = [
+    "matplotlib",
+    "waffle chart",
+    "square pie chart",
+    "pictogram chart",
+    "pie plot",
+    "data visualization",
+]
+# fontawesomefree stays a hard dependency for now; making it an extra is a breaking
+# change and is tracked separately. The "icons" extra is an additive alias.
+dependencies = ["matplotlib", "fontawesomefree"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
+
+[project.optional-dependencies]
+icons = ["fontawesomefree"]
+
+[project.urls]
+Homepage = "https://github.com/gyli/PyWaffle"
+Documentation = "https://pywaffle.readthedocs.io/"
+Changelog = "https://github.com/gyli/PyWaffle/blob/master/CHANGELOG.md"
+Issues = "https://github.com/gyli/PyWaffle/issues"
+
+[tool.setuptools]
+packages = ["pywaffle"]
+
+[tool.setuptools.dynamic]
+version = { attr = "pywaffle._version.__version__" }
+
+[tool.setuptools.package-data]
+pywaffle = ["py.typed"]
+
+[tool.black]
+line-length = 120
+target-version = ['py39']
+include = '\.pyi?$'

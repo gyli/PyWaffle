@@ -1,17 +1,19 @@
-pyenv install -s 3.10.2
-virtualenv -p ~/.pyenv/versions/3.10.2/bin/python --clear --always-copy venv
+#!/bin/bash
+# Local development environment and example regeneration.
+# Releases are built and published by .github/workflows/publish.yml, not from here.
+set -euo pipefail
 
+python3 -m venv venv
 source venv/bin/activate
-pip3 install -r requirements_dev.txt
 
-python3 -m examples.generate_plots
+pip install --upgrade pip
+pip install -r requirements_dev.txt
+pip install -e .
 
-# build docs
-#cd docs
-#python3 -m sphinx -T -E -b html -d _build/doctrees -D language=en . _build/html
+# Regenerate the example charts used by the README and the docs
+MPLBACKEND=Agg python3 -m examples.generate_plots
 
-# Upgrade Font Awesome
-#python3 scripts/fontawesome_mapping_generator.py
+# Build the docs
+# cd docs && python3 -m sphinx -T -E -b html -d _build/doctrees -D language=en . _build/html
 
 deactivate
-
