@@ -5,7 +5,7 @@ Function
 --------
 
 .. module:: pywaffle.functional
-.. autofunction:: waffle
+.. autofunction:: waffle_chart
 
 Figure class
 ------------

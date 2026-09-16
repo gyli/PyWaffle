@@ -31,21 +31,21 @@ pip install pywaffle
 ## Quickstart
 
 ```python
-from pywaffle import waffle
+from pywaffle import waffle_chart
 
-fig, ax = waffle([48, 46, 6], rows=5, columns=10, figsize=(5, 3))
+fig, ax = waffle_chart([48, 46, 6], rows=5, columns=10, figsize=(5, 3))
 ```
 
-`waffle()` returns the matplotlib `(figure, axes)` pair, so everything you already know about
+`waffle_chart()` returns the matplotlib `(figure, axes)` pair, so everything you already know about
 matplotlib still applies. To draw into a layout you have already built, pass `ax`:
 
 ```python
 import matplotlib.pyplot as plt
-from pywaffle import waffle
+from pywaffle import waffle_chart
 
 fig, axes = plt.subplots(1, 2)
-waffle({"Yes": 70, "No": 30}, rows=5, ax=axes[0])
-waffle({"Yes": 30, "No": 70}, rows=5, ax=axes[1])
+waffle_chart({"Yes": 70, "No": 30}, rows=5, ax=axes[0])
+waffle_chart({"Yes": 30, "No": 70}, rows=5, ax=axes[1])
 ```
 
 PyWaffle is also a matplotlib [Figure constructor

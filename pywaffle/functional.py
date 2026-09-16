@@ -17,10 +17,10 @@ from matplotlib.figure import Figure
 
 from .waffle import Waffle
 
-__all__ = ["waffle"]
+__all__ = ["waffle_chart", "waffle"]
 
 
-def waffle(
+def waffle_chart(
     values: Union[List, Tuple, Dict, Iterable],
     rows: Optional[int] = None,
     columns: Optional[int] = None,
@@ -56,12 +56,12 @@ def waffle(
 
     Run it with code like::
 
-        fig, ax = waffle([48, 46, 6], rows=5)
+        fig, ax = waffle_chart([48, 46, 6], rows=5)
 
     or draw into an axes you already have::
 
         fig, axes = plt.subplots(1, 2)
-        waffle({"Yes": 70, "No": 30}, rows=5, ax=axes[0])
+        waffle_chart({"Yes": 70, "No": 30}, rows=5, ax=axes[0])
 
     This is a wrapper around the :class:`~pywaffle.waffle.Waffle` figure class. Every parameter
     behaves exactly as documented there; see :class:`~pywaffle.waffle.Waffle` for the full
@@ -134,3 +134,9 @@ def waffle(
 
     fig: Figure = plt.figure(FigureClass=Waffle, **waffle_args, **kwargs)
     return fig, fig.axes[0]
+
+
+#: Short alias. Not exported from the ``pywaffle`` package itself, because binding the name
+#: ``waffle`` there would shadow the ``pywaffle.waffle`` module and break ``pywaffle.waffle.Waffle``.
+#: Import it explicitly if you want the shorter name: ``from pywaffle.functional import waffle``.
+waffle = waffle_chart
