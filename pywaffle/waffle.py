@@ -4,7 +4,7 @@
 import copy
 import math
 from itertools import islice, product
-from typing import ClassVar, Dict, Iterable, Iterator, List, Optional, Tuple, Union
+from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional, Tuple, Union
 import warnings
 
 import matplotlib as mpl
