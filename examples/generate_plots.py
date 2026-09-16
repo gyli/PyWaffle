@@ -269,6 +269,29 @@ fig = plt.figure(FigureClass=Waffle, rows=5, values=[30, 16, 4], vertical=True)
 fig.savefig(doc_examples_image_folder + "block_direction.svg", bbox_inches="tight")
 plt.close(fig)
 
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[30, 16, 4],
+    background_color="#2b2b2b",
+)
+fig.savefig(doc_examples_image_folder + "block_background_color.svg", bbox_inches="tight")
+plt.close(fig)
+
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[30, 16, 4],
+    interval_ratio_x=0,
+    interval_ratio_y=0,
+    block_edge_color="white",
+    block_edge_width=1.5,
+)
+fig.savefig(doc_examples_image_folder + "block_edge_color.svg", bbox_inches="tight")
+plt.close(fig)
+
 # Adjust Figures
 fig = plt.figure(
     FigureClass=Waffle, rows=5, values=[30, 16, 4], colors=["#232066", "#983D3D", "#DCB732"], facecolor="#DDDDDD"

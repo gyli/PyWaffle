@@ -4,7 +4,7 @@
 import copy
 import math
 from itertools import islice, product
-from typing import Dict, Iterable, Iterator, List, Optional, Tuple, Union
+from typing import Callable, Dict, Iterable, Iterator, List, Optional, Tuple, Union
 import warnings
 
 import matplotlib as mpl
@@ -217,6 +217,24 @@ class Waffle(Figure):
         | [Default True]
     :type tight: bool|dict, optional
 
+    :param background_color: Color filling the space behind the blocks, including the gaps between them.
+
+        | One rectangle is drawn behind the whole grid, so this works for any block shape and any
+          interval ratio, and it applies to icons and characters as well as rectangle blocks.
+        | [Default None, no background]
+    :type background_color: str, optional
+
+    :param block_edge_color: Color of the border drawn around each block.
+
+        | Only applies to rectangle blocks. Icons and characters are text and have no such border.
+        | [Default None, the border matches the block color]
+    :type block_edge_color: str, optional
+
+    :param block_edge_width: Width of the border drawn around each block, in points.
+
+        | [Default None, matplotlib's patch line width]
+    :type block_edge_width: float, optional
+
     :param show_values: Append each category's value to its legend label, as ``Label (value)``.
 
         | ``True`` or ``'value'`` shows the value itself;
@@ -280,6 +298,9 @@ class Waffle(Figure):
         "show_values": False,
         "value_format": None,
         "sort_values": False,
+        "background_color": None,
+        "block_edge_color": None,
+        "block_edge_width": None,
         "tight": True,
         "block_arranging_style": "normal",
         "plots": None,
@@ -350,6 +371,7 @@ class Waffle(Figure):
         cells: List[Tuple[int, int]],
         spans: List[Tuple[int, float, float]],
         colors: List,
+        block_style: Callable[[object], Dict],
         is_vertical: bool,
         x_full: float,
         y_full: float,
@@ -383,7 +405,7 @@ class Waffle(Figure):
                     y += start * block_y_length
                     height = (end - start) * block_y_length
 
-                ax.add_artist(Rectangle(xy=(x, y), width=width, height=height, color=colors[class_index]))
+                ax.add_artist(Rectangle(xy=(x, y), width=width, height=height, **block_style(colors[class_index])))
 
     @staticmethod
     def _coloured_spans(block_per_cat: List, colored_block_per_cat: List) -> List[Tuple[int, float, float]]:
@@ -506,6 +528,23 @@ class Waffle(Figure):
             block_matrix = flip_lines(block_matrix, base=line_base)
 
         return (c[::vertical_order] for c in block_matrix)
+
+    @staticmethod
+    def _block_style(color, edge_color, edge_width) -> Dict:
+        """
+        Styling for one block.
+
+        Without an edge color, ``color`` is passed through as before, which sets the face and the
+        edge to the same value; changing that would shrink every existing chart's blocks by the
+        width of the stroke.
+        """
+        if edge_color is None and edge_width is None:
+            return {"color": color}
+
+        style = {"facecolor": color, "edgecolor": edge_color if edge_color is not None else color}
+        if edge_width is not None:
+            style["linewidth"] = edge_width
+        return style
 
     @staticmethod
     def _sort_categories(par: Dict):
@@ -727,12 +766,27 @@ class Waffle(Figure):
         block_x_length = _pa["block_aspect_ratio"] * block_y_length
 
         # Define the limit of X, Y axis
-        ax.axis(
-            xmin=0,
-            xmax=(_pa["columns"] + _pa["columns"] * _pa["interval_ratio_x"] - _pa["interval_ratio_x"]) * block_x_length,
-            ymin=0,
-            ymax=figure_height,
-        )
+        chart_width = (
+            _pa["columns"] + _pa["columns"] * _pa["interval_ratio_x"] - _pa["interval_ratio_x"]
+        ) * block_x_length
+        ax.axis(xmin=0, xmax=chart_width, ymin=0, ymax=figure_height)
+
+        # Fill the gaps between blocks. One rectangle behind the whole grid is enough, and unlike
+        # per-block edges it works for any block shape and any interval ratio.
+        if _pa["background_color"] is not None:
+            ax.add_artist(
+                Rectangle(
+                    xy=(0, 0),
+                    width=chart_width,
+                    height=figure_height,
+                    facecolor=_pa["background_color"],
+                    edgecolor="none",
+                    zorder=0,
+                )
+            )
+
+        def block_style(color):
+            return self._block_style(color, _pa["block_edge_color"], _pa["block_edge_width"])
 
         # Build a color sequence if colors is empty
         if not _pa["colors"]:
@@ -802,6 +856,7 @@ class Waffle(Figure):
                 cells=cells,
                 spans=self._coloured_spans(block_per_cat, colored_block_per_cat),
                 colors=_pa["colors"],
+                block_style=block_style,
                 is_vertical=_pa["vertical"],
                 x_full=x_full,
                 y_full=y_full,
@@ -850,7 +905,7 @@ class Waffle(Figure):
                         xy=(x, y),
                         width=block_x_length,
                         height=block_y_length,
-                        color=color,
+                        **block_style(color),
                     )
                 )
 
