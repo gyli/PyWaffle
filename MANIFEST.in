@@ -1,6 +1,6 @@
 include LICENSE
 include *.md
 include *.rst
-include requirements.txt
-
-recursive-include pywaffle *.py
+include requirements*.txt
+include pywaffle/py.typed
+recursive-include tests *.py
