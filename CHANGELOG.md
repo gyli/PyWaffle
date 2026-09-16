@@ -1,3 +1,26 @@
+v1.2.0 (unreleased)
+
+Fixes
+
+* **Font Awesome icons now match the installed Font Awesome version.** The icon mapping was generated during installation, which never happens for a wheel install, so every release up to 1.1.1 shipped a Font Awesome 5.14 mapping while drawing from Font Awesome 6 fonts: 451 valid icon names raised `KeyError` and 83 names, including the digits `0`-`9`, `clock` and `hourglass-half`, silently rendered the wrong icon. The mapping is now built at runtime from the installed `fontawesomefree` package, and upgrading Font Awesome no longer requires reinstalling PyWaffle
+* Fix icons and characters being sized wrongly on any figure whose DPI is not 96 - at 200 DPI they were about twice the intended size ([#33](https://github.com/gyli/PyWaffle/issues/33))
+* Fix subplots sharing one legend, so that every subplot after the first rendered the first subplot's labels
+* Fix the package being unbuildable by any PEP 517 frontend: `pip install .`, `pip install git+...` and `python -m build` all failed
+* Support continuous colormaps in `cmap_name`; previously anything other than a `ListedColormap` raised `AttributeError`
+* Replace the deprecated `set_tight_layout` with `set_layout_engine`, removing a warning on every figure
+* Reject negative `values` and a `values` sum of zero up front, instead of silently drawing a wrong chart or raising `ZeroDivisionError`
+* Reject unknown `block_arranging_style`, which was previously accepted and silently drawn as `normal`
+* Raise `ValueError` rather than `KeyError` or `AttributeError` for invalid `starting_location`, `rounding_rule` and `icon_style`, and accept `icon_style` lists in any case
+
+Other
+
+* Add `pywaffle.__version__`
+* Ship `py.typed`, so the existing type hints are visible to type checkers
+* Require Python 3.9+, and move packaging to PEP 621
+* Add continuous integration: test matrix, lint, and a build that installs the sdist and the wheel into clean environments
+
+---
+
 v1.1.1 (2024-06-16)
 
 * Support matplotlib>=3.9.0 by fixing get_cmap calling

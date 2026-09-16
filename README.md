@@ -20,7 +20,7 @@ pip install pywaffle
 
 ## Requirements
 
-* Python 3.5+
+* Python 3.9+
 * Matplotlib
 
 ## Examples
