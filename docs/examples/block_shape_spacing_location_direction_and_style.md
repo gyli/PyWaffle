@@ -107,3 +107,50 @@ fig = plt.figure(
 ```
 
 <img class="img_middle" alt="Change Starting Location" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/new_line_pattern.svg?sanitize=true">
+
+---
+
+## Block Background Color
+
+Use `background_color` to fill the space behind the blocks, including the gaps between them. One
+rectangle is drawn behind the whole grid, so it works whatever the block shape or spacing, and it
+applies to icons and characters as well as rectangle blocks.
+
+```python
+plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[30, 16, 4],
+    background_color='#2b2b2b',
+)
+```
+
+<img class="img_middle" alt="Block background color" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/block_background_color.svg?sanitize=true">
+
+---
+
+## Block Edge Color
+
+Use `block_edge_color` and `block_edge_width` to draw a border around each block. Combined with
+`interval_ratio_x=0` and `interval_ratio_y=0` this turns the chart into a continuous tiled grid.
+
+```python
+plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[30, 16, 4],
+    interval_ratio_x=0,
+    interval_ratio_y=0,
+    block_edge_color='white',
+    block_edge_width=1.5,
+)
+```
+
+<img class="img_middle" alt="Block edge color" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/docs/block_edge_color.svg?sanitize=true">
+
+```{note}
+`block_edge_color` applies to rectangle blocks only. Icons and characters are drawn as text and
+have no block border; use `background_color` with those instead.
+```
