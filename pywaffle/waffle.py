@@ -4,7 +4,7 @@
 import copy
 import math
 from itertools import islice, product
-from typing import ClassVar, Dict, Iterable, Iterator, List, Optional, Tuple, Union
+from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional, Tuple, Union
 import warnings
 
 import matplotlib as mpl
@@ -629,28 +629,34 @@ class Waffle(Figure):
 
         Validation lives in one place so that a bad argument is reported against its own name rather
         than surfacing as an error from arithmetic or matplotlib several frames later, and so that
-        every failure is a ValueError.
+        every failure is a ValueError. The steps run in order: the enums first because later checks
+        read them, then values, because almost everything else is sized against them.
         """
-        # - rounding_rule, block_arranging_style, starting_location
-        self._validate_choice(par, "rounding_rule", ("nearest", "ceil", "floor", "float"), case="lower")
-        self._validate_choice(
-            par,
-            "block_arranging_style",
-            ("normal", "snake", "new-line"),
-            case="lower",
-        )
-        self._validate_choice(par, "starting_location", ("NW", "SW", "NE", "SE"), case="upper")
+        self._validate_enums(par)
+        self._validate_values(par)
+        self._validate_labels_and_colors(par)
 
-        # - values
+        if par["sort_values"]:
+            # Before anything downstream depends on the order
+            self._sort_categories(par)
+
+        self._validate_value_numbers(par)
+        self._validate_rendering_options(par)
+        self._validate_icon_style(par)
+
+    @staticmethod
+    def _validate_enums(par: Dict):
+        """Normalize and check the arguments that accept a fixed set of strings."""
+        Waffle._validate_choice(par, "rounding_rule", ("nearest", "ceil", "floor", "float"), case="lower")
+        Waffle._validate_choice(par, "block_arranging_style", ("normal", "snake", "new-line"), case="lower")
+        Waffle._validate_choice(par, "starting_location", ("NW", "SW", "NE", "SE"), case="upper")
+
+    def _validate_values(self, par: Dict):
+        """Check values is usable, and unpack a dict or Series into values plus labels."""
         if len(par["values"]) == 0:
             raise ValueError("Argument values is required.")
         self.values_len = len(par["values"])
 
-        # - color
-        if par["colors"] and len(par["colors"]) != self.values_len:
-            raise ValueError("Length of colors doesn't match the values.")
-
-        # - labels and values
         if isinstance(par["values"], dict):
             if not par["labels"]:
                 par["labels"] = list(par["values"].keys())
@@ -661,14 +667,17 @@ class Waffle(Figure):
                 par["labels"] = [str(label) for label in par["values"].index]
             par["values"] = par["values"].tolist()
 
+    def _validate_labels_and_colors(self, par: Dict):
+        """Check the per-category arguments are as long as values."""
+        if par["colors"] and len(par["colors"]) != self.values_len:
+            raise ValueError("Length of colors doesn't match the values.")
+
         if par["labels"] and len(par["labels"]) != self.values_len:
             raise ValueError("Length of labels doesn't match the values.")
 
-        # - sort_values, before anything downstream depends on the order
-        if par["sort_values"]:
-            self._sort_categories(par)
-
-        # - values, after they are guaranteed to be a sequence of numbers
+    @staticmethod
+    def _validate_value_numbers(par: Dict):
+        """Check the values themselves, once they are a plain sequence of numbers."""
         if any(v < 0 for v in par["values"]):
             raise ValueError("Argument values should not contain negative numbers.")
 
@@ -678,13 +687,15 @@ class Waffle(Figure):
                 "as there is no way to scale the values to the chart size."
             )
 
-        # - show_values
+    @staticmethod
+    def _validate_rendering_options(par: Dict):
+        """Check the arguments that control what is drawn, and the combinations that cannot work."""
         if par["show_values"] not in (False, True, None) and not (
             isinstance(par["show_values"], str) and par["show_values"].lower().strip() in ("value", "percentage")
         ):
             raise ValueError('Argument show_values should be True, False, "value" or "percentage".')
 
-        # - rounding_rule="float" draws partial blocks, which only works for rectangles.
+        # rounding_rule="float" draws partial blocks, which only works for rectangles.
         # A Text artist cannot be partially filled.
         if par["rounding_rule"] == "float" and (par["icons"] or par["characters"]):
             raise ValueError(
@@ -692,22 +703,25 @@ class Waffle(Figure):
                 "combined with icons or characters. Use nearest, ceil or floor instead."
             )
 
-        # - icon_style
-        if par["icons"]:
-            from pywaffle.fontawesome_handler import FA_STYLES
+    def _validate_icon_style(self, par: Dict):
+        """Normalize icon_style to one entry per category, and check every entry is a real style."""
+        if not par["icons"]:
+            return
 
-            if isinstance(par["icon_style"], str):
-                par["icon_style"] = [par["icon_style"].lower().strip()] * self.values_len
-            else:
-                par["icon_style"] = [str(i).lower().strip() for i in par["icon_style"]]
-                if len(par["icon_style"]) != self.values_len:
-                    raise ValueError("Length of icon_style doesn't match the values.")
+        from pywaffle.fontawesome_handler import FA_STYLES
 
-            invalid_styles = sorted(set(par["icon_style"]) - set(FA_STYLES))
-            if invalid_styles:
-                raise ValueError(
-                    f"Argument icon_style should be one of {', '.join(FA_STYLES)}. " f"Got {', '.join(invalid_styles)}."
-                )
+        if isinstance(par["icon_style"], str):
+            par["icon_style"] = [par["icon_style"].lower().strip()] * self.values_len
+        else:
+            par["icon_style"] = [str(i).lower().strip() for i in par["icon_style"]]
+            if len(par["icon_style"]) != self.values_len:
+                raise ValueError("Length of icon_style doesn't match the values.")
+
+        invalid_styles = sorted(set(par["icon_style"]) - set(FA_STYLES))
+        if invalid_styles:
+            raise ValueError(
+                f"Argument icon_style should be one of {', '.join(FA_STYLES)}. Got {', '.join(invalid_styles)}."
+            )
 
     @classmethod
     def make_waffle(cls, ax: Axes, **kwargs):
@@ -752,148 +766,196 @@ class Waffle(Figure):
 
         self._parameter_validation(par=_pa)
 
-        # Alignment of subplots
-        ax.set_anchor(_pa["plot_anchor"])
+        block_per_cat, colored_block_per_cat = self._resolve_grid(_pa)
+        block_x_length, block_y_length = self._setup_axes(ax, _pa)
 
-        # if only one of rows/columns given, use the values as number of blocks
-        if not _pa["rows"] and not _pa["columns"]:
+        if not _pa["colors"]:
+            _pa["colors"] = self._colors_from_cmap(_pa["cmap_name"], self.values_len)
+
+        font_properties = self._resolve_glyphs(_pa, ax, block_x_length)
+
+        self._draw_blocks(
+            ax=ax,
+            par=_pa,
+            block_per_cat=block_per_cat,
+            colored_block_per_cat=colored_block_per_cat,
+            block_x_length=block_x_length,
+            block_y_length=block_y_length,
+            font_properties=font_properties,
+        )
+
+        if _pa["title"] is not None:
+            ax.set_title(**_pa["title"])
+
+        self._draw_legend(ax, _pa)
+
+        # Remove borders, ticks, etc.
+        ax.axis("off")
+
+        if hasattr(self, "plot_args"):
+            self.plot_args.append(_pa)
+
+    @staticmethod
+    def _resolve_grid(par: Dict) -> Tuple[List, List]:
+        """Work out the grid size and how many blocks each category occupies.
+
+        Returns the blocks a category takes up and the blocks it actually colors. The two differ
+        only for the "new-line" style, where a category is padded out to a whole line and the
+        padding is left blank. Fills in whichever of rows and columns was not given.
+        """
+        if not par["rows"] and not par["columns"]:
             raise ValueError("At least one of rows and columns is required.")
 
-        # if columns is given, rows is not
-        if _pa["rows"] is None:
-            if _pa["block_arranging_style"] == "new-line" and _pa["vertical"]:
-                block_per_cat = [round_up_to_multiple(i, base=_pa["columns"]) for i in _pa["values"]]
-                colored_block_per_cat = [division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]]
-            else:
-                block_per_cat = colored_block_per_cat = [
-                    division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]
-                ]
-            _pa["rows"] = division(sum(block_per_cat), _pa["columns"], method="ceil")
-        # if rows is given, columns is not
-        elif _pa["columns"] is None:
-            if _pa["block_arranging_style"] == "new-line" and not _pa["vertical"]:
-                block_per_cat = [round_up_to_multiple(i, base=_pa["rows"]) for i in _pa["values"]]
-                colored_block_per_cat = [division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]]
-            else:
-                block_per_cat = colored_block_per_cat = [
-                    division(v, 1, method=_pa["rounding_rule"]) for v in _pa["values"]
-                ]
-            _pa["columns"] = division(sum(block_per_cat), _pa["rows"], method="ceil")
-        # if both of rows and columns are given
-        else:
+        def as_blocks(values):
+            """Round each value to a whole number of blocks."""
+            return [division(v, 1, method=par["rounding_rule"]) for v in values]
+
+        # When both are given the values are scaled to fill the grid exactly
+        if par["rows"] is not None and par["columns"] is not None:
+            total = sum(par["values"])
             block_per_cat = colored_block_per_cat = [
-                division(
-                    v * _pa["columns"] * _pa["rows"],
-                    sum(_pa["values"]),
-                    method=_pa["rounding_rule"],
-                )
-                for v in _pa["values"]
+                division(v * par["columns"] * par["rows"], total, method=par["rounding_rule"]) for v in par["values"]
             ]
+            return block_per_cat, colored_block_per_cat
 
-        # Absolute height of the plot
+        # Otherwise the values are block counts, and the missing dimension follows from them
+        given, missing = ("columns", "rows") if par["rows"] is None else ("rows", "columns")
+        pads_to_whole_lines = par["block_arranging_style"] == "new-line" and (
+            par["vertical"] if given == "columns" else not par["vertical"]
+        )
+
+        if pads_to_whole_lines:
+            block_per_cat = [round_up_to_multiple(v, base=par[given]) for v in par["values"]]
+            colored_block_per_cat = as_blocks(par["values"])
+        else:
+            block_per_cat = colored_block_per_cat = as_blocks(par["values"])
+
+        par[missing] = division(sum(block_per_cat), par[given], method="ceil")
+        return block_per_cat, colored_block_per_cat
+
+    @staticmethod
+    def _setup_axes(ax: Axes, par: Dict) -> Tuple[float, float]:
+        """Set the anchor and axis limits, draw the background, and return the block dimensions."""
+        ax.set_anchor(par["plot_anchor"])
+
         figure_height = 1
-        block_y_length = figure_height / (_pa["rows"] + _pa["rows"] * _pa["interval_ratio_y"] - _pa["interval_ratio_y"])
-        block_x_length = _pa["block_aspect_ratio"] * block_y_length
+        block_y_length = figure_height / (par["rows"] + par["rows"] * par["interval_ratio_y"] - par["interval_ratio_y"])
+        block_x_length = par["block_aspect_ratio"] * block_y_length
 
-        # Define the limit of X, Y axis
         chart_width = (
-            _pa["columns"] + _pa["columns"] * _pa["interval_ratio_x"] - _pa["interval_ratio_x"]
+            par["columns"] + par["columns"] * par["interval_ratio_x"] - par["interval_ratio_x"]
         ) * block_x_length
         ax.axis(xmin=0, xmax=chart_width, ymin=0, ymax=figure_height)
 
         # Fill the gaps between blocks. One rectangle behind the whole grid is enough, and unlike
         # per-block edges it works for any block shape and any interval ratio.
-        if _pa["background_color"] is not None:
+        if par["background_color"] is not None:
             ax.add_artist(
                 Rectangle(
                     xy=(0, 0),
                     width=chart_width,
                     height=figure_height,
-                    facecolor=_pa["background_color"],
+                    facecolor=par["background_color"],
                     edgecolor="none",
                     zorder=0,
                 )
             )
 
-        def block_style(color):
-            return self._block_style(color, _pa["block_edge_color"], _pa["block_edge_width"])
+        return block_x_length, block_y_length
 
-        # Build a color sequence if colors is empty
-        if not _pa["colors"]:
-            _pa["colors"] = self._colors_from_cmap(_pa["cmap_name"], self.values_len)
+    def _resolve_glyphs(self, par: Dict, ax: Axes, block_x_length: float):
+        """Resolve icon names to characters and build the font for them.
 
-        # Set icons
-        if _pa["icons"]:
-            from pywaffle.fontawesome_handler import fontawesome_files, icons
+        Returns the FontProperties the blocks are drawn with, or None when they are rectangles.
+        """
+        if par["icons"]:
+            from pywaffle.fontawesome_handler import icons
 
-            if _pa["icon_size"]:
+            if par["icon_size"]:
                 warnings.warn("Parameter icon_size is deprecated. Use font_size instead.", DeprecationWarning)
-                _pa["font_size"] = _pa["icon_size"]
+                par["font_size"] = par["icon_size"]
 
             # icon_style has already been normalized to a list by _parameter_validation
 
             # If icons is a string, convert it into a list of same icon. The length is the value's length
             # '\uf26e' -> ['\uf26e', '\uf26e', '\uf26e', ]
-            if isinstance(_pa["icons"], str):
-                _pa["icons"] = [_pa["icons"]] * self.values_len
+            if isinstance(par["icons"], str):
+                par["icons"] = [par["icons"]] * self.values_len
 
-            if len(_pa["icons"]) != self.values_len:
+            if len(par["icons"]) != self.values_len:
                 raise ValueError("Length of icons doesn't match the values.")
 
             # Replace icon name with Unicode symbols in parameter icons
-            _pa["icons"] = [
-                icons[icon_style][icon_name] for icon_name, icon_style in zip(_pa["icons"], _pa["icon_style"])
+            par["icons"] = [
+                icons[icon_style][icon_name] for icon_name, icon_style in zip(par["icons"], par["icon_style"])
             ]
 
-            prop = fm.FontProperties(size=_pa["font_size"] or self._block_font_size(ax, block_x_length))
+            return fm.FontProperties(size=par["font_size"] or self._block_font_size(ax, block_x_length))
 
-        elif _pa["characters"]:
+        if par["characters"]:
             # If characters is a string, convert it into a list of same characters. It's length is the value's length
-            if isinstance(_pa["characters"], str):
-                _pa["characters"] = [_pa["characters"]] * self.values_len
+            if isinstance(par["characters"], str):
+                par["characters"] = [par["characters"]] * self.values_len
 
-            if len(_pa["characters"]) != self.values_len:
+            if len(par["characters"]) != self.values_len:
                 raise ValueError("Length of characters doesn't match the values.")
 
-            prop = fm.FontProperties(
-                size=_pa["font_size"] or self._block_font_size(ax, block_x_length),
-                fname=_pa["font_file"],
+            return fm.FontProperties(
+                size=par["font_size"] or self._block_font_size(ax, block_x_length),
+                fname=par["font_file"],
             )
 
-        # Plot blocks
-        class_index = 0
-        block_index = 0
-        this_cat_block_count = 0
-        x_full = (1 + _pa["interval_ratio_x"]) * block_x_length
-        y_full = (1 + _pa["interval_ratio_y"]) * block_y_length
-        column_order = self._direction_values[_pa["starting_location"]]["column_order"]
-        row_order = self._direction_values[_pa["starting_location"]]["row_order"]
+        return None
+
+    def _draw_blocks(
+        self,
+        ax: Axes,
+        par: Dict,
+        block_per_cat: List,
+        colored_block_per_cat: List,
+        block_x_length: float,
+        block_y_length: float,
+        font_properties,
+    ):
+        """Walk the grid and draw every block, as a rectangle, an icon or a character."""
+        x_full = (1 + par["interval_ratio_x"]) * block_x_length
+        y_full = (1 + par["interval_ratio_y"]) * block_y_length
+
+        def block_style(color):
+            """Styling keywords for one block of the given colour."""
+            return self._block_style(color, par["block_edge_color"], par["block_edge_width"])
 
         cells = list(
             self._block_arranger(
-                rows=_pa["rows"],
-                columns=_pa["columns"],
-                row_order=row_order,
-                column_order=column_order,
-                is_vertical=_pa["vertical"],
-                is_snake=_pa["block_arranging_style"] == "snake",
+                rows=par["rows"],
+                columns=par["columns"],
+                row_order=self._direction_values[par["starting_location"]]["row_order"],
+                column_order=self._direction_values[par["starting_location"]]["column_order"],
+                is_vertical=par["vertical"],
+                is_snake=par["block_arranging_style"] == "snake",
             )
         )
 
-        if _pa["rounding_rule"] == "float":
+        if par["rounding_rule"] == "float":
             self._draw_fractional_blocks(
                 ax=ax,
                 cells=cells,
                 spans=self._coloured_spans(block_per_cat, colored_block_per_cat),
-                colors=_pa["colors"],
+                colors=par["colors"],
                 block_style=block_style,
-                is_vertical=_pa["vertical"],
+                is_vertical=par["vertical"],
                 x_full=x_full,
                 y_full=y_full,
                 block_x_length=block_x_length,
                 block_y_length=block_y_length,
             )
-            cells = []
+            return
+
+        draw_block = self._block_drawer(ax, par, block_x_length, block_y_length, font_properties, block_style)
+
+        class_index = 0
+        block_index = 0
+        this_cat_block_count = 0
 
         for col, row in cells:
             # Value could be 0. If so, skip it
@@ -907,37 +969,9 @@ class Waffle(Figure):
             if this_cat_block_count > colored_block_per_cat[class_index] - 1:
                 color = (0, 0, 0, 0)  # transparent
             else:
-                color = _pa["colors"][class_index]
+                color = par["colors"][class_index]
 
-            x = x_full * col
-            y = y_full * row
-
-            if _pa["icons"]:
-                prop.set_file(fontawesome_files[_pa["icon_style"][class_index]])
-                ax.text(
-                    x=x,
-                    y=y,
-                    s=_pa["icons"][class_index],
-                    color=color,
-                    fontproperties=prop,
-                )
-            elif _pa["characters"]:
-                ax.text(
-                    x=x,
-                    y=y,
-                    s=_pa["characters"][class_index],
-                    color=color,
-                    fontproperties=prop,
-                )
-            else:
-                ax.add_artist(
-                    Rectangle(
-                        xy=(x, y),
-                        width=block_x_length,
-                        height=block_y_length,
-                        **block_style(color),
-                    )
-                )
+            draw_block(x_full * col, y_full * row, color, class_index)
 
             # Counted explicitly rather than with enumerate(): this reads as "blocks drawn so
             # far, including this one", which is what the comparison below needs. enumerate would
@@ -950,50 +984,74 @@ class Waffle(Figure):
                     break
                 this_cat_block_count = 0
 
-        # Add title
-        if _pa["title"] is not None:
-            ax.set_title(**_pa["title"])
+    @staticmethod
+    def _block_drawer(ax: Axes, par: Dict, block_x_length: float, block_y_length: float, font_properties, block_style):
+        """Return the function that draws one block.
 
-        # Add legend
-        # The arguments are built in a new dict rather than mutating _pa["legend"], which subplots
-        # share by reference with the figure-level arguments
-        if _pa["labels"] or "labels" in _pa["legend"]:
-            legend_args = {**_pa["legend"]}
-            labels = _pa["labels"] or legend_args.get("labels")
+        Which of the three kinds of block a chart uses is fixed for the whole chart, so it is
+        decided once here rather than re-tested on every block.
+        """
+        if par["icons"]:
+            from pywaffle.fontawesome_handler import fontawesome_files
 
-            if _pa["show_values"]:
-                labels = self._format_values(
-                    labels=labels,
-                    values=_pa["values"],
-                    show_values=_pa["show_values"],
-                    value_format=_pa["value_format"],
-                )
+            def draw(x, y, color, class_index):
+                """Draw one block as a Font Awesome icon."""
+                font_properties.set_file(fontawesome_files[par["icon_style"][class_index]])
+                ax.text(x=x, y=y, s=par["icons"][class_index], color=color, fontproperties=font_properties)
 
-            if _pa["icons"] and _pa["icon_legend"] is True:
-                from pywaffle.fontawesome_handler import (
-                    legend_handler_style_mapping,
-                    legend_style_class_mapping,
-                )
+        elif par["characters"]:
 
-                legend_args["handles"] = [
-                    legend_style_class_mapping[style](color=color, text=icon)
-                    for color, icon, style in zip(_pa["colors"], _pa["icons"], _pa["icon_style"])
-                ]
-                legend_args["handler_map"] = legend_handler_style_mapping
-            elif not legend_args.get("handles"):
-                legend_args["handles"] = [Patch(color=c, label=str(l)) for c, l in zip(_pa["colors"], labels)]
+            def draw(x, y, color, class_index):
+                """Draw one block as a character."""
+                ax.text(x=x, y=y, s=par["characters"][class_index], color=color, fontproperties=font_properties)
 
-            # labels is an alias of legend['labels']
-            if ("labels" not in legend_args and _pa["labels"]) or _pa["show_values"]:
-                legend_args["labels"] = labels
+        else:
 
-            _pa["legend"] = legend_args
+            def draw(x, y, color, class_index):
+                """Draw one block as a rectangle."""
+                ax.add_artist(Rectangle(xy=(x, y), width=block_x_length, height=block_y_length, **block_style(color)))
 
-            if "handles" in legend_args and "labels" in legend_args:
-                ax.legend(**legend_args)
+        return draw
 
-        # Remove borders, ticks, etc.
-        ax.axis("off")
+    def _draw_legend(self, ax: Axes, par: Dict):
+        """Build and draw the legend.
 
-        if hasattr(self, "plot_args"):
-            self.plot_args.append(_pa)
+        The arguments are built in a new dict rather than mutating par["legend"], which subplots
+        share by reference with the figure-level arguments.
+        """
+        if not (par["labels"] or "labels" in par["legend"]):
+            return
+
+        legend_args = {**par["legend"]}
+        labels = par["labels"] or legend_args.get("labels")
+
+        if par["show_values"]:
+            labels = self._format_values(
+                labels=labels,
+                values=par["values"],
+                show_values=par["show_values"],
+                value_format=par["value_format"],
+            )
+
+        if par["icons"] and par["icon_legend"] is True:
+            from pywaffle.fontawesome_handler import (
+                legend_handler_style_mapping,
+                legend_style_class_mapping,
+            )
+
+            legend_args["handles"] = [
+                legend_style_class_mapping[style](color=color, text=icon)
+                for color, icon, style in zip(par["colors"], par["icons"], par["icon_style"])
+            ]
+            legend_args["handler_map"] = legend_handler_style_mapping
+        elif not legend_args.get("handles"):
+            legend_args["handles"] = [Patch(color=c, label=str(l)) for c, l in zip(par["colors"], labels)]
+
+        # labels is an alias of legend['labels']
+        if ("labels" not in legend_args and par["labels"]) or par["show_values"]:
+            legend_args["labels"] = labels
+
+        par["legend"] = legend_args
+
+        if "handles" in legend_args and "labels" in legend_args:
+            ax.legend(**legend_args)
