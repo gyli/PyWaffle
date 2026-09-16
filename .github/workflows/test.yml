@@ -105,6 +105,48 @@ jobs:
           name: image-comparison-results
           path: image-results/
 
+  examples:
+    # Everything the documentation shows has to still run. The example scripts and the demo
+    # notebook exercise argument combinations the test suite does not, so a stricter validation
+    # rule or a renamed parameter can break what the docs tell people to type while every test
+    # still passes.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e . pandas nbconvert nbformat ipykernel
+
+      - name: Regenerate the documented examples
+        env:
+          MPLBACKEND: Agg
+        run: python -m examples.generate_plots
+
+      - name: Execute the demo notebook
+        run: |
+          python -m ipykernel install --user --name demo
+          jupyter nbconvert --to notebook --execute --stdout \
+            --ExecutePreprocessor.kernel_name=demo \
+            --ExecutePreprocessor.timeout=300 demo.ipynb > /dev/null
+
+      - name: Check every image the docs reference exists
+        run: |
+          python - <<'PY'
+          import pathlib, re, sys
+          missing = []
+          for page in pathlib.Path("docs").rglob("*.md"):
+              for src in re.findall(r'src="[^"]*examples/([^"?]+)', page.read_text()):
+                  if not pathlib.Path("examples") .joinpath(src).exists():
+                      missing.append(f"{page}: {src}")
+          for page in [pathlib.Path("README.md")]:
+              for src in re.findall(r'!\[[^\]]*\]\((examples/[^)]+)\)', page.read_text()):
+                  if not pathlib.Path(src).exists():
+                      missing.append(f"{page}: {src}")
+          print("\n".join(missing) if missing else "every referenced image exists")
+          sys.exit(1 if missing else 0)
+          PY
+
   lint:
     runs-on: ubuntu-latest
     steps:
