@@ -8,6 +8,8 @@ Fixes
 * Fix the package being unbuildable by any PEP 517 frontend: `pip install .`, `pip install git+...` and `python -m build` all failed
 * Support continuous colormaps in `cmap_name`. Previously anything other than a `ListedColormap` raised `AttributeError`, and the perceptual colormaps stored *as* `ListedColormap`s - `viridis`, `plasma`, `magma`, `inferno`, `cividis`, `turbo` - silently used the first few of their 256 entries, so every category came out the same shade. Qualitative palettes such as `Set2` are unchanged
 * Replace the deprecated `set_tight_layout` with `set_layout_engine`, removing a warning on every figure
+* Reject a negative or non-integer `rows` / `columns`, a non-positive `block_aspect_ratio`, a negative `interval_ratio_x` / `interval_ratio_y`, an unknown `plot_anchor`, and non-numeric `values` elements. `rows=-5` previously drew an empty chart with no error, and `plot_anchor='XX'` was accepted because matplotlib's `set_anchor` does not validate it either
+* Refuse to draw a chart of more than `MAX_BLOCKS` (10,000,000) blocks. Values that were meant to be scaled previously turned into minutes of drawing rather than an error; the limit can be raised with `pywaffle.waffle.MAX_BLOCKS`
 * Reject negative `values` and a `values` sum of zero up front, instead of silently drawing a wrong chart or raising `ZeroDivisionError`
 * Reject unknown `block_arranging_style`, which was previously accepted and silently drawn as `normal`
 * Raise `ValueError` rather than `KeyError` or `AttributeError` for invalid `starting_location`, `rounding_rule` and `icon_style`, and accept `icon_style` lists in any case
