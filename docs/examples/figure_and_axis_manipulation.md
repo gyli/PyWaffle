@@ -31,7 +31,7 @@ it, without creating a new figure. In this case, you may use `Waffle.make_waffle
 
 > **_NOTE:_** `Waffle.make_waffle()` is a classmethod, and you should call it without creating a new `Waffle` instance.
 
-> **_NOTE:_** The only argument that is available in Waffle but unsupported in `Waffle.make_waffle()` is `plots`, since it only accept one axis. Thus, this function can only generate waffle chart in a single plot.
+> **_NOTE:_** The only argument available in `Waffle` but not in `Waffle.make_waffle()` is `plots`, since this function draws into the single axis you pass. Passing it raises a `ValueError` rather than being ignored. Every other argument behaves the same as it does on `Waffle`.
 
 Below is an example showing that you may create and modify the figure and axis first, and then pass the axis to `Waffle.make_waffle()` for waffle chart plotting.
 

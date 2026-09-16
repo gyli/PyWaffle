@@ -799,6 +799,12 @@ class Waffle(Figure):
         :param **kwargs: Waffle properties
 
         """
+        if kwargs.get("plots"):
+            raise ValueError(
+                "Argument plots is not supported by make_waffle, which draws into the single axis "
+                "given by ax. Use plt.figure(FigureClass=Waffle, plots=...) for subplots."
+            )
+
         w = cls.__new__(cls)
 
         w._make_single_waffle(
