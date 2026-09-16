@@ -42,7 +42,8 @@ plt.figure(
 
 ---
 
-However, unlike values in a dictionary that can generate labels and legend automatically, when the `values` is a DataFrame, `Waffle` does not use the row index of the DataFrame as label by default. So you have to pass the index to parameter `labels` manually, if you would like to use column index as label.
+A pandas Series carries its labels in the index, just as a dictionary does in its keys, so the
+index is used for the legend automatically.
 
 ```python
 import pandas as pd
@@ -55,8 +56,14 @@ plt.figure(
     FigureClass=Waffle,
     rows=5,
     columns=10,
-    values=df['Value'],
-    labels=list(df.index),  # Legend would not be created without this line
+    values=df['Value'],  # Labels are taken from the index
     legend={'loc': 'upper left', 'bbox_to_anchor': (1, 1)}
 )
+```
+
+Passing `labels` explicitly still overrides the index.
+
+```{note}
+Before PyWaffle 1.2.0 the index was ignored and `labels=list(df.index)` had to be passed by hand,
+or no legend appeared at all.
 ```
