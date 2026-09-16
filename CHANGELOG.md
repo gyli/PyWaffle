@@ -19,7 +19,7 @@ New
 * Add `show_values` and `value_format`, which append each category's value or its percentage of the total to its legend label. This is the f-string the documentation has always told people to write by hand: `labels=[f"{k} ({v}%)" for k, v in data.items()]`
 * Add `sort_values` to order categories by value. Every per-category argument - `labels`, `colors`, `icons`, `characters` and `icon_style` - is reordered along with the values
 * Take labels from a `pandas.Series` index, the same way they are already taken from a dict's keys
-* Add a top-level `waffle()` function with an explicit signature, so the parameters are visible to IDEs and `help()`, and a chart can be drawn straight into an existing axes with `ax=`. `plt.figure(FigureClass=Waffle, ...)` and `Waffle.make_waffle()` are unchanged and not deprecated
+* Add a top-level `waffle_chart()` function with an explicit signature, so the parameters are visible to IDEs and `help()`, and a chart can be drawn straight into an existing axes with `ax=`. It is named `waffle_chart` rather than `waffle` so that it does not shadow the `pywaffle.waffle` module; `from pywaffle.functional import waffle` gives the shorter name. `plt.figure(FigureClass=Waffle, ...)` and `Waffle.make_waffle()` are unchanged and not deprecated
 
 Other
 
