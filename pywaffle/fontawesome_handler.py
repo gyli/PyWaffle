@@ -19,9 +19,7 @@ FA_STYLES = {
 
 
 def fontawesome_package_path() -> pathlib.Path:
-    """
-    Path to the static asset directory of the installed fontawesomefree package.
-    """
+    """Path to the static asset directory of the installed fontawesomefree package."""
     import fontawesomefree
 
     package_path = pathlib.Path(inspect.getsourcefile(fontawesomefree))
@@ -29,6 +27,7 @@ def fontawesome_package_path() -> pathlib.Path:
 
 
 def font_file_finder() -> Dict[str, pathlib.Path]:
+    """Map each Font Awesome style to the .otf file that provides it."""
     font_otf_path = (fontawesome_package_path() / "otfs").glob("*.otf")
     font_file_mapping = {
         style: path
@@ -69,6 +68,8 @@ def icon_mapping_builder() -> Dict[str, Dict[str, str]]:
 
 
 class TextLegendBase:
+    """A legend entry that is a glyph rather than a colour swatch."""
+
     def __init__(self, text, color, **kwargs):
         self.text = text
         self.color = color
@@ -76,6 +77,12 @@ class TextLegendBase:
 
 
 def LegendClassFactory(name, BaseClass=TextLegendBase):
+    """Build a legend handle class for one Font Awesome style.
+
+    matplotlib dispatches legend handlers by handle type, so each style needs a distinct class for
+    its own handler to be selected.
+    """
+
     def __init__(self, text, color, **kwargs):
         BaseClass.__init__(self, text=text, color=color, **kwargs)
 
@@ -89,11 +96,14 @@ legend_style_class_mapping = {
 
 
 class TextLegendHandler(HandlerBase):
+    """Draw a legend entry as a glyph from a given font file."""
+
     def __init__(self, font_file):
         super().__init__()
         self.font_file = font_file
 
     def create_artists(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize, trans):
+        """Return the artists that draw one legend entry."""
         x = xdescent + width / 2.0
         y = ydescent + height / 2.0
         kwargs = {
