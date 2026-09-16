@@ -48,7 +48,7 @@ def waffle(
     block_arranging_style: str = "normal",
     **kwargs,
 ):
-    """
+    r"""
     Plot a waffle chart.
 
     Run it with code like::
