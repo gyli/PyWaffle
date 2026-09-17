@@ -44,6 +44,10 @@ extensions = [
     'myst_parser'
 ]
 
+# MyST does not generate heading anchors unless asked, so a link to another page's
+# section, such as value_scaling_and_auto_sizing.md#value-scaling, silently fails.
+myst_heading_anchors = 3
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -61,7 +65,7 @@ master_doc = 'index'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
