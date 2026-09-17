@@ -1,5 +1,8 @@
 include LICENSE
 include *.md
+# RELEASING.md documents how a release is cut. That is for this repository, not for anyone
+# unpacking the source distribution, so keep it out of the sdist.
+exclude RELEASING.md
 include *.rst
 include requirements*.txt
 include pywaffle/py.typed
