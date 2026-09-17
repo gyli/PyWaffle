@@ -6,6 +6,7 @@
 
 import matplotlib.pyplot as plt
 
+from pywaffle import waffle_chart
 from pywaffle.waffle import Waffle
 
 # For README
@@ -318,4 +319,130 @@ fig.text(
     bbox={"boxstyle": "square", "lw": 3, "ec": "gray", "fc": (0.9, 0.9, 0.9, 0.5), "alpha": 0.3},
 )
 fig.savefig(doc_examples_image_folder + "add_other_elements.svg", bbox_inches="tight")
+plt.close(fig)
+
+
+# ---------------------------------------------------------------------------
+# Quickstart
+#
+# One dataset carried through the whole quickstart, so that each chart adds a
+# single idea rather than restarting on new numbers. It is a real dataset, which
+# is the point: a waffle chart's argument is that one block is one real thing.
+#
+# These calls are written exactly as docs/quickstart.md shows them, so the code a
+# reader copies is the code that produced the image underneath it.
+#
+# Source: British Board of Trade inquiry (1912) into the loss of the RMS Titanic.
+#         2,201 aboard, 710 saved, 1,491 lost. Tabulated at
+#         https://en.wikipedia.org/wiki/Sinking_of_the_Titanic#Casualties_and_survivors
+#
+# A 1912 inquiry cannot go out of date, so unlike a yearly statistic these numbers
+# never need refreshing. Class totals are the sum of the men, women and children
+# rows of that table, and are consistent with its published totals.
+# ---------------------------------------------------------------------------
+quickstart_image_folder = "examples/quickstart/"
+
+aboard = {"First class": 325, "Second class": 285, "Third class": 706, "Crew": 885}
+by_group = {"Men": 1667, "Women": 425, "Children": 109}
+saved = {"First class": 202, "Second class": 118, "Third class": 178, "Crew": 212}
+
+class_colors = ["#c9a227", "#5f8a8b", "#b5653f", "#3d4f5d"]
+group_colors = ["#3d4f5d", "#c9a227", "#b5653f"]
+group_icons = ["person", "person-dress", "child"]
+aside = {"loc": "upper left", "bbox_to_anchor": (1.02, 1), "frameon": False}
+
+# 1. The first chart: one block is about 22 of the people aboard
+fig, ax = waffle_chart(aboard, rows=10, columns=10, legend=aside, figsize=(6, 4))
+fig.savefig(quickstart_image_folder + "first_chart.svg", bbox_inches="tight")
+plt.close(fig)
+
+# 2. Colours, a title, and the counts alongside the labels
+fig, ax = waffle_chart(
+    aboard,
+    rows=10,
+    columns=10,
+    colors=class_colors,
+    title={"label": "Who was aboard the Titanic: 2,201 people", "loc": "left"},
+    legend=aside,
+    show_values=True,
+    figsize=(6.5, 4),
+)
+fig.savefig(quickstart_image_folder + "labelled.svg", bbox_inches="tight")
+plt.close(fig)
+
+# 3. rounding_rule="float". One block is 22 people, so rounding would shuffle whole
+#    groups of them between categories. Partial blocks keep every share exact.
+fig, ax = waffle_chart(
+    aboard,
+    rows=10,
+    columns=10,
+    colors=class_colors,
+    rounding_rule="float",
+    title={"label": "One block = 22 people, and nobody is rounded away", "loc": "left"},
+    legend=aside,
+    show_values="percentage",
+    figsize=(6.5, 4),
+)
+fig.savefig(quickstart_image_folder + "fractional.svg", bbox_inches="tight")
+plt.close(fig)
+
+# 4. A continuous tiled grid, largest group first
+fig, ax = waffle_chart(
+    aboard,
+    rows=10,
+    columns=10,
+    colors=class_colors,
+    sort_values=True,
+    rounding_rule="float",
+    interval_ratio_x=0,
+    interval_ratio_y=0,
+    block_edge_color="white",
+    block_edge_width=1.2,
+    title={"label": "Who was aboard the Titanic: 2,201 people", "loc": "left"},
+    legend=aside,
+    show_values="percentage",
+    figsize=(6.5, 4),
+)
+fig.savefig(quickstart_image_folder + "tiled.svg", bbox_inches="tight")
+plt.close(fig)
+
+# 5. Pictogram. The same 2,201 people cut a different way, one figure per 44 of them.
+fig, ax = waffle_chart(
+    by_group,
+    rows=5,
+    columns=10,
+    colors=group_colors,
+    icons=group_icons,
+    font_size=22,
+    icon_legend=True,
+    background_color="#f4f2ee",
+    title={"label": "One figure = 44 people aboard", "loc": "left"},
+    legend=aside,
+    show_values=True,
+    figsize=(6.5, 2.8),
+)
+fig.savefig(quickstart_image_folder + "pictogram.svg", bbox_inches="tight")
+plt.close(fig)
+
+# 6. Subplots, and the reason the dataset is worth drawing at all. Only the last
+#    panel carries the legend, and the others take a list so no labels are derived
+#    from dict keys.
+survival_plots = {}
+for position, (group, total) in enumerate(aboard.items(), start=1):
+    is_last = position == len(aboard)
+    lived = saved[group]
+    survival_plots[(1, 4, position)] = {
+        "values": {"Survived": lived, "Lost": total - lived} if is_last else [lived, total - lived],
+        "rows": 5,
+        "columns": 10,
+        "colors": ["#4a8f68", "#cfc9bf"],
+        "rounding_rule": "float",
+        "title": {"label": f"{group}\n{lived / total:.0%} survived", "loc": "left", "fontsize": 11},
+        "interval_ratio_x": 0.15,
+        "interval_ratio_y": 0.15,
+        **({"legend": {"loc": "upper left", "bbox_to_anchor": (1.05, 1), "frameon": False}} if is_last else {}),
+    }
+
+fig = plt.figure(FigureClass=Waffle, figsize=(10, 2.4), plots=survival_plots)
+fig.savefig(quickstart_image_folder + "survival.svg", bbox_inches="tight")
 plt.close(fig)

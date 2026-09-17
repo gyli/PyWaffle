@@ -6,10 +6,26 @@
 PyWaffle Documentation
 ======================
 
-PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts.
+PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts — also known as
+square pie charts, and, when drawn with icons, pictogram charts.
 
-A `Figure constructor
-<https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html>`_ class *Waffle* is provided, which could be passed to matplotlib.pyplot.figure and generate a matplotlib Figure object.
+.. image:: https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/quickstart/survival.svg?sanitize=true
+   :alt: Titanic survival rate by class, drawn as waffle charts
+   :align: center
+
+A waffle chart is a grid of blocks where one block stands for a fixed quantity, so a proportion is
+something the reader can count rather than estimate.
+
+.. code:: python
+
+   from pywaffle import waffle_chart
+
+   fig, ax = waffle_chart({"Survived": 710, "Lost": 1491}, rows=10, columns=10)
+
+PyWaffle is also a `Figure constructor
+<https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html>`_ class *Waffle*,
+which can be passed to matplotlib.pyplot.figure to generate a matplotlib Figure object. Both forms
+are fully supported — see the :doc:`quickstart`.
 
 Visit PyWaffle on `Github
 <https://github.com/gyli/PyWaffle>`_ and `PyPI
@@ -20,6 +36,7 @@ Visit PyWaffle on `Github
    :caption: Contents:
 
    installation
+   quickstart
    examples
    font_awesome_integration
    class
