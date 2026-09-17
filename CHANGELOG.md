@@ -15,6 +15,7 @@ Fixes
 * Reject values that come to zero blocks when only one of `rows` and `columns` is given. The other dimension is derived from the block count, so it came out zero, the block size came out negative, and the figure had negative axis extents. Reachable from ordinary values, not just zeros: `rounding_rule='floor'` maps anything below 1 to zero blocks
 * Reject unknown `block_arranging_style`, which was previously accepted and silently drawn as `normal`
 * Raise `ValueError` rather than `KeyError` or `AttributeError` for invalid `starting_location`, `rounding_rule` and `icon_style`, and accept `icon_style` lists in any case
+* Make `sort_values` case insensitive and reject unknown values, like every other string argument. `sort_values="DESC"` matched neither `True` nor `"desc"` and fell through to ascending order, the opposite of what was asked, with no error
 
 New
 

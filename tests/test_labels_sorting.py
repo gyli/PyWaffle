@@ -152,6 +152,31 @@ class TestSortValues(LabelsTestCase):
         fig = plt.figure(FigureClass=Waffle, rows=5, values=self.DATA)
         self.assertEqual(fig.plot_args[0]["values"], [5, 20, 10])
 
+    def test_the_direction_is_case_and_whitespace_insensitive(self):
+        # "DESC" matched neither True nor "desc", so it sorted ascending - the opposite of the ask
+        for given in ("DESC", "Desc", " desc "):
+            with self.subTest(sort_values=given):
+                fig = plt.figure(FigureClass=Waffle, rows=5, values=self.DATA, sort_values=given)
+                self.assertEqual(fig.plot_args[0]["values"], [20, 10, 5])
+
+        for given in ("ASC", "Asc", " asc "):
+            with self.subTest(sort_values=given):
+                fig = plt.figure(FigureClass=Waffle, rows=5, values=self.DATA, sort_values=given)
+                self.assertEqual(fig.plot_args[0]["values"], [5, 10, 20])
+
+    def test_an_unknown_direction_is_rejected(self):
+        # Previously any unrecognised value silently sorted ascending
+        for given in ("bogus", "descending", "ascending", 1, ["desc"]):
+            with self.subTest(sort_values=given):
+                with self.assertRaisesRegex(ValueError, "sort_values"):
+                    plt.figure(FigureClass=Waffle, rows=5, values=self.DATA, sort_values=given)
+
+    def test_false_and_none_both_leave_the_order_alone(self):
+        for given in (False, None):
+            with self.subTest(sort_values=given):
+                fig = plt.figure(FigureClass=Waffle, rows=5, values=self.DATA, sort_values=given)
+                self.assertEqual(fig.plot_args[0]["values"], [5, 20, 10])
+
     def test_block_counts_follow_the_sorted_order(self):
         fig = plt.figure(FigureClass=Waffle, rows=1, columns=7, values={"A": 5, "B": 20, "C": 10}, sort_values=True)
         colors = [tuple(p.get_facecolor()) for p in fig.axes[0].patches]
