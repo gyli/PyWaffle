@@ -51,7 +51,6 @@ fig = plt.figure(
     legend={"loc": "lower left", "bbox_to_anchor": (0, -0.4), "ncol": len(data), "framealpha": 0},
     starting_location="NW",
     vertical=True,
-    block_arranging_style="snake",
 )
 fig.set_facecolor("#EEEEEE")
 fig.savefig(readme_image_folder + "title_and_legend.svg", bbox_inches="tight", facecolor="#EEEEEE")

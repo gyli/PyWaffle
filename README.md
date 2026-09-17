@@ -163,7 +163,7 @@ In this example, only `rows` is specified and `columns` is empty, absolute value
 
 If `values` is a dict, the keys will be used as labels in the legend.
 
-### 3. More style settings including Legend, Title, Colors, Direction, Arranging Style, etc.
+### 3. More style settings including Legend, Title, Colors, Direction, etc.
 
 ```python
 data = {'First class': 325, 'Second class': 285, 'Third class': 706, 'Crew': 885}
@@ -177,8 +177,7 @@ fig = plt.figure(
     labels=[f"{k} ({v})" for k, v in data.items()],
     legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0},
     starting_location='NW',
-    vertical=True,
-    block_arranging_style='snake'
+    vertical=True
 )
 fig.set_facecolor('#EEEEEE')
 plt.show()
@@ -190,7 +189,9 @@ Parameter `colors` allows you to change the block color, and it accepts a list o
 
 Parameter `title` and `legend` accept the same parameters as in Matplotlib, [matplotlib.pyplot.title](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html) and [matplotlib.pyplot.legend](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html).
 
-Parameter `starting_location`, `vertical`, and `block_arranging_style` controls [Where to Start First Block](https://pywaffle.readthedocs.io/en/latest/examples/block_shape_spacing_location_direction_and_style.html#where-to-start-first-block), [Plotting Direction](https://pywaffle.readthedocs.io/en/latest/examples/block_shape_spacing_location_direction_and_style.html#plotting-direction), and [Where to Start Each Category](https://pywaffle.readthedocs.io/en/latest/examples/block_shape_spacing_location_direction_and_style.html#where-to-start-each-category). 
+Parameter `starting_location` and `vertical` control [Where to Start First Block](https://pywaffle.readthedocs.io/en/latest/examples/block_shape_spacing_location_direction_and_style.html#where-to-start-first-block) and [Plotting Direction](https://pywaffle.readthedocs.io/en/latest/examples/block_shape_spacing_location_direction_and_style.html#plotting-direction). Together they fill from the top left along each row, so the four groups read in order, the way a line of text does.
+
+There is also `block_arranging_style`, which can start each category on a new line or lay the blocks out in a snake. See [Where to Start Each Category](https://pywaffle.readthedocs.io/en/latest/examples/block_shape_spacing_location_direction_and_style.html#where-to-start-each-category).
 
 You may find more details under [Examples](https://pywaffle.readthedocs.io/en/latest/examples.html) section in PyWaffle Documentation. 
 
