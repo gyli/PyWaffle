@@ -8,122 +8,131 @@ import matplotlib.pyplot as plt
 
 from pywaffle import waffle_chart
 from pywaffle.waffle import Waffle
-
 # For README
+#
+# The README uses one dataset throughout: the people aboard the Titanic. Figures from the
+# British Board of Trade inquiry of 1912, 2,201 aboard, 710 saved, 1,491 lost, tabulated at
+# https://en.wikipedia.org/wiki/Sinking_of_the_Titanic#Casualties_and_survivors
+# A 1912 inquiry cannot go out of date, so these never need refreshing.
 readme_image_folder = "examples/readme/"
 
-# Basic
-fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 6], figsize=(5, 3))
+# 1. Value scaling: 2,201 people scaled onto a 5 x 10 grid
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=5,
+    columns=10,
+    values=[325, 285, 706, 885],
+    figsize=(5, 3),
+)
 fig.savefig(readme_image_folder + "basic.svg", bbox_inches="tight")
 plt.close(fig)
 
-# Use values in dictionary; use absolute value as block number, without defining columns
-data = {'Cat1': 40, 'Cat2': 27, 'Cat3': 9}
+# 2. Values in a dict, and auto-sizing: one block per child aboard
+data = {"First class": 6, "Second class": 24, "Third class": 79}
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
     values=data,
-    legend={'loc': 'upper left', 'bbox_to_anchor': (1.05, 1)}
+    legend={"loc": "upper left", "bbox_to_anchor": (1.05, 1)},
 )
 fig.savefig(readme_image_folder + "absolute_block_numbers.svg", bbox_inches="tight")
 plt.close(fig)
 
-# Add title, legend, background color, block color, direction and style
-data = {'Car': 58, 'Pickup': 21, 'Truck': 11, 'Motorcycle': 7}
+# 3. Colours, title, legend, direction and arranging style
+data = {"First class": 325, "Second class": 285, "Third class": 706, "Crew": 885}
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
+    columns=10,
     values=data,
-    colors=["#C1D82F", "#00A4E4", "#FBB034", '#6A737B'],
-    title={'label': 'Vehicle Sales by Vehicle Type', 'loc': 'left'},
-    labels=[f"{k} ({v}%)" for k, v in data.items()],
-    legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.4), 'ncol': len(data), 'framealpha': 0},
-    starting_location='NW',
+    colors=["#c9a227", "#5f8a8b", "#b5653f", "#3d4f5d"],
+    title={"label": "Who was aboard the Titanic", "loc": "left"},
+    labels=[f"{k} ({v})" for k, v in data.items()],
+    legend={"loc": "lower left", "bbox_to_anchor": (0, -0.4), "ncol": len(data), "framealpha": 0},
+    starting_location="NW",
     vertical=True,
-    block_arranging_style='snake'
+    block_arranging_style="snake",
 )
+fig.set_facecolor("#EEEEEE")
 fig.savefig(readme_image_folder + "title_and_legend.svg", bbox_inches="tight", facecolor="#EEEEEE")
 plt.close(fig)
 
-# Use icons from Font Awesome
-data = {'Car': 58, 'Pickup': 21, 'Truck': 11, 'Motorcycle': 7}
+# 4. Pictogram: the same people, cut by group
+data = {"Men": 1667, "Women": 425, "Children": 109}
 fig = plt.figure(
     FigureClass=Waffle,
     rows=5,
+    columns=10,
     values=data,
-    colors=["#c1d82f", "#00a4e4", "#fbb034", '#6a737b'],
-    legend={'loc': 'upper left', 'bbox_to_anchor': (1, 1)},
-    icons=['car-side', 'truck-pickup', 'truck', 'motorcycle'],
-    font_size=12,
-    icon_legend=True
+    colors=["#3d4f5d", "#c9a227", "#b5653f"],
+    legend={"loc": "upper left", "bbox_to_anchor": (1, 1)},
+    icons=["person", "person-dress", "child"],
+    font_size=18,
+    icon_legend=True,
 )
 fig.savefig(readme_image_folder + "fontawesome.svg", bbox_inches="tight")
 plt.close(fig)
 
-# plotting on existed figure
+# 5. Drawing onto an axis that already exists
 fig = plt.figure()
 ax = fig.add_subplot(111)
-
-# Modify existed axis
 ax.set_title("Axis Title")
 ax.set_aspect(aspect="equal")
-
 Waffle.make_waffle(
-    ax=ax,  # pass axis to make_waffle
+    ax=ax,
     rows=5,
     columns=10,
-    values=[30, 16, 4],
-    title={"label": "Waffle Title", "loc": "left"}
+    values=[710, 1491],
+    title={"label": "Survived and lost", "loc": "left"},
 )
 fig.savefig(readme_image_folder + "existed_axis.svg", bbox_inches="tight")
 plt.close(fig)
 
-# Multiple Plots
+# 6. One subplot per passenger class, from a DataFrame
 import pandas as pd
 
 data = pd.DataFrame(
     {
-        'labels': ['Car', 'Truck', 'Motorcycle'],
-        'Factory A': [32384, 13354, 5245],
-        'Factory B': [22147, 6678, 2156],
-        'Factory C': [8932, 3879, 896],
+        "labels": ["Men", "Women", "Children"],
+        "First class": [175, 144, 6],
+        "Second class": [168, 93, 24],
+        "Third class": [462, 165, 79],
     },
-).set_index('labels')
+).set_index("labels")
 
 fig = plt.figure(
     FigureClass=Waffle,
     plots={
         311: {
-            'values': data['Factory A'] / 1000,  # Convert actual number to a reasonable block number
-            'labels': [f"{k} ({v})" for k, v in data['Factory A'].items()],
-            'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.05, 1), 'fontsize': 8},
-            'title': {'label': 'Vehicle Production of Factory A', 'loc': 'left', 'fontsize': 12}
+            "values": data["First class"] / 10,
+            "labels": [f"{k} ({v})" for k, v in data["First class"].items()],
+            "legend": {"loc": "upper left", "bbox_to_anchor": (1.05, 1), "fontsize": 8},
+            "title": {"label": "First class", "loc": "left", "fontsize": 12},
         },
         312: {
-            'values': data['Factory B'] / 1000,
-            'labels': [f"{k} ({v})" for k, v in data['Factory B'].items()],
-            'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.2, 1), 'fontsize': 8},
-            'title': {'label': 'Vehicle Production of Factory B', 'loc': 'left', 'fontsize': 12}
+            "values": data["Second class"] / 10,
+            "labels": [f"{k} ({v})" for k, v in data["Second class"].items()],
+            "legend": {"loc": "upper left", "bbox_to_anchor": (1.05, 1), "fontsize": 8},
+            "title": {"label": "Second class", "loc": "left", "fontsize": 12},
         },
         313: {
-            'values': data['Factory C'] / 1000,
-            'labels': [f"{k} ({v})" for k, v in data['Factory C'].items()],
-            'legend': {'loc': 'upper left', 'bbox_to_anchor': (1.3, 1), 'fontsize': 8},
-            'title': {'label': 'Vehicle Production of Factory C', 'loc': 'left', 'fontsize': 12}
+            "values": data["Third class"] / 10,
+            "labels": [f"{k} ({v})" for k, v in data["Third class"].items()],
+            "legend": {"loc": "upper left", "bbox_to_anchor": (1.05, 1), "fontsize": 8},
+            "title": {"label": "Third class", "loc": "left", "fontsize": 12},
         },
     },
-    rows=5,  # Outside parameter applied to all subplots, same as below
-    cmap_name="Accent",  # Change color with cmap
-    rounding_rule='ceil',  # Change rounding rule, so value less than 1000 will still have at least 1 block
-    figsize=(6, 5)
+    rows=5,
+    cmap_name="Accent",
+    rounding_rule="ceil",
+    figsize=(6, 5),
 )
-fig.suptitle('Vehicle Production by Vehicle Type', fontsize=14, fontweight='bold')
-fig.supxlabel('1 block = 1000 vehicles', fontsize=8, x=0.14)
-fig.set_facecolor('#EEEDE7')
-fig.savefig(readme_image_folder + "multiple_plots.svg")
+fig.suptitle("Titanic passengers by class", fontsize=14, fontweight="bold")
+fig.supxlabel("1 block = 10 people", fontsize=8, x=0.14)
+fig.set_facecolor("#EEEDE7")
+fig.savefig(readme_image_folder + "multiple_plots.svg", bbox_inches="tight", facecolor="#EEEDE7")
 plt.close(fig)
 
-# For documents
 doc_examples_image_folder = "examples/docs/"
 
 # Formats of values
