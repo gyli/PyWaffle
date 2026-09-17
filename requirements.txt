@@ -1,2 +1,3 @@
+# Runtime dependencies. Font Awesome is optional and lives in the "icons" extra:
+#   pip install "pywaffle[icons]"
 matplotlib>=3.6
-fontawesomefree

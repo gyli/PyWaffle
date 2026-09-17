@@ -1006,7 +1006,8 @@ class Waffle(Figure):
 
             # Replace icon name with Unicode symbols in parameter icons
             par["icons"] = [
-                icons[icon_style][icon_name] for icon_name, icon_style in zip(par["icons"], par["icon_style"])
+                self._resolve_icon(icons, icon_name, icon_style)
+                for icon_name, icon_style in zip(par["icons"], par["icon_style"])
             ]
 
             return fm.FontProperties(size=par["font_size"] or self._block_font_size(ax, block_x_length))
@@ -1025,6 +1026,47 @@ class Waffle(Figure):
             )
 
         return None
+
+    @staticmethod
+    def _resolve_icon(icons: Dict, name: str, style: str) -> str:
+        """Look up one icon name, and say something useful when it is not there.
+
+        Which names exist depends on the Font Awesome version installed and on the style, so a bare
+        KeyError leaves the user unable to tell a typo from an icon that was renamed, moved between
+        styles, or added after their version.
+        """
+        available = icons.get(style)
+        if available is not None and name in available:
+            return available[name]
+
+        if available is None:
+            # The installed Font Awesome does not provide this style at all. Distributions split
+            # the styles across packages -- Fedora ships free and brands separately -- so having
+            # some but not others is normal rather than exotic.
+            present = ", ".join(repr(s) for s in sorted(icons)) or "none"
+            raise ValueError(
+                f"Font Awesome style {style!r} is not available. The fonts found provide: {present}. "
+                "Install the missing style, or see pywaffle.font_awesome_status() for which fonts "
+                "are in use and where they came from."
+            )
+
+        elsewhere = sorted(other for other in icons if other != style and name in icons[other])
+        if elsewhere:
+            raise ValueError(
+                f"Icon {name!r} is not in the {style!r} style, but it is in "
+                f"{', '.join(repr(s) for s in elsewhere)}. Pass icon_style={elsewhere[0]!r}."
+            )
+
+        import difflib
+
+        close = difflib.get_close_matches(name, available, n=3, cutoff=0.7)
+        suggestion = f" Did you mean {', '.join(repr(c) for c in close)}?" if close else ""
+        raise ValueError(
+            f"Icon {name!r} was not found in the {style!r} style of the installed Font Awesome, "
+            f"which has {len(available):,} {style} icons.{suggestion} "
+            "Names change between Font Awesome versions; check the icon exists in the version you "
+            "have installed."
+        )
 
     def _draw_blocks(
         self,

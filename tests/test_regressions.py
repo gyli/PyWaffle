@@ -150,23 +150,17 @@ class TestFontAwesomeMapping(WaffleTestCase):
         import json
         import tempfile
         from pathlib import Path
-        from unittest import mock
 
-        from pywaffle.fontawesome_handler import icon_mapping_builder
+        from pywaffle.fontawesome_handler import _mapping_from_metadata
 
         metadata = {
             "a": {"unicode": "f001", "styles": ["solid"], "aliases": {"names": ["b", "c"]}},
             "b": {"unicode": "f002", "styles": ["solid"]},
         }
         with tempfile.TemporaryDirectory() as directory:
-            package = Path(directory)
-            (package / "metadata").mkdir()
-            (package / "metadata" / "icons.json").write_text(json.dumps(metadata))
-            with mock.patch(
-                "pywaffle.fontawesome_handler.fontawesome_package_path",
-                return_value=package,
-            ):
-                mapping = icon_mapping_builder()
+            icons_json = Path(directory) / "icons.json"
+            icons_json.write_text(json.dumps(metadata))
+            mapping = _mapping_from_metadata(icons_json)
 
         # The real icon keeps its name, rather than being replaced by the other icon's alias
         self.assertEqual(mapping["solid"]["b"], chr(0xF002))

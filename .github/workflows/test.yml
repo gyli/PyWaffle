@@ -31,7 +31,7 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install -e .
+          pip install -e ".[icons]"
           # pandas is not a dependency, but the Series-input tests need it present to run
           pip install pytest pytest-cov pandas
 
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -e . pytest pandas
+      - run: pip install -e ".[icons]" pytest pandas
 
       - name: The suite must pass normally
         env:
@@ -91,7 +91,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -e . pytest pandas
+      - run: pip install -e ".[icons]" pytest pandas
 
       - name: The suite must pass on the released matplotlib
         env:
@@ -137,7 +137,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -e . pytest pytest-mpl
+      - run: pip install -e ".[icons]" pytest pytest-mpl
       - name: Compare against baselines
         env:
           MPLBACKEND: Agg
@@ -162,7 +162,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -e . pandas nbconvert nbformat ipykernel
+      - run: pip install -e ".[icons]" pandas nbconvert nbformat ipykernel
 
       - name: Regenerate the documented examples
         env:
@@ -217,27 +217,51 @@ jobs:
       - run: python -m build
       - run: twine check dist/*
 
-      - name: Install the sdist into a clean environment
+      # Font Awesome is an extra, so both installation modes are worth proving: the plain install
+      # must draw blocks and must refuse icons with a useful message, and the [icons] install must
+      # draw icons.
+      - name: Install each artifact plain, and check icons are refused helpfully
         run: |
-          python -m venv /tmp/sdist-env
-          /tmp/sdist-env/bin/pip install dist/*.tar.gz
-          MPLBACKEND=Agg /tmp/sdist-env/bin/python -c "
+          for artifact in dist/*.tar.gz dist/*.whl; do
+            rm -rf /tmp/plain-env
+            python -m venv /tmp/plain-env
+            /tmp/plain-env/bin/pip install --quiet "$artifact"
+            MPLBACKEND=Agg /tmp/plain-env/bin/python - "$artifact" <<'PY'
+          import sys
+          import matplotlib; matplotlib.use("Agg")
           import matplotlib.pyplot as plt
           from pywaffle import Waffle
-          plt.figure(FigureClass=Waffle, rows=5, values=[10, 20], icons='star')
-          print('sdist OK')
-          "
 
-      - name: Install the wheel into a clean environment
+          figure = plt.figure(FigureClass=Waffle, rows=5, values=[10, 20])
+          assert len(figure.axes[0].patches) == 30, "plain install cannot draw blocks"
+
+          try:
+              plt.figure(FigureClass=Waffle, rows=5, values=[10, 20], icons="star")
+          except ImportError as exc:
+              assert "pywaffle[icons]" in str(exc), f"unhelpful message: {exc}"
+          else:
+              raise AssertionError("icons should not work without the extra")
+          print(f"{sys.argv[1]}: blocks OK, icons refused with instructions")
+          PY
+          done
+
+      - name: Install each artifact with [icons], and check icons draw
         run: |
-          python -m venv /tmp/wheel-env
-          /tmp/wheel-env/bin/pip install dist/*.whl
-          MPLBACKEND=Agg /tmp/wheel-env/bin/python -c "
+          for artifact in dist/*.tar.gz dist/*.whl; do
+            rm -rf /tmp/icons-env
+            python -m venv /tmp/icons-env
+            /tmp/icons-env/bin/pip install --quiet "$artifact[icons]"
+            MPLBACKEND=Agg /tmp/icons-env/bin/python - "$artifact" <<'PY'
+          import sys
+          import matplotlib; matplotlib.use("Agg")
           import matplotlib.pyplot as plt
           from pywaffle import Waffle
-          plt.figure(FigureClass=Waffle, rows=5, values=[10, 20], icons='star')
-          print('wheel OK')
-          "
+
+          figure = plt.figure(FigureClass=Waffle, rows=5, values=[10, 20], icons="star")
+          assert len(figure.axes[0].texts) == 30, "icons did not draw"
+          print(f"{sys.argv[1]}[icons]: icons OK")
+          PY
+          done
 
       - uses: actions/upload-artifact@v7
         with:

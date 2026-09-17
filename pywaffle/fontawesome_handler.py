@@ -3,9 +3,13 @@
 
 import inspect
 import json
+import os
 import pathlib
+import sys
+from dataclasses import dataclass
+from functools import lru_cache
 from collections import defaultdict
-from typing import Dict
+from typing import Dict, Optional, Tuple
 
 import matplotlib.font_manager as fm
 from matplotlib.legend_handler import HandlerBase
@@ -18,35 +22,213 @@ FA_STYLES = {
 }
 
 
+MISSING_FONT_AWESOME = (
+    "Drawing with icons requires Font Awesome, which is an optional dependency of PyWaffle.\n"
+    "Install it with:\n"
+    "    pip install 'pywaffle[icons]'\n"
+    "or, if you manage the font package yourself:\n"
+    "    pip install fontawesomefree"
+)
+
+
+#: Environment variable naming a directory of Font Awesome .otf files to use instead of the
+#: fontawesomefree package. Set it to use a system-provided Font Awesome.
+FONT_DIRECTORY_VARIABLE = "PYWAFFLE_FONTAWESOME_DIR"
+
+
+def _system_font_directories() -> Tuple[str, ...]:
+    """Where this platform keeps fonts, searched when nothing else supplies them.
+
+    Listing only the Linux paths would make the fallback silently useless on macOS and Windows,
+    where none of them exist.
+    """
+    home = pathlib.Path.home()
+
+    if sys.platform == "darwin":
+        return (
+            str(home / "Library/Fonts"),  # where Homebrew casks install
+            "/Library/Fonts",
+            "/System/Library/Fonts",
+            "/opt/homebrew/share/fonts",  # Homebrew on Apple silicon
+            "/usr/local/share/fonts",  # Homebrew on Intel
+        )
+
+    if sys.platform == "win32":
+        local = os.environ.get("LOCALAPPDATA")
+        windir = os.environ.get("WINDIR", r"C:\Windows")
+        directories = [str(pathlib.Path(windir) / "Fonts")]
+        if local:
+            # Per-user font installs, the default since Windows 10
+            directories.append(str(pathlib.Path(local) / "Microsoft/Windows/Fonts"))
+        return tuple(directories)
+
+    return (
+        "/usr/share/fonts/fontawesome",  # Fedora, fontawesome-fonts
+        "/usr/share/fonts/OTF",  # Arch, otf-font-awesome
+        "/usr/share/fonts/opentype/font-awesome",  # Debian and Ubuntu
+        "/usr/share/fonts/truetype/font-awesome",
+        "/usr/share/fonts",  # the parent, for layouts not listed above
+        str(home / ".local/share/fonts"),  # per-user installs
+        str(home / ".fonts"),  # the older per-user location
+        "/usr/local/share/fonts",
+    )
+
+
+#: Where this platform keeps fonts. Searched only when the environment variable is unset and the
+#: fontawesomefree package is not installed.
+SYSTEM_FONT_DIRECTORIES = _system_font_directories()
+
+
 def fontawesome_package_path() -> pathlib.Path:
-    """Path to the static asset directory of the installed fontawesomefree package."""
-    import fontawesomefree
+    """Path to the static asset directory of the installed fontawesomefree package.
+
+    Raises ImportError with installation instructions when the optional font package is absent,
+    rather than letting a bare ModuleNotFoundError surface from several frames down.
+    """
+    try:
+        import fontawesomefree
+    except ImportError as exc:
+        raise ImportError(MISSING_FONT_AWESOME) from exc
 
     package_path = pathlib.Path(inspect.getsourcefile(fontawesomefree))
     return package_path.parent / "static/fontawesomefree"
 
 
-def font_file_finder() -> Dict[str, pathlib.Path]:
-    """Map each Font Awesome style to the .otf file that provides it."""
-    font_otf_path = (fontawesome_package_path() / "otfs").glob("*.otf")
+def _styles_in(directory: pathlib.Path) -> Dict[str, pathlib.Path]:
+    """Match the .otf files in one directory to the Font Awesome styles they provide.
+
+    Distributions keep the upstream file names -- "Font Awesome 6 Free-Solid-900.otf" and the
+    like -- so the same suffix match works for a system directory as for the Python package.
+    """
+    try:
+        if not directory.is_dir():
+            return {}
+        # glob("*.otf") is case sensitive whatever the filesystem, so an .OTF file would be
+        # invisible on every platform. Filter by suffix instead.
+        paths = sorted(p for p in directory.iterdir() if p.suffix.lower() == ".otf")
+    except OSError:
+        # An unreadable directory, a path too long for the filesystem, a broken symlink: all mean
+        # "no fonts here", and none of them should escape as an OSError from a chart call.
+        return {}
+
     return {
         style: path
-        for path in font_otf_path
+        for path in paths
         for style, font_suffix in FA_STYLES.items()
         if font_suffix.lower() in path.name.lower()
     }
 
 
-def icon_mapping_builder() -> Dict[str, Dict[str, str]]:
-    """
-    Build the icon name to Unicode character mapping from the metadata shipped with the installed
-    fontawesomefree package.
+def configured_font_directory() -> Optional[pathlib.Path]:
+    """The directory named by the environment variable, or None when it is not usefully set.
 
-    Reading it at runtime keeps the mapping in sync with whichever Font Awesome version is installed.
-    Generating it at install time does not work, because a wheel install never runs setup.py.
+    Whitespace is stripped and ``~`` expanded, so a value set programmatically behaves the same as
+    one a shell would have expanded. An empty or blank value counts as unset.
     """
-    icons_json_path = fontawesome_package_path() / "metadata" / "icons.json"
-    with open(icons_json_path, "r") as f:
+    raw = os.environ.get(FONT_DIRECTORY_VARIABLE)
+    if raw is None or not raw.strip():
+        return None
+    return pathlib.Path(os.path.expanduser(raw.strip()))
+
+
+def font_directory_candidates():
+    """Directories to search for Font Awesome, most specific first.
+
+    An explicit setting wins, then the Python package, then the places distributions install it.
+    Yields (path, is_package) so the caller can tell whether icons.json sits alongside.
+    """
+    override = configured_font_directory()
+    if override is not None:
+        yield override, False
+
+    try:
+        yield fontawesome_package_path() / "otfs", True
+    except ImportError:
+        pass
+
+    for directory in SYSTEM_FONT_DIRECTORIES:
+        yield pathlib.Path(directory), False
+
+
+@lru_cache(maxsize=None)
+def font_file_finder() -> Dict[str, pathlib.Path]:
+    """Map each Font Awesome style to the .otf file that provides it.
+
+    Prefers an explicitly configured directory, then the fontawesomefree package, then the system
+    font directories, so a distribution can supply the fonts without the Python package.
+    """
+    override = configured_font_directory()
+
+    searched = []
+    for directory, _ in font_directory_candidates():
+        found = _styles_in(directory)
+        if found:
+            return found
+        searched.append(str(directory))
+
+        # Falling back past an explicit setting would hide the fact that it did not work
+        if override is not None and directory == override:
+            try:
+                present = (
+                    sorted(p.name for p in directory.iterdir() if p.suffix.lower() == ".otf")
+                    if directory.is_dir()
+                    else []
+                )
+            except OSError as exc:
+                raise ImportError(
+                    f"{FONT_DIRECTORY_VARIABLE} is set to {directory}, which cannot be read: {exc}.\n"
+                    "Point it at a readable directory of Font Awesome .otf files, unset it to fall "
+                    "back to the Python package and the system font directories, or install the "
+                    "package:\n    pip install 'pywaffle[icons]'"
+                ) from exc
+            detail = (
+                "it contains no Font Awesome .otf files"
+                if not present
+                else "the .otf files there are not recognised: " + ", ".join(present)
+            )
+            raise ImportError(
+                f"{FONT_DIRECTORY_VARIABLE} is set to {directory}, but {detail}.\n"
+                "Expected file names ending in: " + ", ".join(sorted(FA_STYLES.values())) + ".\n"
+                "Font Awesome 4 is not supported: it ships a single FontAwesome.otf with no "
+                "separate solid, regular and brands styles.\n\n"
+                f"Point {FONT_DIRECTORY_VARIABLE} at a directory holding those files, unset it to "
+                "fall back to the Python package and the system font directories, or install the "
+                "package:\n    pip install 'pywaffle[icons]'"
+            )
+
+    raise ImportError(
+        MISSING_FONT_AWESOME
+        + "\n\nNo Font Awesome .otf files were found in:\n    "
+        + "\n    ".join(searched or ["(nowhere searched)"])
+        + f"\n\nSet {FONT_DIRECTORY_VARIABLE} to a directory of Font Awesome .otf files to use "
+        "a system copy."
+    )
+
+
+def _metadata_file() -> pathlib.Path:
+    """Path to Font Awesome's icons.json, if whatever is providing the fonts also provides it.
+
+    The Python package ships it. Distribution font packages generally do not -- they package
+    fonts, not the web tooling -- so this can legitimately find nothing.
+    """
+    for directory, is_package in font_directory_candidates():
+        if not _styles_in(directory):
+            continue
+        candidates = [directory.parent / "metadata" / "icons.json"] if is_package else []
+        candidates += [directory / "icons.json", directory / "metadata" / "icons.json"]
+        for candidate in candidates:
+            if candidate.is_file():
+                return candidate
+        break
+    return None
+
+
+def _mapping_from_metadata(path: pathlib.Path) -> Dict[str, Dict[str, str]]:
+    """Build the name to character mapping from Font Awesome's own metadata.
+
+    This is the better source: it carries the aliases, which the fonts do not.
+    """
+    with open(path, "r") as f:
         icons_metadata = json.load(f)
 
     mapping: Dict[str, Dict[str, str]] = defaultdict(dict)
@@ -64,6 +246,57 @@ def icon_mapping_builder() -> Dict[str, Dict[str, str]]:
                 mapping[style].setdefault(alias, character)
 
     return dict(mapping)
+
+
+def _mapping_from_fonts() -> Dict[str, Dict[str, str]]:
+    """Build the name to character mapping out of the font files themselves.
+
+    Font Awesome stores real icon names as glyph names, so the character map inverted gives every
+    canonical name without any metadata file. Read through matplotlib's own FreeType binding, so
+    this needs no dependency beyond matplotlib.
+
+    Two differences from the metadata, both checked rather than assumed:
+
+    * Aliases are absent. They exist only in icons.json, so ``adjust`` will not resolve while
+      ``circle-half-stroke`` will.
+    * Where a glyph has several code points -- Font Awesome maps both its private-use code point
+      and the matching real Unicode one -- this may pick the other one. It renders the same glyph,
+      because both code points map to it.
+    """
+    from matplotlib.ft2font import FT2Font
+
+    mapping: Dict[str, Dict[str, str]] = defaultdict(dict)
+    for style, path in font_file_finder().items():
+        try:
+            face = FT2Font(str(path))
+            charmap = face.get_charmap()
+        except Exception as exc:
+            # FreeType raises RuntimeError for anything it cannot parse. Name the file, since the
+            # user chose the directory it came from.
+            raise ValueError(
+                f"Could not read the Font Awesome {style} font at {path}: {exc}. "
+                "The file may be truncated or not a font."
+            ) from exc
+
+        for code_point, glyph_index in charmap.items():
+            name = face.get_glyph_name(glyph_index)
+            if name:
+                mapping[style].setdefault(name, chr(code_point))
+    return dict(mapping)
+
+
+@lru_cache(maxsize=None)
+def icon_mapping_builder() -> Dict[str, Dict[str, str]]:
+    """Map each style's icon names to the characters that draw them.
+
+    Prefers Font Awesome's own metadata, which includes aliases. Falls back to reading the fonts,
+    so a system Font Awesome works even though distributions ship fonts without icons.json.
+
+    Built at runtime either way, so the names always match the fonts actually being drawn from.
+    Generating it at install time did not work, because a wheel install never runs setup.py.
+    """
+    metadata = _metadata_file()
+    return _mapping_from_metadata(metadata) if metadata else _mapping_from_fonts()
 
 
 class TextLegendBase:
@@ -113,8 +346,136 @@ class TextLegendHandler(HandlerBase):
         return [annotation]
 
 
-fontawesome_files = font_file_finder()
-icons = icon_mapping_builder()
-legend_handler_style_mapping = {
-    v: TextLegendHandler(font_file=fontawesome_files[k]) for k, v in legend_style_class_mapping.items()
+@dataclass(frozen=True)
+class FontAwesomeStatus:
+    """Which Font Awesome PyWaffle is using, and where it came from."""
+
+    available: bool
+    source: str
+    directory: Optional[pathlib.Path] = None
+    version: Optional[str] = None
+    fonts: Optional[Dict[str, pathlib.Path]] = None
+    icon_counts: Optional[Dict[str, int]] = None
+    aliases_available: bool = False
+    problem: Optional[str] = None
+
+    def __str__(self) -> str:
+        if not self.available:
+            return f"Font Awesome: not available\n  source:  {self.source}\n  problem: {self.problem}"
+
+        lines = [
+            f"Font Awesome {self.version or '(unknown version)'}",
+            f"  source:    {self.source}",
+            f"  directory: {self.directory}",
+            f"  aliases:   {'yes, from icons.json' if self.aliases_available else 'no, names read from the fonts'}",
+            "  styles:",
+        ]
+        for style in sorted(self.fonts or {}):
+            count = (self.icon_counts or {}).get(style, 0)
+            lines.append(f"    {style:8s} {count:>5,} icons  {self.fonts[style].name}")
+        return "\n".join(lines)
+
+
+def reload_font_awesome() -> None:
+    """Forget which fonts were resolved, so they are looked up again on next use.
+
+    The fonts and the icon mapping are resolved once and cached for the life of the process, so
+    changing PYWAFFLE_FONTAWESOME_DIR after a chart has been drawn has no effect until this is
+    called. Mostly useful in a notebook, where the process outlives the experiment.
+    """
+    font_file_finder.cache_clear()
+    icon_mapping_builder.cache_clear()
+    _legend_handlers.cache_clear()
+    for name in _LAZY:
+        globals().pop(name, None)
+
+
+def font_awesome_status() -> FontAwesomeStatus:
+    """Report which Font Awesome is in use, so it is never a guess.
+
+    Reflects what is currently resolved. The fonts are cached for the life of the process, so if
+    PYWAFFLE_FONTAWESOME_DIR has changed since the first chart, call reload_font_awesome() first.
+
+    Never raises. When Font Awesome cannot be found it reports why, which is the case where
+    knowing what PyWaffle looked at matters most.
+
+    >>> from pywaffle import font_awesome_status
+    >>> print(font_awesome_status())
+    """
+    override = os.environ.get(FONT_DIRECTORY_VARIABLE)
+    source = f"{FONT_DIRECTORY_VARIABLE}={override}" if override else "not found"
+    try:
+        return _describe_font_awesome()
+    except Exception as exc:  # noqa: BLE001 - a diagnostic that raises is no diagnostic
+        return FontAwesomeStatus(available=False, source=source, problem=f"{type(exc).__name__}: {exc}")
+
+
+def _describe_font_awesome() -> FontAwesomeStatus:
+    """Gather the report. Wrapped by font_awesome_status, which turns any failure into a report."""
+    override = configured_font_directory()
+    try:
+        fonts = font_file_finder()
+    except ImportError as exc:
+        source = f"{FONT_DIRECTORY_VARIABLE}={override}" if override else "not found"
+        return FontAwesomeStatus(available=False, source=source, problem=str(exc))
+
+    directory = next(iter(fonts.values())).parent
+    if override is not None and directory == override:
+        source = f"{FONT_DIRECTORY_VARIABLE}={override}"
+    elif any(directory == candidate for candidate, is_package in font_directory_candidates() if is_package):
+        source = "fontawesomefree package"
+    else:
+        source = "system font directory"
+
+    version = None
+    if source == "fontawesomefree package":
+        try:
+            from importlib.metadata import version as _version
+
+            version = _version("fontawesomefree")
+        except Exception:  # pragma: no cover - metadata is normally present
+            version = None
+    if version is None:
+        # The family name carries the major version, e.g. "Font Awesome 6 Free"
+        from matplotlib.ft2font import FT2Font
+
+        families = {FT2Font(str(path)).family_name for path in fonts.values()}
+        majors = {name.split()[2] for name in families if len(name.split()) > 2 and name.split()[2].isdigit()}
+        version = majors.pop() if len(majors) == 1 else None
+
+    mapping = icon_mapping_builder()
+    return FontAwesomeStatus(
+        available=True,
+        source=source,
+        directory=directory,
+        version=version,
+        fonts=dict(fonts),
+        icon_counts={style: len(names) for style, names in mapping.items()},
+        aliases_available=_metadata_file() is not None,
+    )
+
+
+@lru_cache(maxsize=None)
+def _legend_handlers() -> Dict:
+    """Map each legend handle class to a handler that draws it in the right font."""
+    files = font_file_finder()
+    return {v: TextLegendHandler(font_file=files[k]) for k, v in legend_style_class_mapping.items()}
+
+
+#: Resolved on first use rather than at import, so that importing this module -- which
+#: _parameter_validation does simply to read FA_STYLES -- does not require the optional font
+#: package. Anything that actually needs a font raises ImportError with install instructions.
+_LAZY = {
+    "fontawesome_files": font_file_finder,
+    "icons": icon_mapping_builder,
+    "legend_handler_style_mapping": _legend_handlers,
 }
+
+
+def __getattr__(name: str):
+    """Resolve the font-backed module attributes on first access (PEP 562)."""
+    if name in _LAZY:
+        value = _LAZY[name]()
+        globals()[name] = value
+        return value
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

@@ -23,10 +23,18 @@ Documentation: [http://pywaffle.readthedocs.io/](http://pywaffle.readthedocs.io/
 pip install pywaffle
 ```
 
+To draw [pictogram charts](https://pywaffle.readthedocs.io/en/latest/examples/plot_with_characters_or_icons.html)
+with Font Awesome icons, install the optional extra:
+
+```shell
+pip install "pywaffle[icons]"
+```
+
 ## Requirements
 
 * Python 3.9+
 * Matplotlib
+* Font Awesome, optional, for `icons` only — `pip install "pywaffle[icons]"`
 
 ## Quickstart
 

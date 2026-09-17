@@ -28,9 +28,10 @@ keywords = [
 # in place of the deprecated set_tight_layout. Without the floor, installing into an
 # environment that already pins an older matplotlib leaves the pin in place and every figure
 # then raises AttributeError.
-# fontawesomefree stays a hard dependency for now; making it an extra is a breaking
-# change and is tracked separately. The "icons" extra is an additive alias.
-dependencies = ["matplotlib>=3.6", "fontawesomefree"]
+# Font Awesome is only needed to draw with icons, so it is an extra rather than a hard
+# dependency: pip install "pywaffle[icons]". Requesting icons without it raises ImportError
+# with installation instructions.
+dependencies = ["matplotlib>=3.6"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",

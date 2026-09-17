@@ -13,11 +13,20 @@ Fixes
 * Refuse to draw a chart of more than `MAX_BLOCKS` (10,000,000) blocks. Values that were meant to be scaled previously turned into minutes of drawing rather than an error; the limit can be raised with `pywaffle.waffle.MAX_BLOCKS`
 * Reject negative `values` and a `values` sum of zero up front, instead of silently drawing a wrong chart or raising `ZeroDivisionError`
 * Reject values that come to zero blocks when only one of `rows` and `columns` is given. The other dimension is derived from the block count, so it came out zero, the block size came out negative, and the figure had negative axis extents. Reachable from ordinary values, not just zeros: `rounding_rule='floor'` maps anything below 1 to zero blocks
+* An unknown icon name now raises `ValueError` explaining itself rather than a bare `KeyError`. If the icon exists in another style it says which and what to pass; if it looks like a typo it suggests the nearest name; otherwise it notes that names change between Font Awesome versions
 * Reject unknown `block_arranging_style`, which was previously accepted and silently drawn as `normal`
 * Raise `ValueError` rather than `KeyError` or `AttributeError` for invalid `starting_location`, `rounding_rule` and `icon_style`, and accept `icon_style` lists in any case
 * Make `sort_values` case insensitive and reject unknown values, like every other string argument. `sort_values="DESC"` matched neither `True` nor `"desc"` and fell through to ascending order, the opposite of what was asked, with no error
 
+Breaking
+
+* **Font Awesome is now an optional dependency.** `pip install pywaffle` no longer pulls in `fontawesomefree`; install `pywaffle[icons]` to draw with `icons`. Everything else, including `characters`, works without it. Asking for `icons` without the extra raises `ImportError` naming the command to run, rather than a bare `ModuleNotFoundError`. This removes a font package from the dependency graph of every project that uses PyWaffle without icons, and is a step towards letting distributions use a system Font Awesome ([#25](https://github.com/gyli/PyWaffle/issues/25))
+
 New
+
+* Add `pywaffle.reload_font_awesome()`, which forgets the resolved fonts so a changed `PYWAFFLE_FONTAWESOME_DIR` takes effect without restarting
+* Add `pywaffle.font_awesome_status()`, which reports which Font Awesome is in use, where it came from, its version, how many icons each style has, and whether aliases are available. It never raises: when Font Awesome cannot be found it reports every directory searched and how to install it
+* Font Awesome can now come from the system rather than the Python package. `PYWAFFLE_FONTAWESOME_DIR` points at a directory of `.otf` files, and the usual system font directories are searched as a fallback, so a distribution's font package works on its own. Distribution packages ship fonts without Font Awesome's `icons.json`, so in that case the icon names are recovered from the fonts themselves - every canonical name is available, though aliases are not ([#25](https://github.com/gyli/PyWaffle/issues/25))
 
 * Add `rounding_rule="float"`, which draws partial blocks instead of rounding values ([#26](https://github.com/gyli/PyWaffle/issues/26)). A category that ends part way through a block fills only that fraction of it, and a block containing a boundary between two categories is split between their colors. The block count then depends only on the total of the values, so two datasets with the same total produce charts of the same size - which rounding did not guarantee
 * Add `background_color`, which fills the space behind the blocks including the gaps between them, and `block_edge_color` / `block_edge_width`, which draw a border around each block ([#37](https://github.com/gyli/PyWaffle/issues/37)). The blank cells that `block_arranging_style='new-line'` pads a line with get no border, so a padded line still ends where its value ends

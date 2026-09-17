@@ -1,4 +1,5 @@
--r requirements.txt
+# Development environment. The test suite exercises icons throughout, so it needs the extra.
+-e .[icons]
 black
 build
 pandas
