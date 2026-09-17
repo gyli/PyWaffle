@@ -20,7 +20,7 @@ Fixes
 New
 
 * Add `rounding_rule="float"`, which draws partial blocks instead of rounding values ([#26](https://github.com/gyli/PyWaffle/issues/26)). A category that ends part way through a block fills only that fraction of it, and a block containing a boundary between two categories is split between their colors. The block count then depends only on the total of the values, so two datasets with the same total produce charts of the same size - which rounding did not guarantee
-* Add `background_color`, which fills the space behind the blocks including the gaps between them, and `block_edge_color` / `block_edge_width`, which draw a border around each block ([#37](https://github.com/gyli/PyWaffle/issues/37))
+* Add `background_color`, which fills the space behind the blocks including the gaps between them, and `block_edge_color` / `block_edge_width`, which draw a border around each block ([#37](https://github.com/gyli/PyWaffle/issues/37)). The blank cells that `block_arranging_style='new-line'` pads a line with get no border, so a padded line still ends where its value ends
 * Add `show_values` and `value_format`, which append each category's value or its percentage of the total to its legend label. This is the f-string the documentation has always told people to write by hand: `labels=[f"{k} ({v}%)" for k, v in data.items()]`
 * Add `sort_values` to order categories by value. Every per-category argument - `labels`, `colors`, `icons`, `characters` and `icon_style` - is reordered along with the values
 * Take labels from a `pandas.Series` index, the same way they are already taken from a dict's keys
