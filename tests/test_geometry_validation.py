@@ -181,6 +181,40 @@ class TestBlockCountCap(ValidationMixin, unittest.TestCase):
             module.MAX_BLOCKS = original
 
 
+class TestZeroBlockGrid(ValidationMixin, unittest.TestCase):
+    """Values that come to zero blocks derived a zero-sized grid, not an empty one."""
+
+    def test_values_that_round_down_to_nothing_are_rejected(self):
+        """floor maps anything below 1 to zero blocks, which derived columns=0."""
+        # block_y_length is 1 / (rows + rows*interval - interval), so rows=0 makes it negative,
+        # and every extent computed from it follows: xlim came out (0, -29.0)
+        self._rejects("comes to zero blocks", values=[0.4, 0.6], rounding_rule="floor")
+        self._rejects("comes to zero blocks", values=[0.4, 0.6], rows=None, columns=5, rounding_rule="floor")
+
+    def test_all_zero_values_are_rejected_with_one_dimension_too(self):
+        """Only the rows-and-columns case checked this; one dimension drew a broken figure."""
+        self._rejects("comes to zero blocks", values=[0, 0])
+        self._rejects("comes to zero blocks", values=[0, 0], rows=None, columns=5)
+
+    def test_the_message_says_how_to_fix_it(self):
+        with self.assertRaises(ValueError) as caught:
+            plt.figure(FigureClass=Waffle, rows=5, values=[0.4, 0.6], rounding_rule="floor")
+        message = str(caught.exception)
+        self.assertIn("rounding_rule", message)
+        self.assertIn("pass both rows and columns", message.lower())
+
+    def test_scaling_into_a_fixed_grid_still_works(self):
+        """With both dimensions the values are scaled, so small values are not zero blocks."""
+        fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[0.4, 0.6])
+        self.assertEqual(len(fig.axes[0].patches), 50)
+
+    def test_one_block_is_still_a_valid_chart(self):
+        """The guard is for zero, not for small."""
+        fig = plt.figure(FigureClass=Waffle, rows=5, values=[0.4, 0.6])
+        self.assertEqual(len(fig.axes[0].patches), 1)
+        self.assertGreater(fig.axes[0].get_xlim()[1], 0)
+
+
 class TestValidationReachesTheFunctionAPI(ValidationMixin, unittest.TestCase):
     """Validation applies whichever entry point is used."""
 

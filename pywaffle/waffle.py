@@ -897,6 +897,17 @@ class Waffle(Figure):
 
             par[missing] = division(sum(block_per_cat), par[given], method="ceil")
 
+        # The other dimension is derived from the block count, so values that come to zero blocks
+        # derive it as zero. That is not an empty chart, it is a broken one: the block size is
+        # 1 / (0 - interval_ratio), which is negative, and every extent computed from it follows.
+        if par["rows"] * par["columns"] == 0:
+            raise ValueError(
+                "Argument values comes to zero blocks, so there is nothing to draw. Values are "
+                "block counts when only one of rows and columns is given, and rounding_rule "
+                f"{par['rounding_rule']!r} maps these to zero. Scale the values up, or pass both "
+                "rows and columns to scale them into a fixed grid."
+            )
+
         # A chart is drawn one artist per block, so an unscaled value quietly turns into minutes of
         # drawing rather than an error. Fail fast and say what to do about it.
         total_blocks = par["rows"] * par["columns"]
