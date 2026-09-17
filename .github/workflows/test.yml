@@ -54,8 +54,8 @@ jobs:
     # the job, which is what a job-level continue-on-error would have hidden.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: pip install -e ".[icons]" pytest pandas
@@ -87,8 +87,8 @@ jobs:
     # here means the pre-release changed something rather than that this job is misconfigured.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: pip install -e ".[icons]" pytest pandas
@@ -133,8 +133,8 @@ jobs:
     # The uploaded summary shows which images differ and by how much when one fails.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: pip install -e ".[icons]" pytest pytest-mpl
@@ -145,7 +145,7 @@ jobs:
           pytest tests/test_images.py --mpl
           --mpl-generate-summary=html
           --mpl-results-path=image-results
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: image-comparison-results
@@ -158,8 +158,8 @@ jobs:
     # still passes.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: pip install -e ".[icons]" pandas nbconvert nbformat ipykernel
