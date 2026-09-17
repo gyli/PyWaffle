@@ -7,8 +7,10 @@ every Python snippet embedded in the docs and the README, and check the class do
 the real parameters with their real defaults.
 """
 
+import os
 import pathlib
 import re
+import tempfile
 import unittest
 import warnings
 
@@ -44,9 +46,22 @@ def documentation_pages():
 class TestDocumentationSnippets(unittest.TestCase):
     """Every Python snippet in the documentation still runs."""
 
-    @staticmethod
-    def tearDown():
-        """Close the figures a snippet leaves behind."""
+    def setUp(self):
+        """Run the snippets in a disposable directory.
+
+        Two of them call fig.savefig("my_plot.png") and fig.savefig("plot.png"), which is exactly
+        what those pages should show a reader. Executed verbatim they write into the current
+        working directory, so the suite littered whatever directory it was started from - usually
+        the repository root, where both files ended up committed.
+        """
+        self._original_cwd = os.getcwd()
+        self._tmpdir = tempfile.TemporaryDirectory()
+        os.chdir(self._tmpdir.name)
+
+    def tearDown(self):
+        """Close the figures a snippet leaves behind, and drop what it wrote."""
+        os.chdir(self._original_cwd)
+        self._tmpdir.cleanup()
         plt.close("all")
 
     def test_every_snippet_runs(self):
@@ -70,6 +85,10 @@ class TestDocumentationSnippets(unittest.TestCase):
                             exec(compile(code, f"{page.name}#{number}", "exec"), namespace)  # noqa: S102
                     finally:
                         plt.close("all")
+
+        # The snippets that save a file wrote it here, not into the directory the suite was
+        # started from. If this ever comes back empty, the isolation above has stopped working.
+        self.assertTrue(list(pathlib.Path.cwd().glob("*.png")), "no snippet saved a file")
 
     def test_the_docs_actually_contain_snippets(self):
         """Guard against the extraction silently matching nothing and the test passing vacuously."""
