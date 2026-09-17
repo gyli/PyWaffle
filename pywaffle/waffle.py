@@ -28,6 +28,10 @@ MAX_BLOCKS = 10_000_000
 #: continuous one has 256.
 QUALITATIVE_COLORMAP_MAX = 20
 
+#: Face colour of a cell that belongs to a category's line but has no value behind it. Only the
+#: "new-line" arranging style produces these, where a category is padded out to a whole line.
+TRANSPARENT = (0, 0, 0, 0)
+
 METHOD_MAPPING = {
     "float": lambda a, b: a / b,
     "nearest": lambda a, b: round(a / b),
@@ -249,6 +253,8 @@ class Waffle(Figure):
     :param block_edge_color: Color of the border drawn around each block.
 
         | Only applies to rectangle blocks. Icons and characters are text and have no such border.
+        | The blank cells that ``block_arranging_style='new-line'`` pads a category's line with
+          get no border either, so a padded line still ends where its value ends.
         | [Default None, the border matches the block color]
     :type block_edge_color: str, optional
 
@@ -272,7 +278,8 @@ class Waffle(Figure):
 
     :param sort_values: Order the categories by value.
 
-        | ``True`` or ``'desc'`` sorts largest first; ``'asc'`` sorts smallest first.
+        | ``True`` or ``'desc'`` sorts largest first; ``'asc'`` sorts smallest first. The string
+          is case insensitive, as every other string argument is.
         | Every per-category argument - ``labels``, ``colors``, ``icons``, ``characters`` and
           ``icon_style`` - is reordered along with the values.
         | [Default False]
@@ -585,7 +592,7 @@ class Waffle(Figure):
         move with its value, or the chart silently mislabels itself. Arguments given as a single
         value apply to every category and need no reordering.
         """
-        descending = par["sort_values"] in (True, "desc")
+        descending = par["sort_values"] == "desc"
         order = sorted(range(len(par["values"])), key=lambda i: par["values"][i], reverse=descending)
 
         par["values"] = [par["values"][i] for i in order]
@@ -686,6 +693,31 @@ class Waffle(Figure):
         # matplotlib's set_anchor does not reject an unknown string, so an unusable anchor is
         # silently stored on the axes and the plot is simply misplaced
         Waffle._validate_choice(par, "plot_anchor", ("C", "SW", "S", "SE", "E", "NE", "N", "NW", "W"), case="upper")
+        Waffle._validate_sort_values(par)
+
+    @staticmethod
+    def _validate_sort_values(par: Dict):
+        """Normalize sort_values to False, "desc" or "asc".
+
+        It takes a bool as well as a string, so it cannot go through _validate_choice. It was
+        previously compared to its literal value, which made it the one string argument in this
+        class that was case sensitive: sort_values="DESC" matched neither "True" nor "desc" and
+        fell through to ascending order, the opposite of what was asked, with no error.
+        """
+        value = par["sort_values"]
+
+        if value is None or value is False:
+            par["sort_values"] = False
+            return
+        if value is True:
+            par["sort_values"] = "desc"
+            return
+
+        if isinstance(value, str) and value.strip().lower() in ("desc", "asc"):
+            par["sort_values"] = value.strip().lower()
+            return
+
+        raise ValueError(f'Argument sort_values should be True, False, "desc" or "asc", got {value!r}.')
 
     @staticmethod
     def _validate_geometry(par: Dict):
@@ -897,6 +929,17 @@ class Waffle(Figure):
 
             par[missing] = division(sum(block_per_cat), par[given], method="ceil")
 
+        # The other dimension is derived from the block count, so values that come to zero blocks
+        # derive it as zero. That is not an empty chart, it is a broken one: the block size is
+        # 1 / (0 - interval_ratio), which is negative, and every extent computed from it follows.
+        if par["rows"] * par["columns"] == 0:
+            raise ValueError(
+                "Argument values comes to zero blocks, so there is nothing to draw. Values are "
+                "block counts when only one of rows and columns is given, and rounding_rule "
+                f"{par['rounding_rule']!r} maps these to zero. Scale the values up, or pass both "
+                "rows and columns to scale them into a fixed grid."
+            )
+
         # A chart is drawn one artist per block, so an unscaled value quietly turns into minutes of
         # drawing rather than an error. Fail fast and say what to do about it.
         total_blocks = par["rows"] * par["columns"]
@@ -1041,6 +1084,11 @@ class Waffle(Figure):
 
         def block_style(color):
             """Styling keywords for one block of the given colour."""
+            if color is TRANSPARENT:
+                # Padding rather than a block. block_edge_color sets the edge independently of the
+                # face, so styling this one would draw an empty outlined square where the chart
+                # should simply end.
+                return {"color": TRANSPARENT}
             return self._block_style(color, par["block_edge_color"], par["block_edge_width"])
 
         cells = list(
@@ -1085,7 +1133,7 @@ class Waffle(Figure):
                 break
 
             if this_cat_block_count > colored_block_per_cat[class_index] - 1:
-                color = (0, 0, 0, 0)  # transparent
+                color = TRANSPARENT
             else:
                 color = par["colors"][class_index]
 

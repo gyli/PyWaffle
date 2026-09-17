@@ -82,8 +82,16 @@ class TestShowValues(LabelsTestCase):
             plt.figure(FigureClass=Waffle, rows=5, values=self.DATA, show_values="bogus")
 
     def test_percentage_of_a_zero_total_is_rejected(self):
-        with self.assertRaisesRegex(ValueError, "sum to more than zero"):
+        # A zero total now fails earlier, when the grid is resolved: it comes to zero blocks,
+        # which is not a chart. Either way the user gets a ValueError naming the cause.
+        with self.assertRaisesRegex(ValueError, "zero blocks"):
             plt.figure(FigureClass=Waffle, rows=5, values={"A": 0, "B": 0}, show_values="percentage")
+
+    def test_the_formatter_guards_the_zero_total_itself(self):
+        # The grid check now catches every route to this through the public API, but the helper
+        # still refuses rather than dividing by zero, so keep it covered directly.
+        with self.assertRaisesRegex(ValueError, "sum to more than zero"):
+            Waffle._format_values(labels=["A", "B"], values=[0, 0], show_values="percentage", value_format=None)
 
 
 class TestSortValues(LabelsTestCase):
@@ -143,6 +151,31 @@ class TestSortValues(LabelsTestCase):
     def test_off_by_default(self):
         fig = plt.figure(FigureClass=Waffle, rows=5, values=self.DATA)
         self.assertEqual(fig.plot_args[0]["values"], [5, 20, 10])
+
+    def test_the_direction_is_case_and_whitespace_insensitive(self):
+        # "DESC" matched neither True nor "desc", so it sorted ascending - the opposite of the ask
+        for given in ("DESC", "Desc", " desc "):
+            with self.subTest(sort_values=given):
+                fig = plt.figure(FigureClass=Waffle, rows=5, values=self.DATA, sort_values=given)
+                self.assertEqual(fig.plot_args[0]["values"], [20, 10, 5])
+
+        for given in ("ASC", "Asc", " asc "):
+            with self.subTest(sort_values=given):
+                fig = plt.figure(FigureClass=Waffle, rows=5, values=self.DATA, sort_values=given)
+                self.assertEqual(fig.plot_args[0]["values"], [5, 10, 20])
+
+    def test_an_unknown_direction_is_rejected(self):
+        # Previously any unrecognised value silently sorted ascending
+        for given in ("bogus", "descending", "ascending", 1, ["desc"]):
+            with self.subTest(sort_values=given):
+                with self.assertRaisesRegex(ValueError, "sort_values"):
+                    plt.figure(FigureClass=Waffle, rows=5, values=self.DATA, sort_values=given)
+
+    def test_false_and_none_both_leave_the_order_alone(self):
+        for given in (False, None):
+            with self.subTest(sort_values=given):
+                fig = plt.figure(FigureClass=Waffle, rows=5, values=self.DATA, sort_values=given)
+                self.assertEqual(fig.plot_args[0]["values"], [5, 20, 10])
 
     def test_block_counts_follow_the_sorted_order(self):
         fig = plt.figure(FigureClass=Waffle, rows=1, columns=7, values={"A": 5, "B": 20, "C": 10}, sort_values=True)

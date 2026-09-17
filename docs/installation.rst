@@ -9,7 +9,9 @@ The last stable release is available on PyPI and can be installed with ``pip``::
 .. rubric:: Requirements
 
 * Python 3.9+
-* Matplotlib
+* Matplotlib 3.6+
+
+Matplotlib is installed automatically with PyWaffle.
 
 .. rubric:: Drawing with icons
 
@@ -21,3 +23,6 @@ Install it alongside PyWaffle if you want pictogram charts::
 Everything except the ``icons`` parameter works without it, including ``characters``, which uses
 an ordinary font. Passing ``icons`` without the extra raises ``ImportError`` with the command to
 run.
+
+A copy of Font Awesome already installed on the system can be used instead of the Python package.
+See :doc:`font_awesome_integration`.

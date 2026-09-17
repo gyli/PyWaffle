@@ -9,7 +9,7 @@
 PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts — also known as
 square pie charts, and, when drawn with icons, pictogram charts.
 
-![PyWaffle](examples/readme/title_and_legend.svg)
+![Titanic survival rate by class, drawn as waffle charts](examples/quickstart/survival.svg)
 
 It provides a [Figure constructor class](https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html) `Waffle`, which could be passed to [matplotlib.pyplot.figure](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.figure.html) and generates a matplotlib Figure object.
 
@@ -38,33 +38,79 @@ pip install "pywaffle[icons]"
 
 ## Quickstart
 
-```python
-from pywaffle import waffle_chart
+A waffle chart is a grid of blocks where **one block stands for a fixed quantity**, so a proportion is
+something the reader can count rather than estimate from the angle of a pie slice.
 
-fig, ax = waffle_chart([48, 46, 6], rows=5, columns=10, figsize=(5, 3))
-```
-
-`waffle_chart()` returns the matplotlib `(figure, axes)` pair, so everything you already know about
-matplotlib still applies. To draw into a layout you have already built, pass `ax`:
+These are the people aboard the Titanic. 2,201 of them in a grid of 100 blocks, so one block is about
+22 people.
 
 ```python
 import matplotlib.pyplot as plt
 from pywaffle import waffle_chart
 
-fig, axes = plt.subplots(1, 2)
-waffle_chart({"Yes": 70, "No": 30}, rows=5, ax=axes[0])
-waffle_chart({"Yes": 30, "No": 70}, rows=5, ax=axes[1])
+aboard = {"First class": 325, "Second class": 285, "Third class": 706, "Crew": 885}
+
+class_colors = ["#c9a227", "#5f8a8b", "#b5653f", "#3d4f5d"]
+aside = {"loc": "upper left", "bbox_to_anchor": (1.02, 1), "frameon": False}
+
+fig, ax = waffle_chart(
+    aboard,
+    rows=10,
+    columns=10,
+    colors=class_colors,
+    title={"label": "Who was aboard the Titanic: 2,201 people", "loc": "left"},
+    legend=aside,
+    show_values=True,
+    figsize=(6.5, 4),
+)
 ```
+
+![Who was aboard the Titanic, by class](examples/quickstart/labelled.svg)
+
+Swap the rectangles for [Font Awesome](https://fontawesome.com/icons?d=gallery&m=free) icons and it
+becomes a pictogram chart, where one figure stands for a number of people:
+
+```python
+by_group = {"Men": 1667, "Women": 425, "Children": 109}
+
+fig, ax = waffle_chart(
+    by_group,
+    rows=5,
+    columns=10,
+    colors=["#3d4f5d", "#c9a227", "#b5653f"],
+    icons=["person", "person-dress", "child"],
+    font_size=22,
+    icon_legend=True,
+    background_color="#f4f2ee",
+    title={"label": "One figure = 44 people aboard", "loc": "left"},
+    legend=aside,
+    show_values=True,
+    figsize=(6.5, 2.8),
+)
+```
+
+![The people aboard as a pictogram of men, women and children](examples/quickstart/pictogram.svg)
+
+`waffle_chart()` returns the matplotlib `(figure, axes)` pair, so everything you already know about
+matplotlib still applies. Pass `ax` to draw into a layout you have already built.
 
 PyWaffle is also a matplotlib [Figure constructor
 class](https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html), which is
 the form used throughout the examples below and is fully supported:
 
 ```python
-fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 6])
+fig = plt.figure(FigureClass=Waffle, rows=10, columns=10, values=aboard)
 ```
 
 Both build the same chart. Use whichever reads better in your code.
+
+**[Read the full quickstart](https://pywaffle.readthedocs.io/en/latest/quickstart.html)** for partial
+blocks that lose nothing to rounding, continuous tiled grids, sorting, subplots, and drawing into an
+existing layout.
+
+> Figures from the British Board of Trade inquiry of 1912: 2,201 aboard, 710 saved, 1,491 lost.
+> Tabulated at [Sinking of the
+> Titanic](https://en.wikipedia.org/wiki/Sinking_of_the_Titanic#Casualties_and_survivors).
 
 ## Examples
 

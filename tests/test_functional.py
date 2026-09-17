@@ -99,10 +99,6 @@ class TestWaffleChartFunction(unittest.TestCase):
         self.assertEqual(params["starting_location"].default, "SW")
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class TestModuleIsNotShadowed(unittest.TestCase):
     """The function must not take the name of the pywaffle.waffle module.
 
@@ -138,3 +134,7 @@ class TestModuleIsNotShadowed(unittest.TestCase):
 
         self.assertNotIn("waffle", pywaffle.__all__)
         self.assertIn("waffle_chart", pywaffle.__all__)
+
+
+if __name__ == "__main__":
+    unittest.main()

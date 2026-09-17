@@ -6,14 +6,17 @@ Fixes
 * Fix icons and characters being sized wrongly on any figure whose DPI is not 96 - at 200 DPI they were about twice the intended size ([#33](https://github.com/gyli/PyWaffle/issues/33))
 * Fix subplots sharing one legend, so that every subplot after the first rendered the first subplot's labels
 * Fix the package being unbuildable by any PEP 517 frontend: `pip install .`, `pip install git+...` and `python -m build` all failed
+* Declare the build and runtime version floors the code actually needs: `setuptools>=77` for the PEP 639 license metadata, and `matplotlib>=3.6` for `Figure.set_layout_engine`
 * Support continuous colormaps in `cmap_name`. Previously anything other than a `ListedColormap` raised `AttributeError`, and the perceptual colormaps stored *as* `ListedColormap`s - `viridis`, `plasma`, `magma`, `inferno`, `cividis`, `turbo` - silently used the first few of their 256 entries, so every category came out the same shade. Qualitative palettes such as `Set2` are unchanged
 * Replace the deprecated `set_tight_layout` with `set_layout_engine`, removing a warning on every figure
 * Reject a negative or non-integer `rows` / `columns`, a non-positive `block_aspect_ratio`, a negative `interval_ratio_x` / `interval_ratio_y`, an unknown `plot_anchor`, and non-numeric `values` elements. `rows=-5` previously drew an empty chart with no error, and `plot_anchor='XX'` was accepted because matplotlib's `set_anchor` does not validate it either
 * Refuse to draw a chart of more than `MAX_BLOCKS` (10,000,000) blocks. Values that were meant to be scaled previously turned into minutes of drawing rather than an error; the limit can be raised with `pywaffle.waffle.MAX_BLOCKS`
 * Reject negative `values` and a `values` sum of zero up front, instead of silently drawing a wrong chart or raising `ZeroDivisionError`
+* Reject values that come to zero blocks when only one of `rows` and `columns` is given. The other dimension is derived from the block count, so it came out zero, the block size came out negative, and the figure had negative axis extents. Reachable from ordinary values, not just zeros: `rounding_rule='floor'` maps anything below 1 to zero blocks
 * An unknown icon name now raises `ValueError` explaining itself rather than a bare `KeyError`. If the icon exists in another style it says which and what to pass; if it looks like a typo it suggests the nearest name; otherwise it notes that names change between Font Awesome versions
 * Reject unknown `block_arranging_style`, which was previously accepted and silently drawn as `normal`
 * Raise `ValueError` rather than `KeyError` or `AttributeError` for invalid `starting_location`, `rounding_rule` and `icon_style`, and accept `icon_style` lists in any case
+* Make `sort_values` case insensitive and reject unknown values, like every other string argument. `sort_values="DESC"` matched neither `True` nor `"desc"` and fell through to ascending order, the opposite of what was asked, with no error
 
 Breaking
 
@@ -26,7 +29,7 @@ New
 * Font Awesome can now come from the system rather than the Python package. `PYWAFFLE_FONTAWESOME_DIR` points at a directory of `.otf` files, and the usual system font directories are searched as a fallback, so a distribution's font package works on its own. Distribution packages ship fonts without Font Awesome's `icons.json`, so in that case the icon names are recovered from the fonts themselves - every canonical name is available, though aliases are not ([#25](https://github.com/gyli/PyWaffle/issues/25))
 
 * Add `rounding_rule="float"`, which draws partial blocks instead of rounding values ([#26](https://github.com/gyli/PyWaffle/issues/26)). A category that ends part way through a block fills only that fraction of it, and a block containing a boundary between two categories is split between their colors. The block count then depends only on the total of the values, so two datasets with the same total produce charts of the same size - which rounding did not guarantee
-* Add `background_color`, which fills the space behind the blocks including the gaps between them, and `block_edge_color` / `block_edge_width`, which draw a border around each block ([#37](https://github.com/gyli/PyWaffle/issues/37))
+* Add `background_color`, which fills the space behind the blocks including the gaps between them, and `block_edge_color` / `block_edge_width`, which draw a border around each block ([#37](https://github.com/gyli/PyWaffle/issues/37)). The blank cells that `block_arranging_style='new-line'` pads a line with get no border, so a padded line still ends where its value ends
 * Add `show_values` and `value_format`, which append each category's value or its percentage of the total to its legend label. This is the f-string the documentation has always told people to write by hand: `labels=[f"{k} ({v}%)" for k, v in data.items()]`
 * Add `sort_values` to order categories by value. Every per-category argument - `labels`, `colors`, `icons`, `characters` and `icon_style` - is reordered along with the values
 * Take labels from a `pandas.Series` index, the same way they are already taken from a dict's keys

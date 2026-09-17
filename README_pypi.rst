@@ -24,6 +24,25 @@ Installation
 
     pip install pywaffle
 
+Quickstart
+----------
+
+.. code:: python
+
+    from pywaffle import waffle_chart
+
+    fig, ax = waffle_chart([48, 46, 6], rows=5, columns=10, figsize=(5, 3))
+
+``waffle_chart()`` returns the matplotlib ``(figure, axes)`` pair, and takes ``ax=`` to draw into a
+layout you already have. The figure-class form below builds the same chart and is equally supported:
+
+.. code:: python
+
+    import matplotlib.pyplot as plt
+    from pywaffle import Waffle
+
+    fig = plt.figure(FigureClass=Waffle, rows=5, columns=10, values=[48, 46, 6])
+
 Demo
 ----
 
