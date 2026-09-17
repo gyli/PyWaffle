@@ -170,12 +170,11 @@ class Waffle(Figure):
     :param icon_style: The style of icons to be used.
 
         | Font Awesome Icons find an icon by style and icon name.
-        The style could be 'brands', 'regular' and 'solid'.
-        Visit https://fontawesome.com/cheatsheet for detail.
-
+          The style could be 'brands', 'regular' and 'solid'.
+          Visit https://fontawesome.com/cheatsheet for detail.
         | If it is a string, it would search icons within given style.
-        If it is a list or a tuple, the length should be
-        the same as values and it means the style for each icon.
+          If it is a list or a tuple, the length should be
+          the same as values and it means the style for each icon.
 
         | [Default 'solid']
     :type icon_style: str|list[str]|tuple[str], optional
@@ -817,7 +816,7 @@ class Waffle(Figure):
 
     @classmethod
     def make_waffle(cls, ax: Axes, **kwargs):
-        """
+        r"""
         Plot waffle chart on given axis.
         Run it with codes like:
         ``Waffle.make_waffle(ax=ax, rows=5, values=[48, 46, 6])``
@@ -828,7 +827,7 @@ class Waffle(Figure):
         :param ax: An instance of Matplotlib Axes
         :type ax: matplotlib.axes.Axes
 
-        :param **kwargs: Waffle properties
+        :param \*\*kwargs: Waffle properties
 
         """
         if kwargs.get("plots"):

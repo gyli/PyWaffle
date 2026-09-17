@@ -40,7 +40,7 @@ See [issue #17](https://github.com/gyli/PyWaffle/issues/17) for the original rep
 Waffle Chart with icons is also known as Pictogram Chart. 
 
 PyWaffle supports plotting with icons through [Font Awesome](https://fontawesome.com/), which is an
-optional dependency — install it with `pip install "pywaffle[icons]"`. See page [Font Awesome Integration](font_awesome_integration.html) for how Font Awesome is integrated into PyWaffle.
+optional dependency — install it with `pip install "pywaffle[icons]"`. See page [Font Awesome Integration](../font_awesome_integration.rst) for how Font Awesome is integrated into PyWaffle.
 
 For searching available icon name in Font Awesome, please visit [https://fontawesome.com/search](https://fontawesome.com/search).
 
