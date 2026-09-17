@@ -9,7 +9,7 @@
 PyWaffle is an open source, MIT-licensed Python package for plotting waffle charts — also known as
 square pie charts, and, when drawn with icons, pictogram charts.
 
-![World electricity generation in 2025, drawn as a waffle chart](examples/quickstart/tiled.svg)
+![Titanic survival rate by class, drawn as waffle charts](examples/quickstart/survival.svg)
 
 It provides a [Figure constructor class](https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_class.html) `Waffle`, which could be passed to [matplotlib.pyplot.figure](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.figure.html) and generates a matplotlib Figure object.
 
@@ -30,66 +30,58 @@ pip install pywaffle
 
 ## Quickstart
 
-A waffle chart is a grid of blocks where **one block stands for a fixed quantity** — so a proportion
-is something the reader can count, rather than estimate from the angle of a pie slice.
+A waffle chart is a grid of blocks where **one block stands for a fixed quantity**, so a proportion is
+something the reader can count rather than estimate from the angle of a pie slice.
 
-Here is how the world generated its electricity in 2025. The shares sum to 100 and the grid holds 100
-blocks, so one block is one percent.
+These are the people aboard the Titanic. 2,201 of them in a grid of 100 blocks, so one block is about
+22 people.
 
 ```python
 import matplotlib.pyplot as plt
 from pywaffle import waffle_chart
 
-electricity = {
-    "Coal": 33.0,
-    "Gas": 21.8,
-    "Hydro": 14.0,
-    "Nuclear": 8.8,
-    "Solar": 8.7,
-    "Wind": 8.5,
-    "Other": 5.2,
-}
+aboard = {"First class": 325, "Second class": 285, "Third class": 706, "Crew": 885}
 
-energy_colors = ["#44413d", "#c4703a", "#2e6fa7", "#7a4b9e", "#f2b705", "#3fa796", "#b9b6b0"]
+class_colors = ["#c9a227", "#5f8a8b", "#b5653f", "#3d4f5d"]
 aside = {"loc": "upper left", "bbox_to_anchor": (1.02, 1), "frameon": False}
 
 fig, ax = waffle_chart(
-    electricity,
+    aboard,
     rows=10,
     columns=10,
-    colors=energy_colors,
-    title={"label": "How the world made its electricity in 2025", "loc": "left"},
+    colors=class_colors,
+    title={"label": "Who was aboard the Titanic: 2,201 people", "loc": "left"},
     legend=aside,
     show_values=True,
-    value_format="{:g}%",
     figsize=(6.5, 4),
 )
 ```
 
-![How the world made its electricity in 2025](examples/quickstart/labelled.svg)
+![Who was aboard the Titanic, by class](examples/quickstart/labelled.svg)
 
-Swap the rectangles for [Font Awesome](https://fontawesome.com/icons?d=gallery&m=free) icons and the
-same data becomes a pictogram chart:
+Swap the rectangles for [Font Awesome](https://fontawesome.com/icons?d=gallery&m=free) icons and it
+becomes a pictogram chart, where one figure stands for a number of people:
 
 ```python
-energy_icons = ["fire", "gas-pump", "water", "atom", "solar-panel", "fan", "plug"]
+by_group = {"Men": 1667, "Women": 425, "Children": 109}
 
 fig, ax = waffle_chart(
-    electricity,
+    by_group,
     rows=5,
     columns=10,
-    colors=energy_colors,
-    icons=energy_icons,
-    font_size=20,
+    colors=["#3d4f5d", "#c9a227", "#b5653f"],
+    icons=["person", "person-dress", "child"],
+    font_size=22,
     icon_legend=True,
     background_color="#f4f2ee",
-    title={"label": "World electricity generation, 2025", "loc": "left"},
+    title={"label": "One figure = 44 people aboard", "loc": "left"},
     legend=aside,
+    show_values=True,
     figsize=(6.5, 2.8),
 )
 ```
 
-![World electricity generation in 2025, as a pictogram chart](examples/quickstart/pictogram.svg)
+![The people aboard as a pictogram of men, women and children](examples/quickstart/pictogram.svg)
 
 `waffle_chart()` returns the matplotlib `(figure, axes)` pair, so everything you already know about
 matplotlib still applies. Pass `ax` to draw into a layout you have already built.
@@ -99,18 +91,18 @@ class](https://matplotlib.org/gallery/subplots_axes_and_figures/custom_figure_cl
 the form used throughout the examples below and is fully supported:
 
 ```python
-fig = plt.figure(FigureClass=Waffle, rows=10, columns=10, values=electricity)
+fig = plt.figure(FigureClass=Waffle, rows=10, columns=10, values=aboard)
 ```
 
 Both build the same chart. Use whichever reads better in your code.
 
-**[Read the full quickstart →](https://pywaffle.readthedocs.io/en/latest/quickstart.html)** — partial
-blocks that lose nothing to rounding, continuous tiled grids, sorting, and drawing into an existing
-layout.
+**[Read the full quickstart](https://pywaffle.readthedocs.io/en/latest/quickstart.html)** for partial
+blocks that lose nothing to rounding, continuous tiled grids, sorting, subplots, and drawing into an
+existing layout.
 
-> Electricity data: [Ember (2026) via Our World in
-> Data](https://ourworldindata.org/grapher/share-elec-by-source), 2025, both CC BY 4.0. Oil,
-> bioenergy and other renewables are grouped as "Other".
+> Figures from the British Board of Trade inquiry of 1912: 2,201 aboard, 710 saved, 1,491 lost.
+> Tabulated at [Sinking of the
+> Titanic](https://en.wikipedia.org/wiki/Sinking_of_the_Titanic#Casualties_and_survivors).
 
 ## Examples
 

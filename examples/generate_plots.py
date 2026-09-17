@@ -325,107 +325,123 @@ plt.close(fig)
 # Quickstart
 #
 # One dataset carried through the whole quickstart, so that each chart adds a
-# single idea rather than restarting on new numbers. The values are real, which
+# single idea rather than restarting on new numbers. It is a real dataset, which
 # is the point: a waffle chart's argument is that one block is one real thing.
 #
 # These calls are written exactly as docs/quickstart.md shows them, so the code a
 # reader copies is the code that produced the image underneath it.
 #
-# Source: Ember (2026) via Our World in Data, "Share of electricity production
-#         by source", 2025. Both CC BY 4.0.
-#         https://ourworldindata.org/grapher/share-elec-by-source
+# Source: British Board of Trade inquiry (1912) into the loss of the RMS Titanic.
+#         2,201 aboard, 710 saved, 1,491 lost. Tabulated at
+#         https://en.wikipedia.org/wiki/Sinking_of_the_Titanic#Casualties_and_survivors
 #
-# Oil, bioenergy and other renewables are grouped as "Other". Shares are rounded
-# to one decimal and sum to exactly 100.0. To refresh for a later year, replace
-# the year and the seven numbers below; nothing else depends on them.
+# A 1912 inquiry cannot go out of date, so unlike a yearly statistic these numbers
+# never need refreshing. Class totals are the sum of the men, women and children
+# rows of that table, and are consistent with its published totals.
 # ---------------------------------------------------------------------------
 quickstart_image_folder = "examples/quickstart/"
 
-electricity = {
-    "Coal": 33.0,
-    "Gas": 21.8,
-    "Hydro": 14.0,
-    "Nuclear": 8.8,
-    "Solar": 8.7,
-    "Wind": 8.5,
-    "Other": 5.2,
-}
-energy_colors = ["#44413d", "#c4703a", "#2e6fa7", "#7a4b9e", "#f2b705", "#3fa796", "#b9b6b0"]
-energy_icons = ["fire", "gas-pump", "water", "atom", "solar-panel", "fan", "plug"]
+aboard = {"First class": 325, "Second class": 285, "Third class": 706, "Crew": 885}
+by_group = {"Men": 1667, "Women": 425, "Children": 109}
+saved = {"First class": 202, "Second class": 118, "Third class": 178, "Crew": 212}
+
+class_colors = ["#c9a227", "#5f8a8b", "#b5653f", "#3d4f5d"]
+group_colors = ["#3d4f5d", "#c9a227", "#b5653f"]
+group_icons = ["person", "person-dress", "child"]
 aside = {"loc": "upper left", "bbox_to_anchor": (1.02, 1), "frameon": False}
 
-# 1. The first chart: one block is 1% of world electricity
-fig, ax = waffle_chart(electricity, rows=10, columns=10, legend=aside, figsize=(6, 4))
+# 1. The first chart: one block is about 22 of the people aboard
+fig, ax = waffle_chart(aboard, rows=10, columns=10, legend=aside, figsize=(6, 4))
 fig.savefig(quickstart_image_folder + "first_chart.svg", bbox_inches="tight")
 plt.close(fig)
 
-# 2. Colours, a title, and the values alongside the labels
+# 2. Colours, a title, and the counts alongside the labels
 fig, ax = waffle_chart(
-    electricity,
+    aboard,
     rows=10,
     columns=10,
-    colors=energy_colors,
-    title={"label": "How the world made its electricity in 2025", "loc": "left"},
+    colors=class_colors,
+    title={"label": "Who was aboard the Titanic: 2,201 people", "loc": "left"},
     legend=aside,
     show_values=True,
-    value_format="{:g}%",
     figsize=(6.5, 4),
 )
 fig.savefig(quickstart_image_folder + "labelled.svg", bbox_inches="tight")
 plt.close(fig)
 
-# 3. rounding_rule="float". One block is 2% here, so most shares land part way
-#    through a block and the partial blocks are plain to see.
+# 3. rounding_rule="float". One block is 22 people, so rounding would shuffle whole
+#    groups of them between categories. Partial blocks keep every share exact.
 fig, ax = waffle_chart(
-    electricity,
-    rows=5,
+    aboard,
+    rows=10,
     columns=10,
-    colors=energy_colors,
+    colors=class_colors,
     rounding_rule="float",
-    title={"label": "One block = 2%, and nothing is rounded away", "loc": "left"},
+    title={"label": "One block = 22 people, and nobody is rounded away", "loc": "left"},
     legend=aside,
-    show_values=True,
-    value_format="{:g}%",
-    figsize=(6.5, 2.8),
+    show_values="percentage",
+    figsize=(6.5, 4),
 )
 fig.savefig(quickstart_image_folder + "fractional.svg", bbox_inches="tight")
 plt.close(fig)
 
-# 4. A continuous tiled grid, largest share first. Also the README and docs hero.
+# 4. A continuous tiled grid, largest group first
 fig, ax = waffle_chart(
-    electricity,
+    aboard,
     rows=10,
     columns=10,
-    colors=energy_colors,
+    colors=class_colors,
     sort_values=True,
     rounding_rule="float",
     interval_ratio_x=0,
     interval_ratio_y=0,
     block_edge_color="white",
     block_edge_width=1.2,
-    title={"label": "World electricity generation, 2025", "loc": "left"},
+    title={"label": "Who was aboard the Titanic: 2,201 people", "loc": "left"},
     legend=aside,
-    show_values=True,
-    value_format="{:g}%",
+    show_values="percentage",
     figsize=(6.5, 4),
 )
 fig.savefig(quickstart_image_folder + "tiled.svg", bbox_inches="tight")
 plt.close(fig)
 
-# 5. Pictogram. Icons are Text and cannot take a block edge, so background_color
-#    is how the grid is given a panel to sit on.
+# 5. Pictogram. The same 2,201 people cut a different way, one figure per 44 of them.
 fig, ax = waffle_chart(
-    electricity,
+    by_group,
     rows=5,
     columns=10,
-    colors=energy_colors,
-    icons=energy_icons,
-    font_size=20,
+    colors=group_colors,
+    icons=group_icons,
+    font_size=22,
     icon_legend=True,
     background_color="#f4f2ee",
-    title={"label": "World electricity generation, 2025", "loc": "left"},
+    title={"label": "One figure = 44 people aboard", "loc": "left"},
     legend=aside,
+    show_values=True,
     figsize=(6.5, 2.8),
 )
 fig.savefig(quickstart_image_folder + "pictogram.svg", bbox_inches="tight")
+plt.close(fig)
+
+# 6. Subplots, and the reason the dataset is worth drawing at all. Only the last
+#    panel carries the legend, and the others take a list so no labels are derived
+#    from dict keys.
+survival_plots = {}
+for position, (group, total) in enumerate(aboard.items(), start=1):
+    is_last = position == len(aboard)
+    lived = saved[group]
+    survival_plots[(1, 4, position)] = {
+        "values": {"Survived": lived, "Lost": total - lived} if is_last else [lived, total - lived],
+        "rows": 5,
+        "columns": 10,
+        "colors": ["#4a8f68", "#cfc9bf"],
+        "rounding_rule": "float",
+        "title": {"label": f"{group}\n{lived / total:.0%} survived", "loc": "left", "fontsize": 11},
+        "interval_ratio_x": 0.15,
+        "interval_ratio_y": 0.15,
+        **({"legend": {"loc": "upper left", "bbox_to_anchor": (1.05, 1), "frameon": False}} if is_last else {}),
+    }
+
+fig = plt.figure(FigureClass=Waffle, figsize=(10, 2.4), plots=survival_plots)
+fig.savefig(quickstart_image_folder + "survival.svg", bbox_inches="tight")
 plt.close(fig)

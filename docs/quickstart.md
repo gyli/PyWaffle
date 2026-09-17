@@ -3,13 +3,13 @@
 A waffle chart is a grid of blocks where **one block stands for a fixed quantity**. That is the whole
 idea: instead of asking someone to judge the angle of a pie slice, you ask them to count squares.
 
-Everything below is one dataset — how the world generated its electricity in 2025 — carried from the
-first chart to the last, so each step adds a single idea.
+Everything below uses one dataset, the people aboard the Titanic, carried from the first chart to the
+last so that each step adds a single idea.
 
 ```{note}
-Data: [Ember (2026) via Our World in Data](https://ourworldindata.org/grapher/share-elec-by-source),
-"Share of electricity production by source", 2025. Both CC BY 4.0. Oil, bioenergy and other
-renewables are grouped here as "Other".
+Figures from the British Board of Trade inquiry of 1912: 2,201 aboard, 710 saved, 1,491 lost.
+Tabulated at [Sinking of the
+Titanic](https://en.wikipedia.org/wiki/Sinking_of_the_Titanic#Casualties_and_survivors).
 ```
 
 ## Install
@@ -26,106 +26,91 @@ Pass a dict and say how big the grid is. The keys become the labels.
 import matplotlib.pyplot as plt
 from pywaffle import waffle_chart
 
-electricity = {
-    "Coal": 33.0,
-    "Gas": 21.8,
-    "Hydro": 14.0,
-    "Nuclear": 8.8,
-    "Solar": 8.7,
-    "Wind": 8.5,
-    "Other": 5.2,
-}
+aboard = {"First class": 325, "Second class": 285, "Third class": 706, "Crew": 885}
 
 aside = {"loc": "upper left", "bbox_to_anchor": (1.02, 1), "frameon": False}
 
-fig, ax = waffle_chart(electricity, rows=10, columns=10, legend=aside, figsize=(6, 4))
+fig, ax = waffle_chart(aboard, rows=10, columns=10, legend=aside, figsize=(6, 4))
 ```
 
-<img class="img_middle" alt="A first waffle chart of world electricity generation" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/quickstart/first_chart.svg?sanitize=true">
+<img class="img_middle" alt="Who was aboard the Titanic, by class" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/quickstart/first_chart.svg?sanitize=true">
 
-The values sum to 100 and the grid holds 100 blocks, so **one block is one percent of the world's
-electricity**. `waffle_chart()` returns the matplotlib `(figure, axes)` pair, so everything you
-already know about matplotlib still applies.
+2,201 people in a grid of 100 blocks, so **one block is about 22 people**. `waffle_chart()` returns
+the matplotlib `(figure, axes)` pair, so everything you already know about matplotlib still applies.
 
 `legend` is passed straight through to
-[`Axes.legend`](https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html); putting
+[`Axes.legend`](https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html). Putting
 it outside the axes keeps it off the blocks.
 
 ## Colours, a title, and the numbers
 
 ```python
-energy_colors = ["#44413d", "#c4703a", "#2e6fa7", "#7a4b9e", "#f2b705", "#3fa796", "#b9b6b0"]
+class_colors = ["#c9a227", "#5f8a8b", "#b5653f", "#3d4f5d"]
 
 fig, ax = waffle_chart(
-    electricity,
+    aboard,
     rows=10,
     columns=10,
-    colors=energy_colors,
-    title={"label": "How the world made its electricity in 2025", "loc": "left"},
+    colors=class_colors,
+    title={"label": "Who was aboard the Titanic: 2,201 people", "loc": "left"},
     legend=aside,
     show_values=True,
-    value_format="{:g}%",
     figsize=(6.5, 4),
 )
 ```
 
-<img class="img_middle" alt="The same chart with colours, a title and values in the legend" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/quickstart/labelled.svg?sanitize=true">
+<img class="img_middle" alt="The same chart with colours, a title and counts in the legend" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/quickstart/labelled.svg?sanitize=true">
 
-`show_values=True` appends each category's number to its legend label, and `value_format` controls how
-it is written. Use `show_values="percentage"` to show each category's share of the total instead of
-the value itself.
+`show_values=True` appends each category's number to its legend label. `show_values="percentage"`
+shows its share of the total instead, and `value_format` controls how either is written.
 
-## Nothing rounded away
+## Nobody rounded away
 
-A block is a whole thing, so a share that falls part way through one normally has to be rounded.
-`rounding_rule="float"` stops that: a category that ends mid-block fills only that fraction of it, and
+A block is a whole thing, so a share that falls part way through one normally has to be rounded. Here
+a block is 22 people, so rounding moves whole groups of them from one class to another.
+`rounding_rule="float"` stops that. A category that ends mid-block fills only that fraction of it, and
 a block holding a boundary is split between two colours.
-
-It shows best on a smaller grid, where one block is worth more:
 
 ```python
 fig, ax = waffle_chart(
-    electricity,
-    rows=5,
+    aboard,
+    rows=10,
     columns=10,
-    colors=energy_colors,
+    colors=class_colors,
     rounding_rule="float",
-    title={"label": "One block = 2%, and nothing is rounded away", "loc": "left"},
+    title={"label": "One block = 22 people, and nobody is rounded away", "loc": "left"},
     legend=aside,
-    show_values=True,
-    value_format="{:g}%",
-    figsize=(6.5, 2.8),
+    show_values="percentage",
+    figsize=(6.5, 4),
 )
 ```
 
 <img class="img_middle" alt="Fractional blocks, where a category ending mid-block fills only part of it" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/quickstart/fractional.svg?sanitize=true">
 
-Fifty blocks for seven shares that are not multiples of 2% — every boundary lands inside a block, and
-every one of them is drawn where it actually falls. A useful side effect: the number of blocks now
-depends only on the total, so two datasets with the same total always produce the same size of chart.
+A useful side effect: the number of blocks now depends only on the total, so two datasets with the
+same total always produce a chart of the same size.
 
 ## A continuous grid
 
 Close the gaps and give each block an edge, and the chart reads as one tiled surface rather than
-floating squares. `sort_values=True` puts the largest share first, carrying each category's colour
+floating squares. `sort_values=True` puts the largest group first and carries each category's colour
 along with it.
 
 ```python
 fig, ax = waffle_chart(
-    electricity,
+    aboard,
     rows=10,
     columns=10,
-    colors=energy_colors,
+    colors=class_colors,
     sort_values=True,
     rounding_rule="float",
     interval_ratio_x=0,
     interval_ratio_y=0,
     block_edge_color="white",
     block_edge_width=1.2,
-    title={"label": "World electricity generation, 2025", "loc": "left"},
+    title={"label": "Who was aboard the Titanic: 2,201 people", "loc": "left"},
     legend=aside,
-    show_values=True,
-    value_format="{:g}%",
+    show_values="percentage",
     figsize=(6.5, 4),
 )
 ```
@@ -135,31 +120,63 @@ fig, ax = waffle_chart(
 ## Icons, for a pictogram chart
 
 Swap the rectangles for [Font Awesome](https://fontawesome.com/icons?d=gallery&m=free) icons and the
-same data becomes a pictogram chart.
+chart becomes a pictogram, where one figure stands for a number of people. This is the same 2,201
+people, cut by group instead of by class.
 
 ```python
-energy_icons = ["fire", "gas-pump", "water", "atom", "solar-panel", "fan", "plug"]
+by_group = {"Men": 1667, "Women": 425, "Children": 109}
 
 fig, ax = waffle_chart(
-    electricity,
+    by_group,
     rows=5,
     columns=10,
-    colors=energy_colors,
-    icons=energy_icons,
-    font_size=20,
+    colors=["#3d4f5d", "#c9a227", "#b5653f"],
+    icons=["person", "person-dress", "child"],
+    font_size=22,
     icon_legend=True,
     background_color="#f4f2ee",
-    title={"label": "World electricity generation, 2025", "loc": "left"},
+    title={"label": "One figure = 44 people aboard", "loc": "left"},
     legend=aside,
+    show_values=True,
     figsize=(6.5, 2.8),
 )
 ```
 
-<img class="img_middle" alt="The same data drawn as a pictogram chart with energy icons" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/quickstart/pictogram.svg?sanitize=true">
+<img class="img_middle" alt="The people aboard drawn as a pictogram of men, women and children" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/quickstart/pictogram.svg?sanitize=true">
 
 `icon_legend=True` uses the icons in the legend instead of colour swatches. Icons are drawn as text
-and so have no block edge to colour — `background_color` is how you give the grid a panel to sit on,
-and it works for rectangle blocks too.
+and so have no block edge to colour, which is what `background_color` is for. It works behind
+rectangle blocks too.
+
+## Several charts in one figure
+
+`plots` takes a dict of subplot position to arguments. Anything you set at the figure level is the
+default for every subplot, and each subplot can override it.
+
+```python
+saved = {"First class": 202, "Second class": 118, "Third class": 178, "Crew": 212}
+
+survival_plots = {}
+for position, (group, total) in enumerate(aboard.items(), start=1):
+    is_last = position == len(aboard)
+    lived = saved[group]
+    survival_plots[(1, 4, position)] = {
+        # Only the last panel gets labels, so only it draws a legend
+        "values": {"Survived": lived, "Lost": total - lived} if is_last else [lived, total - lived],
+        "rows": 5,
+        "columns": 10,
+        "colors": ["#4a8f68", "#cfc9bf"],
+        "rounding_rule": "float",
+        "title": {"label": f"{group}\n{lived / total:.0%} survived", "loc": "left", "fontsize": 11},
+        "interval_ratio_x": 0.15,
+        "interval_ratio_y": 0.15,
+    }
+survival_plots[(1, 4, 4)]["legend"] = {"loc": "upper left", "bbox_to_anchor": (1.05, 1), "frameon": False}
+
+fig = plt.figure(FigureClass=Waffle, figsize=(10, 2.4), plots=survival_plots)
+```
+
+<img class="img_middle" alt="Survival rate by class, as four small waffle charts" src="https://raw.githubusercontent.com/gyli/PyWaffle/master/examples/quickstart/survival.svg?sanitize=true">
 
 ## Into a layout you already have
 
@@ -168,27 +185,27 @@ Pass `ax` to draw into an axes you have already made, instead of building a new 
 ```python
 fig, axes = plt.subplots(1, 2, figsize=(10, 3))
 
-waffle_chart(electricity, rows=5, columns=10, colors=energy_colors, ax=axes[0])
-waffle_chart(electricity, rows=5, columns=10, colors=energy_colors, icons=energy_icons,
-             font_size=14, ax=axes[1])
+waffle_chart(aboard, rows=5, columns=10, colors=class_colors, ax=axes[0])
+waffle_chart(by_group, rows=5, columns=10, colors=["#3d4f5d", "#c9a227", "#b5653f"],
+             icons=["person", "person-dress", "child"], font_size=14, ax=axes[1])
 ```
 
-No figure-level arguments such as `figsize` or `dpi` are accepted in this form — set those on the
+No figure-level arguments such as `figsize` or `dpi` are accepted in this form. Set those on the
 figure that owns the axes.
 
 ## The other two ways to call it
 
-These build exactly the same chart. Use whichever reads better in your code.
+These build the same chart. Use whichever reads better in your code.
 
 ```python
 from pywaffle import Waffle
 
 # The matplotlib-native form, used throughout the Examples pages
-fig = plt.figure(FigureClass=Waffle, rows=10, columns=10, values=electricity)
+fig = plt.figure(FigureClass=Waffle, rows=10, columns=10, values=aboard)
 
 # Straight onto an existing axes
 fig, ax = plt.subplots()
-Waffle.make_waffle(ax=ax, rows=10, columns=10, values=electricity)
+Waffle.make_waffle(ax=ax, rows=10, columns=10, values=aboard)
 ```
 
 ## Where next
