@@ -1,3 +1,11 @@
+Unreleased
+
+Other
+
+* Add the `Framework :: Matplotlib` PyPI trove classifier, so PyWaffle appears under the [Matplotlib framework facet](https://pypi.org/search/?c=Framework+%3A%3A+Matplotlib) on PyPI. The matplotlib third-party package list asks contributors to set it, and points readers at that facet to find more packages
+
+---
+
 v1.2.0 (2026-09-17)
 
 Fixes
